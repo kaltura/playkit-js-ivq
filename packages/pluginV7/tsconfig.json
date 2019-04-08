@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "skipLibCheck": true,
+        "target": "ES5",
+        "module": "commonjs",
+        "allowJs": false,
+        "jsx": "react",
+        "jsxFactory": "h",
+        "sourceMap": true,
+        "strict": true,
+        "moduleResolution": "node",
+        "baseUrl": "./src",
+        "paths": {
+            "@plugin/shared": ["../../shared"],
+            "@plugin/shared/*": ["../../shared/*"],
+            "*": ["../node_modules/*", "../node_modules/@types/*"]
+        },
+        "preserveSymlinks": true
+    },
+    "include": ["src/**/*.tsx", "src/**/*.ts"],
+    "exclude": ["node_modules"]
+}
