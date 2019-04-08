@@ -3,7 +3,7 @@ import { h, render } from "preact";
 import Stage, {
     LoadCallback,
     NotifyEventTypes,
-    Props as StageProps,
+    Props as StageProps
 } from "@plugin/shared/components/Stage";
 
 import { PlayerCompat } from "@playkit-js/playkit-js-ovp/playerCompat";
@@ -11,7 +11,6 @@ import { KalturaClient } from "kaltura-typescript-client";
 import { CuePointListAction } from "kaltura-typescript-client/api/types/CuePointListAction";
 import { KalturaCuePointFilter } from "kaltura-typescript-client/api/types/KalturaCuePointFilter";
 import { KalturaCuePointType } from "kaltura-typescript-client/api/types/KalturaCuePointType";
-import { KalturaAnnotation } from "kaltura-typescript-client/api/types/KalturaAnnotation";
 import { UIManager } from "@playkit-js/playkit-js-ovp/pluginV7/uiManager";
 import { AnalyticsEvents } from "@plugin/shared/analyticsEvents";
 import { convertToCuepoints } from "@plugin/shared/cuepoints";
@@ -32,7 +31,7 @@ export class IVQPlugin extends KalturaPlayer.core.BasePlugin {
         super(name, player, config);
         this._addBindings();
 
-        this._uiManager = new UIManager(this, 'ivq', this._renderRoot, 'ivqOverlay');
+        this._uiManager = new UIManager(this, "ivq", this._renderRoot, "ivqOverlay");
 
         this._kalturaClient = new KalturaClient({
             clientTag: "playkit-js-ivq",
@@ -79,13 +78,12 @@ export class IVQPlugin extends KalturaPlayer.core.BasePlugin {
                 new CuePointListAction({
                     filter: new KalturaCuePointFilter({
                         entryIdEqual: this.player.config.sources.id,
-                        cuePointTypeEqual: KalturaCuePointType.annotation,
                         tagsLike: ""
                     })
                 }).setRequestOptions({
                     ks: this.player.config.session.ks,
                     partnerId: this.player.config.session.partnerId,
-                    acceptedTypes: [KalturaAnnotation]
+                    acceptedTypes: []
                 })
             )
             .then(
@@ -118,20 +116,12 @@ export class IVQPlugin extends KalturaPlayer.core.BasePlugin {
     };
 
     private _addBindings() {
-        this.eventManager.listenOnce(
-            this.player,
-            this.player.Event.FIRST_PLAY,
-            () => {}
-        );
-        this.eventManager.listen(
-            this.player,
-            this.player.Event.SEEKED,
-            () => {}
-        );
+        this.eventManager.listenOnce(this.player, this.player.Event.FIRST_PLAY, () => {});
+        this.eventManager.listen(this.player, this.player.Event.SEEKED, () => {});
         this.eventManager.listen(this.player, this.player.Event.TIME_UPDATE, () => {
             this._uiManager.root.notify({ type: NotifyEventTypes.TimeUpdated });
         });
-        this.eventManager.listen(this.player, this.player.Event.Core.RESIZE, () => {
+        this.eventManager.listen(this.player, this.player.Event.RESIZE, () => {
             this._uiManager.root.handleResize();
         });
     }
