@@ -8,7 +8,6 @@ import { log, enableLogIfNeeded } from "@playkit-js/playkit-js-ovp/logger";
 import { convertToCuepoints } from "@plugin/shared/cuepoints";
 import { AnalyticsEvents } from "@plugin/shared/analyticsEvents";
 
-
 (function(mw, $) {
     enableLogIfNeeded("ivq");
 
@@ -58,7 +57,6 @@ import { AnalyticsEvents } from "@plugin/shared/analyticsEvents";
                             action: "list",
                             "filter:entryIdEqual": this.getPlayer().kentryid,
                             "filter:objectType": "KalturaCuePointFilter",
-                            "filter:cuePointTypeEqual": "annotation.Annotation",
                             "filter:tagsLike": ""
                         },
                         function(data: any) {
@@ -144,8 +142,7 @@ import { AnalyticsEvents } from "@plugin/shared/analyticsEvents";
                         this.stage.notify({ type: NotifyEventTypes.Monitor });
                     });
 
-                    this.bind("mediaLoaded", () => {
-                    });
+                    this.bind("mediaLoaded", () => {});
 
                     this.bind("seeked", () => {
                         this.stage.notify({ type: NotifyEventTypes.Monitor });
