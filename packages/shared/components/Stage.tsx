@@ -1,11 +1,15 @@
 import { h, Component } from "preact";
 import { AnalyticsEvents } from "../analyticsEvents";
 import { Cuepoint } from "@plugin/shared/cuepoints";
+import {
+    KalturaListResponse,
+    KalturaQuiz,
+    KalturaCuePointListResponse,
+    KalturaUserEntryListResponse,
+    KalturaQuizUserEntry
+} from "kaltura-typescript-client/api/types";
 
-export type LoadCallback = (result: {
-    error?: { message: string };
-    cuepoints?: Cuepoint[];
-}) => void;
+export type LoadCallback = (result: { error?: { message: string }; results?: any }) => void;
 
 export enum NotifyEventTypes {
     Monitor = "monitor",
@@ -16,6 +20,7 @@ export enum NotifyEventTypes {
 interface TimeUpdatedEvent {
     type: NotifyEventTypes.TimeUpdated;
 }
+
 interface SeekedEvent {
     type: NotifyEventTypes.Seeked;
 }
@@ -27,7 +32,9 @@ interface MonitorEvent {
 type NotifyEvents = SeekedEvent | MonitorEvent | TimeUpdatedEvent;
 
 export interface Props {
-    loadCuePoints(callback: LoadCallback): void;
+    loadAnswerCuepoints(userEntryId: number, callback: LoadCallback): void;
+    addUserEntry(callback: LoadCallback): void;
+    loadData(callback: LoadCallback): void;
     sendAnalytics(event: AnalyticsEvents): void;
     getCurrentTime(): number;
     pauseVideo(): void;
@@ -36,21 +43,27 @@ export interface Props {
 interface State {
     isLoading: boolean;
     hasError: boolean;
-    cuepointsCount: number | null; // for demonstration only - can be removed
+    cuepointsCount: number | null;
+    quiz?: KalturaQuiz | undefined;
+    quizUserEntry?: any;
+    questionsCuepoints?: any[];
+    answersCuepoints?: any[];
 }
 
 export default class Stage extends Component<Props, State> {
-
     initialState = {
         isLoading: true,
         hasError: false,
-        cuepointsCount: null
+        cuepointsCount: null,
+        quiz: undefined,
+        quizUserEntry: null,
+        questionsCuepoints: [],
+        answersCuepoints: []
     };
 
     state: State = {
         ...this.initialState
     };
-
 
     notify = (event: NotifyEvents) => {
         switch (event.type) {
@@ -67,8 +80,7 @@ export default class Stage extends Component<Props, State> {
         this.reset();
     }
 
-    handleResize = (): void => {
-    };
+    handleResize = (): void => {};
 
     private reset = () => {
         this.setState(
@@ -76,36 +88,47 @@ export default class Stage extends Component<Props, State> {
                 ...this.initialState
             },
             () => {
-                this.props.loadCuePoints(this._handleCuepoints);
+                this.props.loadData(this._handleData.bind(this));
             }
         );
     };
 
-    private _handleCuepoints = (result: {
-        error?: { message: string };
-        cuepoints?: Cuepoint[];
-    }) => {
-        const { cuepoints, error } = result;
+    private _handleAddedUserEntry = (results: any) => {
+        debugger;
+    };
 
-        if (error || !cuepoints) {
-            console.log('error', 'Stage::_handleCuepoints', 'failed to load cuepoints', { error: error ? error.message : 'missing cuepoints array' });
-            this.setState({
-                isLoading: false,
-                hasError: true
+    private _handleAnswerCuepoints(results: any) {
+        this.setState({ isLoading: false, answersCuepoints: results.results.objects });
+    }
+
+    private _handleData = (results: any) => {
+        const { results: res } = results;
+
+        // multirequest: [quiz-list,questionsCuepoints-list,userEntry-list]
+        const quizData: KalturaQuiz = res[0].result;
+        const quizCuepoints: KalturaCuePointListResponse = res[1].result;
+        const quizUserEntries: KalturaUserEntryListResponse = res[2].result;
+
+        this.setState({
+            quiz: quizData,
+            questionsCuepoints: quizCuepoints.objects,
+            quizUserEntry: quizUserEntries.totalCount ? quizUserEntries.objects[0] : undefined
+        });
+        // check if there is a user entry. If not - we need to add one
+        if (quizUserEntries.totalCount) {
+            // found a previous userEntry - we can load answers cuepoint now
+            const latestUserEntry: KalturaQuizUserEntry = quizUserEntries
+                .objects[0] as KalturaQuizUserEntry;
+            this.props.loadAnswerCuepoints(
+                latestUserEntry.id,
+                this._handleAnswerCuepoints.bind(this)
+            );
+        } else {
+            // TODO - test later
+            this.props.addUserEntry((results: any) => {
+                this.props.loadAnswerCuepoints(results.id, this._handleAnswerCuepoints.bind(this));
             });
-            return;
         }
-
-        this.setState(
-            {
-                isLoading: false,
-                hasError: false,
-                cuepointsCount: cuepoints.length
-            },
-            () => {
-
-            }
-        );
     };
 
     render() {
@@ -117,16 +140,26 @@ export default class Stage extends Component<Props, State> {
             overflow: "visible",
             top: 0,
             left: 0,
-            width: 0,
-            height: 0
+            width: "100px",
+            height: "100px"
         };
 
-        return <div style={style}>
-            <div style="background:papayawhip;font-size:12px;width:200px;height:50px;color:black">
-                {isLoading ? <div>loading</div> : null}
-                {hasError ? <div>failed to get cuepoints</div> : null}
-                {cuepointsCount ? <div>Got {cuepointsCount} cuepoints</div> : null}
+        return !isLoading ? (
+            <div style={style}>
+                <div
+                    style="width:100%;height:100%;background:green;font-size:11px"
+                    className="open-screen"
+                >
+                    OPEN SCREEN
+                </div>
             </div>
-        </div>;
+        ) : (
+            <div
+                style="width:100%;height:100%;background:wheat;font-size:11px"
+                className="open-screen"
+            >
+                LOADING
+            </div>
+        );
     }
 }

@@ -7,13 +7,27 @@ import Stage, {
 } from "@plugin/shared/components/Stage";
 
 import { PlayerCompat } from "@playkit-js/playkit-js-ovp/playerCompat";
-import { KalturaClient } from "kaltura-typescript-client";
-import { CuePointListAction } from "kaltura-typescript-client/api/types/CuePointListAction";
-import { KalturaCuePointFilter } from "kaltura-typescript-client/api/types/KalturaCuePointFilter";
-import { KalturaCuePointType } from "kaltura-typescript-client/api/types/KalturaCuePointType";
+import { KalturaClient, KalturaMultiRequest, KalturaRequest } from "kaltura-typescript-client";
+// import { CuePointListAction } from "kaltura-typescript-client/api/types/CuePointListAction";
+// import { KalturaCuePointFilter } from "kaltura-typescript-client/api/types/KalturaCuePointFilter";
+import { KalturaUserEntryFilter } from "kaltura-typescript-client/api/types/KalturaUserEntryFilter";
+// import { KalturaCuePointType } from "kaltura-typescript-client/api/types/KalturaCuePointType";
 import { UIManager } from "@playkit-js/playkit-js-ovp/pluginV7/uiManager";
 import { AnalyticsEvents } from "@plugin/shared/analyticsEvents";
-import { convertToCuepoints } from "@plugin/shared/cuepoints";
+import {
+    CuePointListAction,
+    KalturaCuePointFilter,
+    KalturaCuePointType,
+    KalturaNullableBoolean,
+    KalturaQuizUserEntry,
+    KalturaUser,
+    KalturaUserEntry,
+    KalturaUserEntryOrderBy,
+    KalturaUserEntryType,
+    QuizGetAction,
+    UserEntryAddAction,
+    UserEntryListAction
+} from "kaltura-typescript-client/api/types";
 
 export class IVQPlugin extends KalturaPlayer.core.BasePlugin {
     static defaultConfig = {};
@@ -30,9 +44,7 @@ export class IVQPlugin extends KalturaPlayer.core.BasePlugin {
     constructor(name: any, player: any, config: any) {
         super(name, player, config);
         this._addBindings();
-
         this._uiManager = new UIManager(this, "ivq", this._renderRoot, "ivqOverlay");
-
         this._kalturaClient = new KalturaClient({
             clientTag: "playkit-js-ivq",
             endpointUrl: this.player.config.provider.env.serviceUrl
@@ -72,29 +84,84 @@ export class IVQPlugin extends KalturaPlayer.core.BasePlugin {
         // TBD
     }
 
-    private _loadCuePoints(callback: LoadCallback) {
+    private _listAnswerCuepoints(userEntryId: any, callback: LoadCallback) {
         this._kalturaClient
             .request(
                 new CuePointListAction({
                     filter: new KalturaCuePointFilter({
-                        entryIdEqual: this.player.config.sources.id,
-                        tagsLike: ""
+                        cuePointTypeEqual: KalturaCuePointType.quizAnswer,
+                        entryIdEqual: userEntryId
                     })
-                }).setRequestOptions({
-                    ks: this.player.config.session.ks,
-                    partnerId: this.player.config.session.partnerId,
-                    acceptedTypes: []
                 })
+            )
+            .then(
+                (response: any) => {
+                    if (!response) {
+                        return;
+                    }
+                    callback({ results: response });
+                },
+                reason => {
+                    callback({
+                        error: { message: reason.message || "failure" }
+                    });
+                }
+            );
+    }
+    // @ts-ignore
+    private _addUserEntry(callback: LoadCallback) {
+        // @ts-ignore
+        this._kalturaClient
+            .request(
+                new UserEntryAddAction({
+                    userEntry: new KalturaQuizUserEntry({
+                        entryId: this.player.config.sources.id
+                    })
+                })
+            )
+            .then((response: any) => {
+                if (!response) {
+                    return;
+                }
+                debugger;
+            });
+    }
+
+    private _loadData(callback: LoadCallback) {
+        this._kalturaClient.setDefaultRequestOptions({
+            ks: this.player.config.session.ks,
+            partnerId: this.player.config.session.partnerId
+        });
+
+        this._kalturaClient
+            .multiRequest(
+                new KalturaMultiRequest(
+                    new QuizGetAction({
+                        entryId: this.player.config.sources.id // grab this from previous multirequest if possible
+                    }),
+                    new CuePointListAction({
+                        filter: new KalturaCuePointFilter({
+                            cuePointTypeEqual: KalturaCuePointType.quizQuestion,
+                            entryIdEqual: this.player.config.sources.id
+                        })
+                    }),
+                    new UserEntryListAction({
+                        filter: new KalturaUserEntryFilter({
+                            entryIdEqual: this.player.config.sources.id,
+                            orderBy: KalturaUserEntryOrderBy.createdAtAsc,
+                            typeEqual: KalturaUserEntryType.quiz,
+                            userIdEqualCurrent: KalturaNullableBoolean.trueValue
+                        })
+                    })
+                )
             )
             .then(
                 response => {
                     if (!response) {
                         return;
                     }
-
-                    const cuepoints = convertToCuepoints(response);
-
-                    callback({ cuepoints });
+                    // const cuepoints = convertToCuepoints(response);
+                    callback({ results: response });
                 },
                 reason => {
                     callback({
@@ -106,8 +173,10 @@ export class IVQPlugin extends KalturaPlayer.core.BasePlugin {
 
     private _renderRoot = (): any => {
         const props: StageProps = {
+            loadAnswerCuepoints: this._listAnswerCuepoints.bind(this),
             getCurrentTime: this._getCurrentTime.bind(this),
-            loadCuePoints: this._loadCuePoints.bind(this),
+            loadData: this._loadData.bind(this),
+            addUserEntry: this._addUserEntry.bind(this),
             pauseVideo: this._pauseVideo.bind(this),
             sendAnalytics: this._sendAnalytics.bind(this)
         };
