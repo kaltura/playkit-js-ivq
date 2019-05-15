@@ -46,7 +46,7 @@
   var player;
   function changeMedia() {
     player.loadMedia({
-      entryId: '' <!-- TODO (optional) set here a second entry id to test change media -->
+      entryId: '' <!-- TODO (optional) set here another entry id to test change media -->
     });
   }
 
@@ -55,10 +55,11 @@
     targetId: "player-div",
     provider: {
       partnerId: "", <!-- TODO set here your partner id as set in the url above -->
-      uiConfId: "" <!-- TODO set here your uiconf id as set in the url above -->
+      uiConfId: "", <!-- TODO set here your uiconf id as set in the url above -->
+      ks: undefined <!-- TODO (optional) provide ks if needed -->
     },
     plugins: {
-      ivq: {
+      'ivq-local': {
       }
     }
   };
