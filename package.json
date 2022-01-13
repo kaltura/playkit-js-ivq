@@ -1,67 +1,61 @@
 {
-  "name": "@playkit-js/ivq-plugin",
-  "version": "1.0.0",
-  "license": "AGPL-3.0",
-  "bugs": {
-    "url": "https://github.com/kaltura/playkit-js-ivq/issues"
-  },
-  "homepage": "https://github.com/kaltura/playkit-js-ivq#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kaltura/playkit-js-ivq.git"
-  },
-  "description": "",
-  "main": "dist/playkit-js-ivq.js",
+  "name": "@playkit-js/playkit-js-ivq",
+  "version": "0.0.1",
+  "main": "dist/playkit-ivq.js",
   "scripts": {
-    "clean": "rm -rf dist",
-    "reset": "npm run clean && rm -rf node_modules",
+    "clean": "rm -rf ./dist",
     "prebuild": "npm run clean",
-    "build": "npm run clean && webpack --mode production",
-    "serve": "webpack-dev-server -d",
-    "analyze": "npm run build && npx source-map-explorer dist/playkit-js-ivq.js",
-    "upgrade:latest": "npm i @playkit-js/ovp-common@latest @playkit-js/ovp-ui@latest",
-    "upgrade:next": "npm i @playkit-js/ovp-common@next @playkit-js/ovp-ui@next"
+    "build": "webpack --mode production",
+    "dev": "webpack-dev-server --mode development",
+    "watch": "webpack --progress --colors --watch --mode development",
+    "test": "jest",
+    "release": "standard-version",
+    "pushTaggedRelease": "git push --follow-tags --no-verify origin master",
+    "eslint": "eslint . --color",
+    "commit:dist": "git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)",
+    "docs:generate": "documentation build flow-typed/** src/** -f md -o docs/configuration.md",
+    "docs:serve": "documentation serve flow-typed/** src/** --watch",
+    "precommit": "lint-staged",
+    "prettier:fix": "prettier --write ."
   },
-  "keywords": [],
-  "author": "",
   "devDependencies": {
-    "awesome-typescript-loader": "^5.2.1",
-    "copy-webpack-plugin": "^5.0.2",
-    "css-loader": "^2.0.0",
-    "html-webpack-plugin": "^3.2.0",
-    "node-sass": "^4.5.3",
-    "npm": "^6.9.0",
-    "prettier": "^1.15.3",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.17.0",
-    "tslint-consistent-codestyle": "^1.14.1",
-    "tslint-eslint-rules": "^5.4.0",
-    "tslint-react": "^3.6.0",
-    "typescript": "^3.2.1",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0",
-    "webpack-dev-server": "^3.2.1",
-    "husky": "^1.3.1",
-    "lint-staged": "^8.1.5"
+    "@types/node": "^15.0.1",
+    "@typescript-eslint/eslint-plugin": "2.34.0",
+    "@typescript-eslint/parser": "2.34.0",
+    "conventional-github-releaser": "3.1.3",
+    "cross-env": "^7.0.2",
+    "css-loader": "^6.5.1",
+    "documentation": "latest",
+    "husky": "^4.2.5",
+    "jest": "^27.4.7",
+    "kaltura-player-js": "https://github.com/kaltura/kaltura-player-js.git#master",
+    "lint-staged": "^10.2.11",
+    "node-sass": "^7.0.1",
+    "prettier": "^2.5.1",
+    "sass-loader": "^12.4.0",
+    "standard-version": "^6.0.1",
+    "style-loader": "^1.3.0",
+    "ts-loader": "^9.2.6",
+    "tslint": "^6.1.3",
+    "typescript": "^4.5.4",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^5.66.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.3"
   },
-  "dependencies": {
-    "@playkit-js/ovp-common": "^0.1.1",
-    "@playkit-js/ovp-ui": "^0.1.1",
-    "kaltura-typescript-client": "file:libs/kaltura-typescript-client-7.0.0-v20190324-101134.tgz",
-    "preact": "^8.4.2"
+  "peerDependencies": {
+    "kaltura-player-js": "https://github.com/kaltura/kaltura-player-js.git#master"
   },
-  "files": [
-    "dist"
-  ],
-  "lint-staged": {
-    "*.{ts,tsx,json,css,html}": [
-      "prettier --write",
-      "git add"
-    ]
+  "publishConfig": {
+    "access": "public"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  }
+  "keywords": [
+    "ivq",
+    "quiz",
+    "kaltura",
+    "player",
+    "playkit-js",
+    "playkit-js-ivq",
+    "html5 player"
+  ]
 }

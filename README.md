@@ -1,89 +1,117 @@
-# IVQ plugin (player v2 & v7)
+# PlayKit JS IVQ - Quiz plugin for the [PlayKit JS Player]
 
-## Overview
+PlayKit JS IVQ is written in [ECMAScript6], statically analysed using [Typescript] and transpiled in ECMAScript5 using [Babel].
+
+[typescript]: https://www.typescriptlang.org/
+[ecmascript6]: https://github.com/ericdouglas/ES6-Learning#articles--tutorials
+[babel]: https://babeljs.io
+
+## Getting Started
+
+### Prerequisites
+
+The plugin requires [Kaltura Player] to be loaded first.
+
+[kaltura player]: https://github.com/kaltura/kaltura-player-js
+
+### Installing
+
+First, clone and run [yarn] to install dependencies:
+
+[yarn]: https://yarnpkg.com/lang/en/
+
+```
+git clone https://github.com/kaltura/playkit-js-ivq.git
+cd playkit-js-ivq
+yarn install
+```
+
+### Building
+
+Then, build the player
+
+```javascript
+yarn run build
+```
+
+### Embed the library in your test page
+
+Finally, add the bundle as a script tag in your page, and initialize the player
+
+```html
+<script type="text/javascript" src="/PATH/TO/FILE/kaltura-player.js"></script>
+<!--Kaltura player-->
+<script type="text/javascript" src="/PATH/TO/FILE/playkit-ivq.js"></script>
+<!--PlayKit ivq plugin-->
+<div id="player-placeholder" style="height:360px; width:640px">
+  <script type="text/javascript">
+    var playerContainer = document.querySelector("#player-placeholder");
+    var config = {
+     ...
+     targetId: 'player-placeholder',
+     plugins: {
+       ivq: {
+       }
+     }
+     ...
+    };
+    var player = KalturaPlayer.setup(config);
+    player.loadMedia(...);
+  </script>
+</div>
+```
+
+## Documentation
+
+IVQ plugin configuration can been found here:
+
+- **[Configuration](docs/configuration.md)**
+
+###Slides configuration
+If you are showing slides, you MUST also include kalturaCuePoints plugin in the configuration as follow -
+
+```html
+plugins: { ivq: {...}, kalturaCuepoints: { } }
+```
+
+## Running the tests
+
+Tests can be run locally via [Karma], which will run on Chrome, Firefox and Safari
+
+[karma]: https://karma-runner.github.io/1.0/index.html
+
+```
+yarn run test
+```
+
+You can test individual browsers:
+
+```
+yarn run test:chrome
+yarn run test:firefox
+yarn run test:safari
+```
+
+### And coding style tests
+
+We use ESLint [recommended set](http://eslint.org/docs/rules/) with some additions for enforcing [Flow] types and other rules.
+
+See [ESLint config](.eslintrc.json) for full configuration.
+
+We also use [.editorconfig](.editorconfig) to maintain consistent coding styles and settings, please make sure you comply with the styling.
+
+## Compatibility
+
 TBD
 
-## Project structure
-TBD
+## Contributing
 
-## Commands
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
-### Setup reporistory
-> Run `setup` command to install packages dependencies.
+## Versioning
 
-This command is shared to both plugins (v2 & v7).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/kaltura/playkit-js-ivq/tags).
 
-```
-npm run setup
-``` 
+## License
 
-### Serve test pages
-> Make sure you setup the repository using the `setup` command
-
-This command will build and run test page for the requested plugin version. This command will watch for changes and build them automatically. 
-
-Use one of the following:
-```$xslt
-npm run serve:v2  // for plugin v2 to be served on http://localhost:8002
-npm run serve:v7  // for plugin v7 to be served on http://localhost:8007
-``` 
-
-#### Serve command pre-requisite
-Until the cli library will be ready, you will need to manually create the test page, using the following guide:
-1. open folder `packages/plugin-v7/test` and copy file `index.template.ejs` as  `package/plugin-v7/test/index.ejs`
-2. open `index.ejs` file and fill all places marked with `TODO` comment.
-3. if you are creating plugin for v2 as well, repeat steps 1 and 2 in folder `packages/plugin-v2`.
-
-### Build packages 
-> Make sure you setup the repository using the `setup` command
-
-This command will build the requested plugin folder and create dist folder with relevant assets 
-
-Use one of the following:
-```$xslt
-npm run build:v2  // dist folder will be created under `packages/plugin-v2/dist`
-npm run build:v7  // dist folder will be created under `packages/plugin-v7/dist`
-``` 
-
-### Analyze packages bundle
-> Make sure you setup the repository using the `setup` command
-
-This command will build and create a static page visualizing the bundle content.
-
-Use one of the following:
-```$xslt
-npm run analyze:v2  // for plugin v2 bundle analyze to be shown automatically in the browser
-npm run analyze:v7  // for plugin v7 bundle analyze to be shown automatically in the browser
-``` 
-
-
-### Reset repository
-> You must run the setup command after this command.
-
-This command will delete the `dist` and `node_modules` folders in all packages and in root folder.
-
-
-This command is shared to both plugins (v2 & v7):
-```$xslt
-npm run reset
-``` 
-
-
-### Update OVP infrastructure dependencies
-> Make sure you setup the repository using the `setup` command
-
-This command will update packages to use `latest` or `next` version of the shared ovp infrastructure.
-
-To update to `latest` version use one of the following:
-```$xslt
-npm run update:latest // upgrade both v2 and v7 to latest vesrion
-npm run update:v2:latest // upgrade v2 to latest version
-npm run update:v7:latest // upgrade v7 to latest version
-```
-
-To update to `next` version use one of the following:
-```$xslt
-npm run update:next // upgrade both v2 and v7 to next vesrion
-npm run update:v2:next // upgrade v2 to next version
-npm run update:v7:next // upgrade v7 to next version
-```
+This project is licensed under the AGPL-3.0 License - see the [LICENSE.md](LICENSE.md) file for details
