@@ -48,12 +48,11 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       if (data && data.has(QuizLoader.id)) {
         const quizLoader = data.get(QuizLoader.id);
         const userEntry = quizLoader?.response?.userEntries[0];
-        if (userEntry) {
-          console.log("> userEntry", userEntry) // TODO: use userEntry data
-        }
         const quizData = quizLoader?.response?.quiz;
-        if (quizData) {
-          console.log("> quizData", quizData)  // TODO: use quiz data
+        if (!userEntry || !quizData) {
+          this.logger.warn('user entry or quiz data absent');
+        } else {
+          // TODO: use quiz data
         }
         this._resolveReadyPromise();
       }
