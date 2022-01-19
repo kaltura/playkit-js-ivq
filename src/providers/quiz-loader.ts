@@ -1,6 +1,6 @@
 import ILoader = KalturaPlayerTypes.ILoader;
-
-const {RequestBuilder, ResponseTypes} = KalturaPlayer.providers;
+import {KalturaQuizResponse, KalturaUserEntryListResponse, KalturaUserEntryType} from "./response-types"
+const {RequestBuilder} = KalturaPlayer.providers;
 
 interface QuizLoaderParams {
   entryId: string;
@@ -29,7 +29,7 @@ export class QuizLoader implements ILoader {
     userEntryRequest.params = {
       filter: {
         objectType: 'KalturaQuizUserEntryFilter',
-        typeEqual: ResponseTypes.KalturaUserEntry.UserEntryType.quiz,
+        typeEqual: KalturaUserEntryType.quiz,
         entryIdEqual: this._entryId,
         userIdEqualCurrent: 1,
         orderBy: "-createdAt"
@@ -43,7 +43,7 @@ export class QuizLoader implements ILoader {
     quizRequest.params = {
       entryId: this._entryId
     };
-    
+
     this.requests.push(userEntryRequest);
     this.requests.push(quizRequest);
   }
@@ -57,11 +57,11 @@ export class QuizLoader implements ILoader {
   }
 
   set response(response: any) {
-    const userEntryListResponse = new ResponseTypes.KalturaUserEntryListResponse(response[0]?.data);
+    const userEntryListResponse = new KalturaUserEntryListResponse(response[0]?.data);
     if (userEntryListResponse.totalCount) {
       this._response.userEntries = userEntryListResponse?.data;
     }
-    const quizResponse = new ResponseTypes.KalturaQuizResponse(response[1]?.data);
+    const quizResponse = new KalturaQuizResponse(response[1]?.data);
     if (quizResponse) {
       this._response.quiz = quizResponse?.data;
     }
