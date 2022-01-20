@@ -1,15 +1,13 @@
 import {h} from 'preact';
-import { QuizLoader } from './providers/quiz-loader';
-import { IvqConfig } from "./types/IvqConfig";
+import {QuizLoader} from './providers/quiz-loader';
+import {IvqConfig} from './types/IvqConfig';
 
 export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _player: KalturaPlayerTypes.Player;
   private _resolveReadyPromise = () => {};
   private _readyPromise: Promise<void>;
 
-  static defaultConfig: IvqConfig = {
-
-  };
+  static defaultConfig: IvqConfig = {};
 
   constructor(name: string, player: any, config: IvqConfig) {
     super(name, player, config);
@@ -22,6 +20,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   }
 
   loadMedia(): void {
+    const kalturaCuePointService: any = this._player.getService('kalturaCuepoints');
+    this._getQuestionsAndAnswers(kalturaCuePointService);
     this._getQuiz();
   }
 
@@ -41,25 +41,29 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     });
   };
 
+  private _getQuestionsAndAnswers(kalturaCuePointService: any) {
+    kalturaCuePointService?.registerTypes([kalturaCuePointService.CuepointType.QUIZ]);
+  }
+
   private _getQuiz() {
     this._player.provider
-    .doRequest([{loader: QuizLoader, params: {entryId: this._player.sources.id}}])
-    .then((data: Map<string, any>) => {
-      if (data && data.has(QuizLoader.id)) {
-        const quizLoader = data.get(QuizLoader.id);
-        const userEntry = quizLoader?.response?.userEntries[0];
-        const quizData = quizLoader?.response?.quiz;
-        if (!userEntry || !quizData) {
-          this.logger.warn('user entry or quiz data absent');
-        } else {
-          // TODO: use quiz data
+      .doRequest([{loader: QuizLoader, params: {entryId: this._player.sources.id}}])
+      .then((data: Map<string, any>) => {
+        if (data && data.has(QuizLoader.id)) {
+          const quizLoader = data.get(QuizLoader.id);
+          const quizData = quizLoader?.response?.quiz;
+          const quizAnswers = quizLoader?.response?.quizAnswers;
+          if (!quizData) {
+            this.logger.warn('quiz data absent');
+          } else {
+            // TODO: use quiz data
+          }
+          this._resolveReadyPromise();
         }
+      })
+      .catch((e: any) => {
+        this.logger.error(e);
         this._resolveReadyPromise();
-      }
-    })
-    .catch((e: any) => {
-      this.logger.error(e);
-      this._resolveReadyPromise();
-    });
+      });
   }
 }

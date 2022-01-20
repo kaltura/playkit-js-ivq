@@ -1,5 +1,5 @@
 import ILoader = KalturaPlayerTypes.ILoader;
-import {KalturaQuizResponse, KalturaUserEntryListResponse, KalturaUserEntryType} from "./response-types"
+import {KalturaQuizResponse, KalturaUserEntryListResponse, KalturaQuizAnswerResponse, KalturaUserEntryType} from './response-types';
 const {RequestBuilder} = KalturaPlayer.providers;
 
 interface QuizLoaderParams {
@@ -18,7 +18,7 @@ export class QuizLoader implements ILoader {
     return 'quiz';
   }
 
-  constructor({ entryId }: QuizLoaderParams) {
+  constructor({entryId}: QuizLoaderParams) {
     this._entryId = entryId;
     const headers: Map<string, string> = new Map();
 
@@ -32,7 +32,7 @@ export class QuizLoader implements ILoader {
         typeEqual: KalturaUserEntryType.quiz,
         entryIdEqual: this._entryId,
         userIdEqualCurrent: 1,
-        orderBy: "-createdAt"
+        orderBy: '-createdAt'
       }
     };
 
@@ -44,8 +44,22 @@ export class QuizLoader implements ILoader {
       entryId: this._entryId
     };
 
+    // quiz answers request
+    const quizAnswersRequest = new RequestBuilder(headers);
+    quizAnswersRequest.service = 'cuepoint_cuepoint';
+    quizAnswersRequest.action = 'list';
+    quizAnswersRequest.params = {
+      filter: {
+        objectType: 'KalturaAnswerCuePointFilter',
+        entryIdEqual: this._entryId,
+        cuePointTypeEqual: 'quiz.QUIZ_ANSWER',
+        quizUserEntryIdEqual: '{1:result:objects:0:id}'
+      }
+    };
+
     this.requests.push(userEntryRequest);
     this.requests.push(quizRequest);
+    this.requests.push(quizAnswersRequest);
   }
 
   set requests(requests: any[]) {
@@ -64,6 +78,10 @@ export class QuizLoader implements ILoader {
     const quizResponse = new KalturaQuizResponse(response[1]?.data);
     if (quizResponse) {
       this._response.quiz = quizResponse?.data;
+    }
+    const quizAnswersResponse = new KalturaQuizAnswerResponse(response[2]?.data);
+    if (quizAnswersResponse) {
+      this._response.quizAnswers = quizAnswersResponse?.data;
     }
   }
 
