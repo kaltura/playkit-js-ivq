@@ -1,5 +1,5 @@
 import ILoader = KalturaPlayerTypes.ILoader;
-import {KalturaQuizResponse, KalturaUserEntryListResponse, KalturaQuizAnswerResponse, KalturaUserEntryType} from './response-types';
+import {KalturaQuizResponse, KalturaUserEntryListResponse, KalturaQuizAnswerListResponse, KalturaUserEntryType} from './response-types';
 const {RequestBuilder} = KalturaPlayer.providers;
 
 interface QuizLoaderParams {
@@ -79,8 +79,8 @@ export class QuizLoader implements ILoader {
     if (quizResponse) {
       this._response.quiz = quizResponse?.data;
     }
-    const quizAnswersResponse = new KalturaQuizAnswerResponse(response[2]?.data);
-    if (quizAnswersResponse) {
+    const quizAnswersResponse = new KalturaQuizAnswerListResponse(response[2]?.data);
+    if (quizAnswersResponse && quizAnswersResponse.totalCount) {
       this._response.quizAnswers = quizAnswersResponse?.data;
     }
   }

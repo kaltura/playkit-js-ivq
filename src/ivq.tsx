@@ -21,8 +21,12 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
 
   loadMedia(): void {
     const kalturaCuePointService: any = this._player.getService('kalturaCuepoints');
-    this._getQuestionsAndAnswers(kalturaCuePointService);
-    this._getQuiz();
+    if (kalturaCuePointService) {
+      this._getQuestions(kalturaCuePointService);
+      this._getQuiz();
+    } else {
+      this.logger.warn('kalturaCuepoints service is not registered');
+    }
   }
 
   static isValid(): boolean {
@@ -41,7 +45,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     });
   };
 
-  private _getQuestionsAndAnswers(kalturaCuePointService: any) {
+  private _getQuestions(kalturaCuePointService: any) {
     kalturaCuePointService?.registerTypes([kalturaCuePointService.CuepointType.QUIZ]);
   }
 
@@ -62,7 +66,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         }
       })
       .catch((e: any) => {
-        this.logger.error(e);
+        this.logger.warn(e);
         this._resolveReadyPromise();
       });
   }
