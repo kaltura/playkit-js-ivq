@@ -1,17 +1,20 @@
 import {h} from 'preact';
 import {QuizLoader} from './providers/quiz-loader';
 import {IvqConfig} from './types/IvqConfig';
+import {DataManager} from './data-manager';
 
 export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _player: KalturaPlayerTypes.Player;
   private _resolveReadyPromise = () => {};
   private _readyPromise: Promise<void>;
+  private _dataManager: DataManager;
 
   static defaultConfig: IvqConfig = {};
 
   constructor(name: string, player: any, config: IvqConfig) {
     super(name, player, config);
     this._player = player;
+    this._dataManager = new DataManager(this.eventManager, this.player, this.logger);
     this._readyPromise = this._makeReadyPromise();
   }
 
@@ -26,6 +29,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._getQuiz();
     } else {
       this.logger.warn('kalturaCuepoints service is not registered');
+      this._resolveReadyPromise();
     }
   }
 
@@ -62,6 +66,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           } else {
             // TODO: use quiz data
           }
+          this._dataManager.addQuizData(quizData);
+          this._dataManager.addQuizAnswers(quizAnswers);
           this._resolveReadyPromise();
         }
       })
