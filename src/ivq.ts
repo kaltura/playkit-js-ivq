@@ -1,16 +1,16 @@
 import {h} from 'preact';
 import {QuizLoader} from './providers/quiz-loader';
 import {IvqConfig} from './types/IvqConfig';
-import {DataManager, QuizQuestion} from './data-manager';
+import {DataSyncManager, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion} from './data-sync-manager';
 import {QuestionsManager} from './questions-manager';
 
 export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _player: KalturaPlayerTypes.Player;
   private _resolveQuizDataPromise = () => {};
-  private _resolveQuizQuestionsPromise = (qq: QuizQuestion[]) => {};
+  private _resolveQuizQuestionsPromise = (qqm: QuizQuestionMap) => {};
   private _quizDataPromise: Promise<void>;
-  private _quizQuestionsPromise: Promise<QuizQuestion[]>;
-  private _dataManager?: DataManager;
+  private _quizQuestionsPromise: Promise<QuizQuestionMap>;
+  private _dataManager?: DataSyncManager;
   private _questionsManager?: QuestionsManager;
 
   static defaultConfig: IvqConfig = {};
@@ -20,9 +20,9 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this._player = player;
     this._quizDataPromise = this._makeQuizDataPromise();
     this._quizQuestionsPromise = this._makeQuizQuestionsPromise();
-    this._dataManager = new DataManager(
+    this._dataManager = new DataSyncManager(
       this._resolveQuizQuestionsPromise,
-      this._questionManager.onQuestionsBecomeActive,
+      (qq: KalturaQuizQuestion[]) => this._questionsManager?.onQuestionsBecomeActive(qq),
       this.eventManager,
       this.player,
       this.logger
@@ -38,9 +38,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if (kalturaCuePointService) {
       this._getQuestions(kalturaCuePointService);
       this._getQuiz();
-      this._quizQuestionsPromise.then((questions: QuizQuestion[]) => {
-        // TODO: quiz ready, init UI manager
-        this._questionsManager = new QuestionsManager(questions);
+      this._quizQuestionsPromise.then((qqm: QuizQuestionMap) => {
+        this._questionsManager = new QuestionsManager(qqm);
       });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered');
@@ -66,7 +65,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   };
 
   private _makeQuizQuestionsPromise = () => {
-    return new Promise<QuizQuestion[]>(res => {
+    return new Promise<QuizQuestionMap>(res => {
       this._resolveQuizQuestionsPromise = res;
     });
   };
@@ -88,6 +87,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           } else {
             this._dataManager?.addQuizData(quizData);
             this._dataManager?.addQuizAnswers(quizAnswers);
+            // TODO: show welcome screen
           }
         }
       })

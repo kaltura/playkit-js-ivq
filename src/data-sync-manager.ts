@@ -2,6 +2,8 @@
 import {core} from 'kaltura-player-js';
 import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
 
+const ACTIVE_QUESTION_TIME_DELTA = 0.001; // TODO: discuss it
+
 const {TimedMetadata} = core;
 
 interface TimedMetadataEvent {
@@ -24,7 +26,9 @@ enum KalturaQuizQuestionTypes {
   OpenQuestion = 8
 }
 
-interface KalturaQuizQuestion {
+export interface KalturaQuizQuestion {
+  id: string;
+  startTime: number;
   excludeFromScore: boolean;
   optionalAnswers: Array<KalturaQuizOptionalAnswer>;
   question: string;
@@ -36,22 +40,24 @@ interface KalturaQuizQuestion {
 
 export interface QuizQuestion {
   id: string;
+  index: number;
   q: KalturaQuizQuestion;
   a?: KalturaQuizAnswer;
-  onNext: () => void;
-  onPrev: () => void;
   onContinue: () => void;
+  onNext?: () => void;
+  onPrev?: () => void;
 }
 
-export type OnQuestionBecomeActive = (questions: Array<QuizQuestion>) => void;
+export type QuizQuestionMap = Record<string, QuizQuestion>;
 
-export class DataManager {
-  public quizQuestions: Record<string, QuizQuestion> = {};
+export type OnQuestionBecomeActive = (questions: Array<KalturaQuizQuestion>) => void;
+
+export class DataSyncManager {
   public quizData: KalturaQuiz | null = null;
-  _quizAnswers: Array<KalturaQuizAnswer> = [];
+  private _quizAnswers: Array<KalturaQuizAnswer> = [];
 
   constructor(
-    private _onQuestionsLoad: (qq: QuizQuestion[]) => void,
+    private _onQuestionsLoad: (qqm: QuizQuestionMap) => void,
     private _onQuestionBecomeActive: OnQuestionBecomeActive,
     private _eventManager: KalturaPlayerTypes.EventManager,
     private _player: KalturaPlayerTypes.Player,
@@ -74,29 +80,45 @@ export class DataManager {
     this._quizAnswers = data;
   }
 
-  private _getQuizQuePoints = (data: any[]) => {
+  private _getQuizQuePoints = (data: Array<typeof TimedMetadata>) => {
     return data.filter(cue => cue?.type === TimedMetadata.TYPE.CUE_POINT && cue.metadata?.cuePointType === 'quiz.QUIZ_QUESTION');
   };
 
   private _onTimedMetadataChange = ({payload}: TimedMetadataEvent) => {
     const quizCues = this._getQuizQuePoints(payload.cues);
-    this._onQuestionBecomeActive(quizCues.map(cue => this.quizQuestions[cue.id]));
+    this._onQuestionBecomeActive(quizCues);
   };
   private _onTimedMetadataAdded = ({payload}: TimedMetadataEvent) => {
     const quizCues = this._getQuizQuePoints(payload.cues);
-
-    quizCues.forEach(cue => {
+    const quizQuestionsMap: QuizQuestionMap = {};
+    quizCues.forEach((cue, index) => {
       const answer = this._quizAnswers.find((answer: KalturaQuizAnswer) => {
         return cue.id === answer.parentId;
       });
-      this.quizQuestions[cue.id] = {
+      let onNext;
+      let onPrev;
+      if (index > 0) {
+        onPrev = () => {
+          this._player.currentTime = quizCues[index - 1].startTime + ACTIVE_QUESTION_TIME_DELTA;
+        };
+      }
+      if (index + 1 < quizCues.length) {
+        onNext = () => {
+          this._player.currentTime = quizCues[index + 1].startTime + ACTIVE_QUESTION_TIME_DELTA;
+        };
+      }
+      quizQuestionsMap[cue.id] = {
         id: cue.id,
+        index,
         q: cue.metadata,
         a: answer,
-        onNext: () => {},
-        onPrev: () => {}
+        onNext,
+        onPrev,
+        onContinue: () => {
+          // TODO: send API call to submit question
+        }
       };
     });
-    this._onQuestionsLoad();
+    this._onQuestionsLoad(quizQuestionsMap);
   };
 }
