@@ -38,24 +38,25 @@ export interface QuizQuestion {
   id: string;
   q: KalturaQuizQuestion;
   a?: KalturaQuizAnswer;
+  onNext: () => void;
+  onPrev: () => void;
+  onContinue: () => void;
 }
 
 export type OnQuestionBecomeActive = (questions: Array<QuizQuestion>) => void;
 
 export class DataManager {
-  // _kalturaCuePointService: any;
   public quizQuestions: Record<string, QuizQuestion> = {};
   public quizData: KalturaQuiz | null = null;
   _quizAnswers: Array<KalturaQuizAnswer> = [];
 
   constructor(
-    private _onQuestionsLoad: () => void,
+    private _onQuestionsLoad: (qq: QuizQuestion[]) => void,
     private _onQuestionBecomeActive: OnQuestionBecomeActive,
     private _eventManager: KalturaPlayerTypes.EventManager,
     private _player: KalturaPlayerTypes.Player,
     private _logger: any
   ) {
-    // this._kalturaCuePointService = this._player.getService('kalturaCuepoints');
     this._syncEvents();
   }
 
@@ -83,6 +84,7 @@ export class DataManager {
   };
   private _onTimedMetadataAdded = ({payload}: TimedMetadataEvent) => {
     const quizCues = this._getQuizQuePoints(payload.cues);
+
     quizCues.forEach(cue => {
       const answer = this._quizAnswers.find((answer: KalturaQuizAnswer) => {
         return cue.id === answer.parentId;
@@ -90,7 +92,9 @@ export class DataManager {
       this.quizQuestions[cue.id] = {
         id: cue.id,
         q: cue.metadata,
-        a: answer
+        a: answer,
+        onNext: () => {},
+        onPrev: () => {}
       };
     });
     this._onQuestionsLoad();
