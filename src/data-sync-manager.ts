@@ -1,8 +1,7 @@
 // @ts-ignore
 import {core} from 'kaltura-player-js';
+import {getKeyValue, stringToBoolean} from './utils';
 import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
-
-const ACTIVE_QUESTION_TIME_DELTA = 0.001; // TODO: discuss it
 
 const {TimedMetadata} = core;
 
@@ -41,24 +40,34 @@ export interface KalturaQuizQuestion {
 export interface QuizQuestion {
   id: string;
   index: number;
+  startTime: number;
   q: KalturaQuizQuestion;
   a?: KalturaQuizAnswer;
   onContinue: () => void;
-  onNext?: () => void;
-  onPrev?: () => void;
+  skipAvailable: boolean;
+  seekAvailable: boolean;
+  next?: QuizQuestion;
+  prev?: QuizQuestion;
 }
 
-export type QuizQuestionMap = Record<string, QuizQuestion>;
+export interface QuizData extends KalturaQuiz {
+  welcomeMessage: string;
+  noSeekAlertText: string;
+  inVideoTip: boolean;
+  showWelcomePage: boolean;
+  canSkip: boolean;
+  banSeek: boolean;
+}
 
-export type OnQuestionBecomeActive = (questions: Array<KalturaQuizQuestion>) => void;
+export type QuizQuestionMap = Map<string, QuizQuestion>;
 
 export class DataSyncManager {
-  public quizData: KalturaQuiz | null = null;
+  public quizData: QuizData | null = null;
   private _quizAnswers: Array<KalturaQuizAnswer> = [];
 
   constructor(
     private _onQuestionsLoad: (qqm: QuizQuestionMap) => void,
-    private _onQuestionBecomeActive: OnQuestionBecomeActive,
+    private _onQuestionBecomeActive: (qq: KalturaQuizQuestion) => void,
     private _eventManager: KalturaPlayerTypes.EventManager,
     private _player: KalturaPlayerTypes.Player,
     private _logger: any
@@ -73,7 +82,15 @@ export class DataSyncManager {
 
   public addQuizData(data: KalturaQuiz) {
     this._logger.debug('addQuizData', data);
-    this.quizData = data;
+    this.quizData = {
+      ...data,
+      welcomeMessage: getKeyValue(data.uiAttributes, 'welcomeMessage'),
+      noSeekAlertText: getKeyValue(data.uiAttributes, 'noSeekAlertText'),
+      inVideoTip: stringToBoolean(getKeyValue(data.uiAttributes, 'inVideoTip')),
+      showWelcomePage: stringToBoolean(getKeyValue(data.uiAttributes, 'showWelcomePage')),
+      canSkip: stringToBoolean(getKeyValue(data.uiAttributes, 'canSkip')),
+      banSeek: stringToBoolean(getKeyValue(data.uiAttributes, 'banSeek'))
+    };
   }
   public addQuizAnswers(data: Array<KalturaQuizAnswer>) {
     this._logger.debug('addQuizAnswers', data);
@@ -86,38 +103,43 @@ export class DataSyncManager {
 
   private _onTimedMetadataChange = ({payload}: TimedMetadataEvent) => {
     const quizCues = this._getQuizQuePoints(payload.cues);
-    this._onQuestionBecomeActive(quizCues);
+    const filteredQuizCues = quizCues.filter(cue => {
+      return cue.endTime !== this._player.currentTime;
+    });
+    if (filteredQuizCues.length) {
+      this._onQuestionBecomeActive(filteredQuizCues[0]);
+    }
   };
   private _onTimedMetadataAdded = ({payload}: TimedMetadataEvent) => {
     const quizCues = this._getQuizQuePoints(payload.cues);
-    const quizQuestionsMap: QuizQuestionMap = {};
+    const quizQuestionsMap: QuizQuestionMap = new Map();
     quizCues.forEach((cue, index) => {
       const answer = this._quizAnswers.find((answer: KalturaQuizAnswer) => {
         return cue.id === answer.parentId;
       });
-      let onNext;
-      let onPrev;
+      let next;
+      let prev;
       if (index > 0) {
-        onPrev = () => {
-          this._player.currentTime = quizCues[index - 1].startTime + ACTIVE_QUESTION_TIME_DELTA;
-        };
+        prev = quizCues[index - 1];
       }
       if (index + 1 < quizCues.length) {
-        onNext = () => {
-          this._player.currentTime = quizCues[index + 1].startTime + ACTIVE_QUESTION_TIME_DELTA;
-        };
+        next = quizCues[index + 1];
       }
-      quizQuestionsMap[cue.id] = {
+      quizQuestionsMap.set(cue.id, {
         id: cue.id,
         index,
+        startTime: cue.startTime,
         q: cue.metadata,
         a: answer,
-        onNext,
-        onPrev,
+        next,
+        prev,
+        skipAvailable: this.quizData!.canSkip,
+        seekAvailable: !this.quizData!.banSeek,
         onContinue: () => {
+          this._player.play();
           // TODO: send API call to submit question
         }
-      };
+      });
     });
     this._onQuestionsLoad(quizQuestionsMap);
   };
