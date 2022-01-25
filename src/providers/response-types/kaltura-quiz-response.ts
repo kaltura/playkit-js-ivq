@@ -1,7 +1,7 @@
 import {KalturaQuiz} from './kaltura-quiz';
-const {ServiceResult} = KalturaPlayer.providers;
+const {BaseServiceResult} = KalturaPlayer.providers.ResponseTypes;
 
-export class KalturaQuizResponse extends ServiceResult {
+export class KalturaQuizResponse extends BaseServiceResult {
   data?: KalturaQuiz;
 
   constructor(responseObj: any) {

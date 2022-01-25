@@ -1,7 +1,7 @@
 import {KalturaQuizAnswer} from './kaltura-quiz-answer';
-const {ServiceResult} = KalturaPlayer.providers;
+const {BaseServiceResult} = KalturaPlayer.providers.ResponseTypes;
 
-export class KalturaQuizAnswerListResponse extends ServiceResult {
+export class KalturaQuizAnswerListResponse extends BaseServiceResult {
   totalCount?: number;
   data: Array<KalturaQuizAnswer> = [];
 

@@ -1,25 +1,34 @@
 import {h} from 'preact';
 import {QuizLoader} from './providers/quiz-loader';
 import {IvqConfig} from './types/IvqConfig';
-import {DataManager} from './data-manager';
+import {DataManager, QuizQuestion} from './data-manager';
 
 export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _player: KalturaPlayerTypes.Player;
-  private _resolveReadyPromise = () => {};
-  private _readyPromise: Promise<void>;
-  private _dataManager: DataManager;
+  private _resolveQuizDataPromise = () => {};
+  private _resolveQuizQuestionsPromise = () => {};
+  private _quizDataPromise: Promise<void>;
+  private _quizQuizQuestionsPromise: Promise<void>;
+  private _dataManager?: DataManager;
 
   static defaultConfig: IvqConfig = {};
 
   constructor(name: string, player: any, config: IvqConfig) {
     super(name, player, config);
     this._player = player;
-    this._dataManager = new DataManager(this.eventManager, this.player, this.logger);
-    this._readyPromise = this._makeReadyPromise();
+    this._quizDataPromise = this._makeQuizDataPromise();
+    this._quizQuizQuestionsPromise = this._makeQuizQuestionsPromise();
+    this._dataManager = new DataManager(
+      this._resolveQuizQuestionsPromise,
+      this._onQuestionsBecomeActive,
+      this.eventManager,
+      this.player,
+      this.logger
+    );
   }
 
   get ready() {
-    return this._readyPromise;
+    return this._quizDataPromise;
   }
 
   loadMedia(): void {
@@ -27,9 +36,12 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if (kalturaCuePointService) {
       this._getQuestions(kalturaCuePointService);
       this._getQuiz();
+      this._quizQuizQuestionsPromise.then(() => {
+        // TODO: quiz ready, init UI manager
+      });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered');
-      this._resolveReadyPromise();
+      this._resolveQuizDataPromise();
     }
   }
 
@@ -38,20 +50,31 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   }
 
   reset(): void {
-    this._readyPromise = this._makeReadyPromise();
+    this._quizDataPromise = this._makeQuizDataPromise();
+    this._quizQuizQuestionsPromise = this._makeQuizQuestionsPromise();
   }
 
   destroy(): void {}
 
-  private _makeReadyPromise = () => {
+  private _makeQuizDataPromise = () => {
     return new Promise<void>(res => {
-      this._resolveReadyPromise = res;
+      this._resolveQuizDataPromise = res;
+    });
+  };
+
+  private _makeQuizQuestionsPromise = () => {
+    return new Promise<void>(res => {
+      this._resolveQuizQuestionsPromise = res;
     });
   };
 
   private _getQuestions(kalturaCuePointService: any) {
     kalturaCuePointService?.registerTypes([kalturaCuePointService.CuepointType.QUIZ]);
   }
+
+  private _onQuestionsBecomeActive = (questions: Array<QuizQuestion>) => {
+    // TODO: handle question become active (note: questions is array type)
+  };
 
   private _getQuiz() {
     this._player.provider
@@ -64,16 +87,16 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           if (!quizData) {
             this.logger.warn('quiz data absent');
           } else {
-            // TODO: use quiz data
+            this._dataManager?.addQuizData(quizData);
+            this._dataManager?.addQuizAnswers(quizAnswers);
           }
-          this._dataManager.addQuizData(quizData);
-          this._dataManager.addQuizAnswers(quizAnswers);
-          this._resolveReadyPromise();
         }
       })
       .catch((e: any) => {
         this.logger.warn(e);
-        this._resolveReadyPromise();
+      })
+      .finally(() => {
+        this._resolveQuizDataPromise();
       });
   }
 }
