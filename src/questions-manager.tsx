@@ -3,8 +3,7 @@ import {KalturaQuizAnswer} from './providers/response-types';
 import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap} from './data-sync-manager';
 import {QuizQuestionWrapper} from './components/quiz-question';
 
-export interface QuizQuestionUi {
-  // TODO: consider flat Q and A
+export interface QuizQuestionUI {
   q: KalturaQuizQuestion;
   a?: KalturaQuizAnswer;
   onNext?: () => void;
@@ -58,7 +57,7 @@ export class QuestionsManager {
       }
     };
 
-    const quizQuestionUi: QuizQuestionUi = {
+    const quizQuestionUi: QuizQuestionUI = {
       q,
       a,
       onNext,
