@@ -1,1 +1,1 @@
-export * from "./quiz-question-wrapper";
+export * from './quiz-question-wrapper';

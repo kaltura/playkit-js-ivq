@@ -34,7 +34,7 @@ export class QuestionsManager {
         if (qq.startTime !== next!.startTime) {
           this._player.currentTime = next!.startTime;
         } else {
-          this._showQuestion(next!);
+          this._showQuestion(this._quizQuestionMap.get(next.id)!);
         }
       };
     }
@@ -43,7 +43,7 @@ export class QuestionsManager {
         if (qq.startTime !== prev!.startTime) {
           this._player.currentTime = prev!.startTime;
         } else {
-          this._showQuestion(prev!);
+          this._showQuestion(this._quizQuestionMap.get(prev.id)!);
         }
       };
     }
@@ -51,10 +51,10 @@ export class QuestionsManager {
     const onContinue = () => {
       qq.onContinue();
       this._removeActives();
-      if (qq.startTime !== next!.startTime) {
-        this._player.play();
+      if (qq.startTime === next?.startTime) {
+        this._showQuestion(this._quizQuestionMap.get(next.id)!);
       } else {
-        this._showQuestion(next!);
+        this._player.play();
       }
     };
 

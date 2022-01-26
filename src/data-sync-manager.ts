@@ -37,6 +37,11 @@ export interface KalturaQuizQuestion {
   status: number;
 }
 
+export interface PrevNextCue {
+  id: string;
+  startTime: number;
+}
+
 export interface QuizQuestion {
   id: string;
   index: number;
@@ -46,8 +51,8 @@ export interface QuizQuestion {
   onContinue: () => void;
   skipAvailable: boolean;
   seekAvailable: boolean;
-  next?: QuizQuestion;
-  prev?: QuizQuestion;
+  next?: PrevNextCue;
+  prev?: PrevNextCue;
 }
 
 export interface QuizData extends KalturaQuiz {
@@ -117,13 +122,19 @@ export class DataSyncManager {
       const answer = this._quizAnswers.find((answer: KalturaQuizAnswer) => {
         return cue.id === answer.parentId;
       });
-      let next;
-      let prev;
-      if (index > 0) {
-        prev = quizCues[index - 1];
+      let prev = quizCues[index - 1];
+      let next = quizCues[index + 1];
+      if (prev) {
+        prev = {
+          id: prev.id,
+          startTime: prev.startTime
+        };
       }
-      if (index + 1 < quizCues.length) {
-        next = quizCues[index + 1];
+      if (next) {
+        next = {
+          id: next.id,
+          startTime: next.startTime
+        };
       }
       quizQuestionsMap.set(cue.id, {
         id: cue.id,
