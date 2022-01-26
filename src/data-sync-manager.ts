@@ -136,7 +136,6 @@ export class DataSyncManager {
         skipAvailable: this.quizData!.canSkip,
         seekAvailable: !this.quizData!.banSeek,
         onContinue: () => {
-          this._player.play();
           // TODO: send API call to submit question
         }
       });

@@ -9,11 +9,5 @@ interface WelcomeScreenProps {
 }
 
 export const WelcomeScreen = ({allowDownload, welcomeMessage, onClose}: WelcomeScreenProps) => {
-  return (
-    <div className={styles.welcomeScreen}>
-      <div>Welcome screen</div>
-      <div>{welcomeMessage}</div>
-      <button onClick={onClose}>Start quiz</button>
-    </div>
-  );
+  return <div className={styles.welcomeScreen}></div>;
 };

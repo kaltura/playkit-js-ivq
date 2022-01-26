@@ -24,7 +24,7 @@ export class QuestionsManager {
   }
 
   private _showQuestion = (qq: QuizQuestion) => {
-    const {next, prev, q, a, onContinue} = qq;
+    const {next, prev, q, a} = qq;
     this._removeActives();
     this._player.pause();
     let onNext;
@@ -48,15 +48,22 @@ export class QuestionsManager {
       };
     }
 
+    const onContinue = () => {
+      qq.onContinue();
+      this._removeActives();
+      if (qq.startTime !== next!.startTime) {
+        this._player.play();
+      } else {
+        this._showQuestion(next!);
+      }
+    };
+
     const quizQuestionUi: QuizQuestionUi = {
       q,
       a,
       onNext,
       onPrev,
-      onContinue: () => {
-        onContinue();
-        this._removeActives();
-      }
+      onContinue
     };
 
     this._removeActives = this._player.ui.addComponent({
