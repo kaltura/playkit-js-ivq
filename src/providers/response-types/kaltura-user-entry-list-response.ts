@@ -1,7 +1,7 @@
-const {ServiceResult} = KalturaPlayer.providers;
 import {KalturaUserEntry, KalturaUserEntryArgs} from './kaltura-user-entry';
+const {BaseServiceResult} = KalturaPlayer.providers.ResponseTypes;
 
-export class KalturaUserEntryListResponse extends ServiceResult {
+export class KalturaUserEntryListResponse extends BaseServiceResult {
   totalCount?: number;
   data: Array<KalturaUserEntry> = [];
 
