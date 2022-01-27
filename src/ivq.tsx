@@ -20,7 +20,11 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   constructor(name: string, player: any, config: IvqConfig) {
     super(name, player, config);
     this._player = player;
-    // TODO: disable autoplay
+    player.configure({
+      playback: {
+        autoplay: false
+      }
+    });
     this._quizDataPromise = this._makeQuizDataPromise();
     this._quizQuestionsPromise = this._makeQuizQuestionsPromise();
     this._dataManager = new DataSyncManager(
@@ -42,7 +46,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._getQuestions(kalturaCuePointService);
       this._getQuiz();
       this._quizQuestionsPromise.then((qqm: QuizQuestionMap) => {
-        this._questionsManager = new QuestionsManager(qqm, this._player);
+        this._questionsManager = new QuestionsManager(qqm, this._player, this.eventManager);
       });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered');

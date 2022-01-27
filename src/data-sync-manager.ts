@@ -18,7 +18,7 @@ interface KalturaQuizOptionalAnswer {
   weight: number;
 }
 
-enum KalturaQuizQuestionTypes {
+export enum KalturaQuizQuestionTypes {
   MultiChoise = 1,
   TrueFalse = 2,
   Reflection = 3,
