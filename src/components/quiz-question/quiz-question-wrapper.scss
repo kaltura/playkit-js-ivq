@@ -1,2 +1,84 @@
+// TODO: add variables
 .quizQuestionWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px);
+  z-index: 2; // TODO: remove once hide\show player control and seekbar implemented
+
+  .questioContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: 32px 32px 64px 32px;
+  }
+
+  .buttonWrapper {
+    display: flex;
+    width: 100%;
+    margin-top: 16px;
+    .ivqButton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px;
+      height: 32px;
+      border-radius: 4px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+
+      font-style: normal;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 17px;
+      text-align: left;
+      color: white;
+
+      &.continueButton {
+        margin-right: 8px;
+        box-sizing: border-box;
+        &:not(.disabled) {
+          background: #006efa;
+        }
+        // TODO: add hover
+
+        &.disabled {
+          border: 1px solid #888888;
+          color: #888888;
+          cursor: not-allowed;
+        }
+      }
+
+      &.skipButton {
+        // TODO: add hover
+      }
+    }
+  }
+
+  .timeLineWrapper {
+    position: absolute;
+    bottom: 44px;
+    left: 0;
+    width: 100%;
+  }
+
+  .navigationWrapper {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    .questionIndex {
+      width: 138px;
+      line-height: 18px;
+      font-size: 14px;
+      text-align: center;
+      color: white;
+    }
+  }
 }

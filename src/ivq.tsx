@@ -1,7 +1,7 @@
 import {h} from 'preact';
 import {QuizLoader} from './providers/quiz-loader';
-import {IvqConfig} from './types/IvqConfig';
-import {DataSyncManager, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion} from './data-sync-manager';
+import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion} from './types';
+import {DataSyncManager} from './data-sync-manager';
 import {QuestionsManager} from './questions-manager';
 import {KalturaQuiz} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';

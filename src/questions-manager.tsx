@@ -1,20 +1,10 @@
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {h} from 'preact';
-import {KalturaQuizAnswer} from './providers/response-types';
-import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap} from './data-sync-manager';
+import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap, QuizQuestionUI} from './types';
 import {QuizQuestionWrapper} from './components/quiz-question';
 
 const {EventType} = core;
-
-export interface QuizQuestionUI {
-  q: KalturaQuizQuestion;
-  a?: KalturaQuizAnswer;
-  questionIndex: [number, number];
-  onNext?: () => void;
-  onPrev?: () => void;
-  onContinue: () => void;
-}
 
 export class QuestionsManager {
   private _removeActives = () => {};
@@ -61,14 +51,21 @@ export class QuestionsManager {
       };
     }
 
-    const onContinue = () => {
-      qq.onContinue();
+    const onSkip = () => {
       this._removeActives();
       if (qq.startTime === next?.startTime) {
         this._prepareQuestion(this._quizQuestionMap.get(next.id)!);
       } else {
         this._player.play();
       }
+    };
+
+    const onContinue = (data?: any) => {
+      if (data) {
+        // TODO: handle API errors
+        qq.onContinue(data);
+      }
+      onSkip();
     };
 
     const quizQuestionUi: QuizQuestionUI = {
@@ -79,6 +76,10 @@ export class QuestionsManager {
       onPrev,
       onContinue
     };
+
+    if (qq.skipAvailable) {
+      quizQuestionUi.onSkip = onSkip;
+    }
 
     this._removeActives = this._player.ui.addComponent({
       label: 'kaltura-ivq-question-wrapper',

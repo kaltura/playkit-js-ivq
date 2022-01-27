@@ -2,6 +2,7 @@
 import {core} from 'kaltura-player-js';
 import {getKeyValue, stringToBoolean} from './utils';
 import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
+import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes} from './types';
 
 const {TimedMetadata} = core;
 
@@ -10,61 +11,6 @@ interface TimedMetadataEvent {
     cues: Array<typeof TimedMetadata>;
   };
 }
-
-interface KalturaQuizOptionalAnswer {
-  isCorrect: boolean;
-  key: string;
-  text: string;
-  weight: number;
-}
-
-export enum KalturaQuizQuestionTypes {
-  MultiChoise = 1,
-  TrueFalse = 2,
-  Reflection = 3,
-  OpenQuestion = 8
-}
-
-export interface KalturaQuizQuestion {
-  id: string;
-  startTime: number;
-  excludeFromScore: boolean;
-  optionalAnswers: Array<KalturaQuizOptionalAnswer>;
-  question: string;
-  questionType: KalturaQuizQuestionTypes;
-  hint?: string;
-  explanation?: string;
-  status: number;
-}
-
-export interface PrevNextCue {
-  id: string;
-  startTime: number;
-}
-
-export interface QuizQuestion {
-  id: string;
-  index: number;
-  startTime: number;
-  q: KalturaQuizQuestion;
-  a?: KalturaQuizAnswer;
-  onContinue: () => void;
-  skipAvailable: boolean;
-  seekAvailable: boolean;
-  next?: PrevNextCue;
-  prev?: PrevNextCue;
-}
-
-export interface QuizData extends KalturaQuiz {
-  welcomeMessage: string;
-  noSeekAlertText: string;
-  inVideoTip: boolean;
-  showWelcomePage: boolean;
-  canSkip: boolean;
-  banSeek: boolean;
-}
-
-export type QuizQuestionMap = Map<string, QuizQuestion>;
 
 export class DataSyncManager {
   public quizData: QuizData | null = null;
@@ -97,10 +43,16 @@ export class DataSyncManager {
       banSeek: stringToBoolean(getKeyValue(data.uiAttributes, 'banSeek'))
     };
   }
-  public addQuizAnswers(data: Array<KalturaQuizAnswer>) {
+  public addQuizAnswers(data?: Array<KalturaQuizAnswer>) {
     this._logger.debug('addQuizAnswers', data);
-    this._quizAnswers = data;
+    if (data) {
+      this._quizAnswers = data;
+    }
   }
+
+  private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, answer?: KalturaQuizAnswer) => {
+    // TODO: make ADD or UPDATE API call
+  };
 
   private _getQuizQuePoints = (data: Array<typeof TimedMetadata>) => {
     return data.filter(cue => cue?.type === TimedMetadata.TYPE.CUE_POINT && cue.metadata?.cuePointType === 'quiz.QUIZ_QUESTION');
@@ -146,8 +98,8 @@ export class DataSyncManager {
         prev,
         skipAvailable: this.quizData!.canSkip,
         seekAvailable: !this.quizData!.banSeek,
-        onContinue: () => {
-          // TODO: send API call to submit question
+        onContinue: newAnswer => {
+          this._sendQuizAnswer(newAnswer, cue.metadata.questionType, answer);
         }
       });
     });
