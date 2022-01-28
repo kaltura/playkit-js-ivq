@@ -3,30 +3,33 @@ import {useMemo, useCallback, useEffect, useState} from 'preact/hooks';
 import {QuizQuestionUI} from '../../types';
 import {TrueFalse} from './true-false';
 import {MultiChoise} from './multi-choise';
-import {KalturaQuizQuestionTypes, Selected, QuestionProps} from '../../types';
+import {KalturaQuizQuestionTypes, Selected, QuestionProps, QuizTranslates} from '../../types';
 import * as styles from './quiz-question-wrapper.scss';
 
-const {withText} = KalturaPlayer.ui.preacti18n;
+const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
-interface QuizQuestionWrapperTranslates {
-  continueButton: string;
-  continueButtonAriaLabel: string;
-  skipButton: string;
-  skipButtonAriaLabel: string;
-}
-
-interface QuizQuestionWrapperProps extends QuizQuestionWrapperTranslates {
+interface QuizQuestionWrapperProps {
   qui: QuizQuestionUI;
 }
 
-const translates: QuizQuestionWrapperTranslates = {
-  continueButton: 'ivq.continue_button',
-  continueButtonAriaLabel: 'ivq.continue_button_area_label',
-  skipButton: 'ivq.skip_button',
-  skipButtonAriaLabel: 'ivq.skip_button_area_label'
+const translates = ({qui}: QuizQuestionWrapperProps): QuizTranslates => {
+  return {
+    continueButton: <Text id="ivq.continue_button">Continue</Text>,
+    continueButtonAriaLabel: <Text id="ivq.continue_button_area_label">Click to continue</Text>,
+    skipButton: <Text id="ivq.skip_button">Skip</Text>,
+    skipButtonAriaLabel: <Text id="ivq.skip_button_area_label">Click to skip</Text>,
+    questionCounter: (
+      <Text
+        id="ivq.question_counter"
+        fields={{
+          current: qui.questionIndex[0],
+          total: qui.questionIndex[1]
+        }}>{`Question ${qui.questionIndex[0]} of ${qui.questionIndex[1]}`}</Text>
+    )
+  };
 };
 
-export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrapperProps) => {
+export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrapperProps & QuizTranslates) => {
   const {qui} = props;
   const [selected, setSelected] = useState<Selected>(qui.a?.answerKey ? [qui.a.answerKey] : []);
 
@@ -104,7 +107,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
             prev
           </button>
         }
-        <div className={styles.questionIndex}>{`Question ${qui.questionIndex[0]} of ${qui.questionIndex[1]}`}</div>
+        <div className={styles.questionIndex}>{props.questionCounter}</div>
         {
           <button disabled={!qui.onNext} onClick={qui.onNext}>
             next

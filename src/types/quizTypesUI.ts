@@ -1,3 +1,4 @@
+import {VNode} from 'preact';
 import {KalturaQuizOptionalAnswer, KalturaQuizQuestion} from './quizTypes';
 import {KalturaQuizAnswer} from '../providers/response-types';
 
@@ -20,3 +21,5 @@ export interface QuestionProps {
   onSelect: (data: Selected) => void;
   selected: Selected;
 }
+
+export type QuizTranslates = Record<string, VNode>;

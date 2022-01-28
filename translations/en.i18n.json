@@ -4,7 +4,8 @@
       "continue_button": "Continue",
       "continue_button_area_label": "Click to continue",
       "skip_button": "Skip",
-      "skip_button_area_label": "Click to skip"
+      "skip_button_area_label": "Click to skip",
+      "question_counter": "Question {{current}} of {{total}}"
     }
   }
 }
