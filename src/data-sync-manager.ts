@@ -67,19 +67,17 @@ export class DataSyncManager {
       answerKey,
       id: answerId
     };
-    return this._player.provider
-      .doRequest([{loader: QuizAnswerSubmitLoader, params}])
-      .then((data: Map<string, any>) => {
-        if (data && data.has(QuizAnswerSubmitLoader.id)) {
-          const loader = data.get(QuizAnswerSubmitLoader.id);
-          const answerData = loader?.response?.quizAnswer;
-          if (!answerData) {
-            this._logger.warn('submit answer failed');
-          } else {
-            return answerData;
-          }
+    return this._player.provider.doRequest([{loader: QuizAnswerSubmitLoader, params}]).then((data: Map<string, any>) => {
+      if (data && data.has(QuizAnswerSubmitLoader.id)) {
+        const loader = data.get(QuizAnswerSubmitLoader.id);
+        const answerData = loader?.response?.quizAnswer;
+        if (!answerData) {
+          this._logger.warn('submit answer failed');
+        } else {
+          return answerData;
         }
-      })
+      }
+    });
   };
 
   private _getQuizQuePoints = (data: Array<typeof TimedMetadata>) => {
@@ -99,7 +97,7 @@ export class DataSyncManager {
     const quizCues = this._getQuizQuePoints(payload.cues);
     const quizQuestionsMap: QuizQuestionMap = new Map();
     quizCues.forEach((cue, index) => {
-      const answer = this._quizAnswers.find((answer: KalturaQuizAnswer) => {
+      const a = this._quizAnswers.find((answer: KalturaQuizAnswer) => {
         return cue.id === answer.parentId;
       });
       let prev = quizCues[index - 1];
@@ -116,27 +114,29 @@ export class DataSyncManager {
           startTime: next.startTime
         };
       }
+      const onContinue = (data: Selected) => {
+        const answer = quizQuestionsMap.get(cue.id)!.a;
+        return this._sendQuizAnswer(data, cue.metadata.questionType, answer?.id, cue.id)
+          .then((newAnswer: KalturaQuizAnswer) => {
+            // update answer
+            quizQuestionsMap.set(cue.id, {...quizQuestionsMap.get(cue.id)!, a: newAnswer});
+          })
+          .catch((error: Error) => {
+            this._logger.warn(error);
+            throw error;
+          });
+      };
       quizQuestionsMap.set(cue.id, {
         id: cue.id,
         index,
         startTime: cue.startTime,
         q: cue.metadata,
-        a: answer,
+        a,
         next,
         prev,
         skipAvailable: this.quizData!.canSkip,
         seekAvailable: !this.quizData!.banSeek,
-        onContinue: newAnswer => {
-          return this._sendQuizAnswer(newAnswer, cue.metadata.questionType, answer?.id, cue.id)
-            .then((a: KalturaQuizAnswer) => {
-              // update answer
-              quizQuestionsMap.set(cue.id, {...quizQuestionsMap.get(cue.id)!, a});
-            })
-            .catch((error: Error) => {
-              this._logger.warn(error);
-              throw error;
-            });
-        }
+        onContinue
       });
     });
     this._onQuestionsLoad(quizQuestionsMap);
