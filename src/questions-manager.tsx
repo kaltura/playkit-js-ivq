@@ -1,7 +1,7 @@
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {h} from 'preact';
-import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap, QuizQuestionUI} from './types';
+import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap, QuizQuestionUI, Selected} from './types';
 import {QuizQuestionWrapper} from './components/quiz-question';
 
 const {EventType} = core;
@@ -60,12 +60,17 @@ export class QuestionsManager {
       }
     };
 
-    const onContinue = (data?: any) => {
+    const onContinue = (data?: Selected) => {
       if (data) {
-        // TODO: handle API errors
-        qq.onContinue(data);
+        return qq
+          .onContinue(data)
+          .then(onSkip)
+          .catch(e => {
+            // TODO: show notification
+          });
+      } else {
+        onSkip();
       }
-      onSkip();
     };
 
     const quizQuestionUi: QuizQuestionUI = {

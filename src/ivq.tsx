@@ -105,11 +105,13 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       .then((data: Map<string, any>) => {
         if (data && data.has(QuizLoader.id)) {
           const quizLoader = data.get(QuizLoader.id);
+          const quizUserEntryId = quizLoader?.response?.userEntries[0]?.id;
           const quizData = quizLoader?.response?.quiz;
           const quizAnswers = quizLoader?.response?.quizAnswers;
-          if (!quizData) {
-            this.logger.warn('quiz data absent');
+          if (!quizData || !quizUserEntryId) {
+            this.logger.warn('quiz data or userEntryId absent');
           } else {
+            this._dataManager.setQuizUserEntryId(quizUserEntryId);
             this._dataManager.addQuizData(quizData);
             this._dataManager.addQuizAnswers(quizAnswers);
             if (this._dataManager.quizData?.showWelcomePage) {

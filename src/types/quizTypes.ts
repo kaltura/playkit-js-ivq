@@ -38,7 +38,7 @@ export interface QuizQuestion {
   startTime: number;
   q: KalturaQuizQuestion;
   a?: KalturaQuizAnswer;
-  onContinue: (data: Selected) => void;
+  onContinue: (data: Selected) => Promise<void>;
   skipAvailable: boolean;
   seekAvailable: boolean;
   next?: PrevNextCue;

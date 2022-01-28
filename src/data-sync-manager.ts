@@ -3,6 +3,7 @@ import {core} from 'kaltura-player-js';
 import {getKeyValue, stringToBoolean} from './utils';
 import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
 import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes} from './types';
+import {QuizAnswerSubmitLoader} from './providers/quiz-question-submit-loader';
 
 const {TimedMetadata} = core;
 
@@ -15,6 +16,7 @@ interface TimedMetadataEvent {
 export class DataSyncManager {
   public quizData: QuizData | null = null;
   private _quizAnswers: Array<KalturaQuizAnswer> = [];
+  private _quizUserEntryId: number = 0;
 
   constructor(
     private _onQuestionsLoad: (qqm: QuizQuestionMap) => void,
@@ -49,9 +51,35 @@ export class DataSyncManager {
       this._quizAnswers = data;
     }
   }
+  public setQuizUserEntryId(quizUserEntryId: number) {
+    this._quizUserEntryId = quizUserEntryId;
+  }
 
-  private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, answer?: KalturaQuizAnswer) => {
-    // TODO: make ADD or UPDATE API call
+  private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, answerId?: string, questionId?: string) => {
+    let answerKey;
+    if (questionType === KalturaQuizQuestionTypes.TrueFalse) {
+      answerKey = Number(newAnswer[0]);
+    }
+    const params = {
+      entryId: this._player.sources.id,
+      quizUserEntryId: this._quizUserEntryId,
+      parentId: questionId,
+      answerKey,
+      id: answerId
+    };
+    return this._player.provider
+      .doRequest([{loader: QuizAnswerSubmitLoader, params}])
+      .then((data: Map<string, any>) => {
+        if (data && data.has(QuizAnswerSubmitLoader.id)) {
+          const loader = data.get(QuizAnswerSubmitLoader.id);
+          const answerData = loader?.response?.quizAnswer;
+          if (!answerData) {
+            this._logger.warn('submit answer failed');
+          } else {
+            return answerData;
+          }
+        }
+      })
   };
 
   private _getQuizQuePoints = (data: Array<typeof TimedMetadata>) => {
@@ -99,7 +127,15 @@ export class DataSyncManager {
         skipAvailable: this.quizData!.canSkip,
         seekAvailable: !this.quizData!.banSeek,
         onContinue: newAnswer => {
-          this._sendQuizAnswer(newAnswer, cue.metadata.questionType, answer);
+          return this._sendQuizAnswer(newAnswer, cue.metadata.questionType, answer?.id, cue.id)
+            .then((a: KalturaQuizAnswer) => {
+              // update answer
+              quizQuestionsMap.set(cue.id, {...quizQuestionsMap.get(cue.id)!, a});
+            })
+            .catch((error: Error) => {
+              this._logger.warn(error);
+              throw error;
+            });
         }
       });
     });

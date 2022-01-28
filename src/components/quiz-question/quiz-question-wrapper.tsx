@@ -82,6 +82,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
         <div className={styles.buttonWrapper}>
           <button
             onClick={handleContinue}
+            disabled={!selected.length}
             tabIndex={0}
             aria-label={props.continueButtonAriaLabel}
             className={[styles.ivqButton, styles.continueButton, !selected.length ? styles.disabled : ''].join(' ')}>
