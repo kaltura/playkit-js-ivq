@@ -60,7 +60,7 @@ export class QuestionsManager {
       }
     };
 
-    const onContinue = (data?: Selected) => {
+    const onContinue = (data: Selected | null) => {
       if (data) {
         return qq
           .onContinue(data)

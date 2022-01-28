@@ -2,7 +2,7 @@ import {VNode} from 'preact';
 import {KalturaQuizOptionalAnswer, KalturaQuizQuestion} from './quizTypes';
 import {KalturaQuizAnswer} from '../providers/response-types';
 
-export type Selected = Array<string | number>;
+export type Selected = string; // TODO: check multi-answer
 
 export interface QuizQuestionUI {
   q: KalturaQuizQuestion;
@@ -10,7 +10,7 @@ export interface QuizQuestionUI {
   questionIndex: [number, number];
   onNext?: () => void;
   onPrev?: () => void;
-  onContinue: (data: Selected) => void;
+  onContinue: (data: Selected | null) => void;
   onSkip?: () => void;
 }
 

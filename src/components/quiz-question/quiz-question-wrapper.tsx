@@ -31,7 +31,7 @@ const translates = ({qui}: QuizQuestionWrapperProps): QuizTranslates => {
 
 export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrapperProps & QuizTranslates) => {
   const {qui} = props;
-  const [selected, setSelected] = useState<Selected>(qui.a?.answerKey ? [qui.a.answerKey] : []);
+  const [selected, setSelected] = useState<Selected>(qui.a?.answerKey ? qui.a.answerKey : '');
 
   useEffect(() => {
     // TODO: hide player controls and seekbar
@@ -44,7 +44,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
     if (!selected.length) {
       return;
     }
-    qui.onContinue(selected);
+    qui.onContinue(qui.a?.answerKey !== selected ? selected : null);
   }, [qui, selected]);
 
   const handleSkip = useCallback(() => {

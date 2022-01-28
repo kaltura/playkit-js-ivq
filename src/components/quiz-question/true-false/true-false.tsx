@@ -6,7 +6,7 @@ import * as styles from './true-false.scss';
 export const TrueFalse = ({question, optionalAnswers, selected, onSelect}: QuestionProps) => {
   const handleSelect = useCallback(
     (key: string) => () => {
-      onSelect([key]);
+      onSelect(key);
     },
     [onSelect]
   );
