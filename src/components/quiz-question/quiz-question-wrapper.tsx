@@ -4,9 +4,11 @@ import {QuizQuestionUI} from '../../types';
 import {TrueFalse} from './true-false';
 import {MultiChoise} from './multi-choise';
 import {KalturaQuizQuestionTypes, Selected, QuestionProps, QuizTranslates} from '../../types';
+import {icons} from '../icons';
 import * as styles from './quiz-question-wrapper.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
+const {Overlay, SeekBarPlaybackContainer, Icon} = KalturaPlayer.ui.components;
 
 interface QuizQuestionWrapperProps {
   qui: QuizQuestionUI;
@@ -32,13 +34,6 @@ const translates = ({qui}: QuizQuestionWrapperProps): QuizTranslates => {
 export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrapperProps & QuizTranslates) => {
   const {qui} = props;
   const [selected, setSelected] = useState<Selected>(qui.a?.answerKey ? qui.a.answerKey : '');
-
-  useEffect(() => {
-    // TODO: hide player controls and seekbar
-    return () => {
-      // TODO: show player controls and seekbar
-    };
-  });
 
   const handleContinue = useCallback(() => {
     if (!selected.length) {
@@ -76,10 +71,10 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   }, [qui, selected]);
 
   return (
-    <div className={styles.quizQuestionWrapper}>
-      <div className={styles.questioContainer}>
+    <Overlay open permanent>
+      <div className={styles.ivqQuestionContainer}>
         {renderQuestion}
-        <div className={styles.buttonWrapper}>
+        <div className={styles.ivqButtonsWrapper}>
           <button
             onClick={handleContinue}
             disabled={!selected.length}
@@ -99,22 +94,18 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
           )}
         </div>
       </div>
-      <div className={styles.timeLineWrapper}>
-        <div style={{height: '4px', width: '100%', background: 'white'}}>timeline placeholder</div>
-      </div>
-      <div className={styles.navigationWrapper}>
-        {
-          <button disabled={!qui.onPrev} onClick={qui.onPrev}>
-            prev
+      <div className={`playkit-bottom-bar ivq-bottom-bar`}>
+        <SeekBarPlaybackContainer playerContainer={document.getElementsByClassName('playkit-gui-area')[0]} />
+        <div className={styles.ivqNavigationWrapper}>
+          <button disabled={!qui.onPrev} onClick={qui.onPrev} className={[styles.navigationButton, !qui.onPrev ? styles.disabled : ''].join(' ')}>
+            <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
           </button>
-        }
-        <div className={styles.questionIndex}>{props.questionCounter}</div>
-        {
-          <button disabled={!qui.onNext} onClick={qui.onNext}>
-            next
+          <div className={styles.questionIndex}>{props.questionCounter}</div>
+          <button disabled={!qui.onNext} onClick={qui.onNext} className={[styles.navigationButton, !qui.onNext ? styles.disabled : ''].join(' ')}>
+            <Icon id="ivq-chevron-right" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_RIGHT} />
           </button>
-        }
+        </div>
       </div>
-    </div>
+    </Overlay>
   );
 });
