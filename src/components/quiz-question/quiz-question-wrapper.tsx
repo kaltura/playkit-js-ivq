@@ -3,6 +3,8 @@ import {useMemo, useCallback, useEffect, useState} from 'preact/hooks';
 import {QuizQuestionUI} from '../../types';
 import {TrueFalse} from './true-false';
 import {MultiChoise} from './multi-choise';
+import {ReflectionPoint} from './reflection-point';
+import {OpenQuestion} from './open-question';
 import {KalturaQuizQuestionTypes, Selected, QuestionProps, QuizTranslates} from '../../types';
 import {icons} from '../icons';
 import * as styles from './quiz-question-wrapper.scss';
@@ -31,15 +33,32 @@ const translates = ({qui}: QuizQuestionWrapperProps): QuizTranslates => {
   };
 };
 
+const getSelected = (qui: QuizQuestionUI) => {
+  if (qui.q.questionType === KalturaQuizQuestionTypes.Reflection) {
+    // Reflection question type uses '1' as flag that question answered
+    return '1';
+  }
+  return qui.a?.answerKey ? qui.a.answerKey : '';
+};
+
 export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrapperProps & QuizTranslates) => {
   const {qui} = props;
-  const [selected, setSelected] = useState<Selected>(qui.a?.answerKey ? qui.a.answerKey : '');
+  const [selected, setSelected] = useState<Selected>(getSelected(qui));
 
   const handleContinue = useCallback(() => {
     if (!selected.length) {
       return;
     }
-    qui.onContinue(qui.a?.answerKey !== selected ? selected : null);
+    let newAnswer: string | null = selected;
+    if (qui.a?.answerKey === selected) {
+      // prevent send the same answer
+      newAnswer = null;
+    }
+    if (qui.a?.answerKey && qui.q.questionType === KalturaQuizQuestionTypes.Reflection) {
+      // for Reflection question type prevent send answer if answer already sent
+      newAnswer = null;
+    }
+    qui.onContinue(newAnswer);
   }, [qui, selected]);
 
   const handleSkip = useCallback(() => {
@@ -67,6 +86,10 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
         return <TrueFalse {...questionProps} />;
       case KalturaQuizQuestionTypes.MultiChoise:
         return <MultiChoise {...questionProps} />;
+      case KalturaQuizQuestionTypes.Reflection:
+        return <ReflectionPoint {...questionProps} />;
+      case KalturaQuizQuestionTypes.OpenQuestion:
+        return <OpenQuestion {...questionProps} />;
     }
   }, [qui, selected]);
 

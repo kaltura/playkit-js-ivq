@@ -1,7 +1,7 @@
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {h} from 'preact';
-import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap, QuizQuestionUI, Selected} from './types';
+import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap, QuizQuestionUI, Selected, KalturaQuizQuestionTypes} from './types';
 import {QuizQuestionWrapper} from './components/quiz-question';
 
 const {EventType} = core;
@@ -82,7 +82,7 @@ export class QuestionsManager {
       onContinue
     };
 
-    if (qq.skipAvailable) {
+    if (qq.skipAvailable && qq.q.questionType !== KalturaQuizQuestionTypes.Reflection) {
       quizQuestionUi.onSkip = onSkip;
     }
 

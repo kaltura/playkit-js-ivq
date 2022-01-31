@@ -57,7 +57,7 @@ export class DataSyncManager {
 
   private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, answerId?: string, questionId?: string) => {
     let answerKey;
-    if (questionType === KalturaQuizQuestionTypes.TrueFalse) {
+    if (questionType === KalturaQuizQuestionTypes.TrueFalse || questionType === KalturaQuizQuestionTypes.Reflection) {
       answerKey = Number(newAnswer[0]);
     }
     const params = {
