@@ -9,7 +9,7 @@ export interface KalturaQuizOptionalAnswer {
 }
 
 export enum KalturaQuizQuestionTypes {
-  MultiChoise = 1,
+  MultiChoice = 1,
   TrueFalse = 2,
   Reflection = 3,
   OpenQuestion = 8
