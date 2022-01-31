@@ -60,13 +60,17 @@ export class DataSyncManager {
     if (questionType === KalturaQuizQuestionTypes.TrueFalse || questionType === KalturaQuizQuestionTypes.Reflection) {
       answerKey = Number(newAnswer[0]);
     }
-    const params = {
+    const params: Record<string, any> = {
       entryId: this._player.sources.id,
       quizUserEntryId: this._quizUserEntryId,
       parentId: questionId,
       answerKey,
       id: answerId
     };
+    if (questionType === KalturaQuizQuestionTypes.OpenQuestion) {
+      params.answerKey = 1;
+      params.openAnswer = newAnswer;
+    }
     return this._player.provider.doRequest([{loader: QuizAnswerSubmitLoader, params}]).then((data: Map<string, any>) => {
       if (data && data.has(QuizAnswerSubmitLoader.id)) {
         const loader = data.get(QuizAnswerSubmitLoader.id);

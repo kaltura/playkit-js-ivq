@@ -38,6 +38,9 @@ const getSelected = (qui: QuizQuestionUI) => {
     // Reflection question type uses '1' as flag that question answered
     return '1';
   }
+  if (qui.q.questionType === KalturaQuizQuestionTypes.OpenQuestion) {
+    return qui.a?.openAnswer || '';
+  }
   return qui.a?.answerKey ? qui.a.answerKey : '';
 };
 

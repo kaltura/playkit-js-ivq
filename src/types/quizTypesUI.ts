@@ -22,4 +22,4 @@ export interface QuestionProps {
   selected: Selected;
 }
 
-export type QuizTranslates = Record<string, VNode>;
+export type QuizTranslates = Record<string, VNode | string>;

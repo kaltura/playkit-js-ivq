@@ -8,6 +8,7 @@ interface QuizAnswerSubmitLoaderParams {
   parentId?: string;
   answerKey: number; // TODO: check multi-opiton API
   id?: string;
+  openAnswer?: string;
 }
 
 export class QuizAnswerSubmitLoader implements ILoader {
@@ -23,7 +24,7 @@ export class QuizAnswerSubmitLoader implements ILoader {
     return 'quizAnswerSubmit';
   }
 
-  constructor({entryId, quizUserEntryId, parentId, answerKey, id}: QuizAnswerSubmitLoaderParams) {
+  constructor({entryId, quizUserEntryId, parentId, answerKey, id, openAnswer}: QuizAnswerSubmitLoaderParams) {
     this._entryId = entryId;
     this._quizUserEntryId = quizUserEntryId;
     this._parentId = parentId;
@@ -45,6 +46,10 @@ export class QuizAnswerSubmitLoader implements ILoader {
         entryId: this._entryId
       }
     };
+
+    if (openAnswer) {
+      submitAnswerRequest.params.cuePoint.openAnswer = openAnswer;
+    }
 
     if (this._id) {
       submitAnswerRequest.params.id = this._id;

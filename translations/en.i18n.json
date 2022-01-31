@@ -5,7 +5,8 @@
       "continue_button_area_label": "Click to continue",
       "skip_button": "Skip",
       "skip_button_area_label": "Click to skip",
-      "question_counter": "Question {{current}} of {{total}}"
+      "question_counter": "Question {{current}} of {{total}}",
+      "open_question_placeholder": "Type your answer here..."
     }
   }
 }
