@@ -53,16 +53,16 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       return;
     }
     let newAnswer: string | null = selected;
-    if (qui.a?.answerKey && qui.q.questionType === KalturaQuizQuestionTypes.Reflection) {
+    if (
+      (qui.q.questionType === KalturaQuizQuestionTypes.Reflection && qui.a?.answerKey) ||
+      (qui.q.questionType === KalturaQuizQuestionTypes.OpenQuestion && qui.a?.openAnswer === selected) ||
+      ([KalturaQuizQuestionTypes.TrueFalse, KalturaQuizQuestionTypes.MultiAnswer, KalturaQuizQuestionTypes.MultiChoice].includes(
+        qui.q.questionType
+      ) &&
+        qui.a?.answerKey === selected)
+    ) {
       // for Reflection question type prevent send answer if answer already sent
-      newAnswer = null;
-    }
-    if (qui.a?.answerKey === selected && qui.q.questionType === KalturaQuizQuestionTypes.TrueFalse) {
-      // for TrueFalse prevent send the same answer
-      newAnswer = null;
-    }
-    if (qui.a?.openAnswer === selected && qui.q.questionType === KalturaQuizQuestionTypes.OpenQuestion) {
-      // for Open answer prevent send the same answer
+      // for another types - prevent send the same answer
       newAnswer = null;
     }
     qui.onContinue(newAnswer);
@@ -97,6 +97,8 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
         return <ReflectionPoint {...questionProps} />;
       case KalturaQuizQuestionTypes.OpenQuestion:
         return <OpenQuestion {...questionProps} />;
+      case KalturaQuizQuestionTypes.MultiAnswer:
+        return <MultiChoice {...questionProps} multiAnswer />;
     }
   }, [qui, selected]);
 

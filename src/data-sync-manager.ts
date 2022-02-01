@@ -56,9 +56,9 @@ export class DataSyncManager {
   }
 
   private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, answerId?: string, questionId?: string) => {
-    let answerKey;
-    if (questionType === KalturaQuizQuestionTypes.TrueFalse || questionType === KalturaQuizQuestionTypes.Reflection) {
-      answerKey = Number(newAnswer[0]);
+    let answerKey = '1'; // default answerKey for Reflection and OpenAnswer
+    if ([KalturaQuizQuestionTypes.TrueFalse, KalturaQuizQuestionTypes.MultiAnswer, KalturaQuizQuestionTypes.MultiChoice].includes(questionType)) {
+      answerKey = newAnswer;
     }
     const params: Record<string, any> = {
       entryId: this._player.sources.id,
@@ -68,7 +68,6 @@ export class DataSyncManager {
       id: answerId
     };
     if (questionType === KalturaQuizQuestionTypes.OpenQuestion) {
-      params.answerKey = 1;
       params.openAnswer = newAnswer;
     }
     return this._player.provider.doRequest([{loader: QuizAnswerSubmitLoader, params}]).then((data: Map<string, any>) => {

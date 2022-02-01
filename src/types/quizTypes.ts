@@ -12,6 +12,7 @@ export enum KalturaQuizQuestionTypes {
   MultiChoice = 1,
   TrueFalse = 2,
   Reflection = 3,
+  MultiAnswer = 4,
   OpenQuestion = 8
 }
 
