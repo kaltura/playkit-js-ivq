@@ -8,16 +8,19 @@ const {EventType} = core;
 
 export class QuestionsManager {
   private _removeActives = () => {};
-  private _active = true;
+  private _ignoreCuepointEvents = false;
   constructor(
     private _quizQuestionMap: QuizQuestionMap,
     private _player: KalturaPlayerTypes.Player,
     private _eventManager: KalturaPlayerTypes.EventManager
   ) {}
 
-  public onQuestionBecomeActive({id}: KalturaQuizQuestion) {
+  public onQuestionCuepointActive({id}: KalturaQuizQuestion) {
+    if (this._ignoreCuepointEvents) {
+      return;
+    }
     const quizQuestion = this._quizQuestionMap.get(id);
-    if (quizQuestion && this._active) {
+    if (quizQuestion) {
       this._prepareQuestion(quizQuestion);
     }
   }
@@ -27,10 +30,10 @@ export class QuestionsManager {
     this._removeActives();
     this._player.pause();
     if (manualChange && this._player.currentTime !== startTime) {
-      this._active = false;
+      this._ignoreCuepointEvents = true;
       this._player.currentTime = startTime;
       this._eventManager.listenOnce(this._player, EventType.SEEKED, () => {
-        this._active = true;
+        this._ignoreCuepointEvents = false;
       });
     }
     this._showQuestion(qq);

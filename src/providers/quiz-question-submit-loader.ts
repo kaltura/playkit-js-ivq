@@ -6,7 +6,7 @@ interface QuizAnswerSubmitLoaderParams {
   entryId: string;
   quizUserEntryId: number;
   parentId?: string;
-  answerKey: number; // TODO: check multi-opiton API
+  answerKey: number;
   id?: string;
   openAnswer?: string;
 }
@@ -32,7 +32,6 @@ export class QuizAnswerSubmitLoader implements ILoader {
     this._id = id;
     const headers: Map<string, string> = new Map();
 
-    // userEntry request
     const submitAnswerRequest = new RequestBuilder(headers);
     submitAnswerRequest.service = 'cuepoint_cuepoint';
     submitAnswerRequest.action = this._id ? 'update' : 'add';

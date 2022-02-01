@@ -52,7 +52,7 @@ export interface QuizData extends KalturaQuiz {
   inVideoTip: boolean;
   showWelcomePage: boolean;
   canSkip: boolean;
-  banSeek: boolean;
+  preventSeek: boolean;
 }
 
 export type QuizQuestionMap = Map<string, QuizQuestion>;

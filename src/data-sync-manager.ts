@@ -42,7 +42,7 @@ export class DataSyncManager {
       inVideoTip: stringToBoolean(getKeyValue(data.uiAttributes, 'inVideoTip')),
       showWelcomePage: stringToBoolean(getKeyValue(data.uiAttributes, 'showWelcomePage')),
       canSkip: stringToBoolean(getKeyValue(data.uiAttributes, 'canSkip')),
-      banSeek: stringToBoolean(getKeyValue(data.uiAttributes, 'banSeek'))
+      preventSeek: stringToBoolean(getKeyValue(data.uiAttributes, 'banSeek'))
     };
   }
   public addQuizAnswers(data?: Array<KalturaQuizAnswer>) {
@@ -55,7 +55,7 @@ export class DataSyncManager {
     this._quizUserEntryId = quizUserEntryId;
   }
 
-  private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, answerId?: string, questionId?: string) => {
+  private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, updatedAnswerId?: string, questionId?: string) => {
     let answerKey = '1'; // default answerKey for Reflection and OpenAnswer
     if ([KalturaQuizQuestionTypes.TrueFalse, KalturaQuizQuestionTypes.MultiAnswer, KalturaQuizQuestionTypes.MultiChoice].includes(questionType)) {
       answerKey = newAnswer;
@@ -65,7 +65,7 @@ export class DataSyncManager {
       quizUserEntryId: this._quizUserEntryId,
       parentId: questionId,
       answerKey,
-      id: answerId
+      id: updatedAnswerId
     };
     if (questionType === KalturaQuizQuestionTypes.OpenQuestion) {
       params.openAnswer = newAnswer;
@@ -138,7 +138,7 @@ export class DataSyncManager {
         next,
         prev,
         skipAvailable: this.quizData!.canSkip,
-        seekAvailable: !this.quizData!.banSeek,
+        seekAvailable: !this.quizData!.preventSeek,
         onContinue
       });
     });
