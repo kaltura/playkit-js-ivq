@@ -16,13 +16,9 @@ export const TrueFalse = ({question, optionalAnswers, selected, onSelect}: Quest
       <div className={styles.optionalAnswersWrapper}>
         {optionalAnswers.map(({key, text}) => {
           const isActive = selected.includes(key);
+          const classes = [styles.trueFalseAnswer, isActive ? styles.active : ''].join(' ');
           return (
-            <div
-              key={key}
-              role="button"
-              tabIndex={0}
-              onClick={handleSelect(key)}
-              className={[styles.quizOptionalAnswer, styles.trueFalseAnswer, isActive ? styles.active : ''].join(' ')}>
+            <div key={key} role="button" tabIndex={0} onClick={handleSelect(key)} className={classes}>
               {text}
             </div>
           );

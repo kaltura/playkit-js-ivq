@@ -1,4 +1,5 @@
-// TODO: add variables
+@import '../../../theme.scss';
+
 .trueFalseWrapper {
   display: flex;
   flex-direction: column;
@@ -6,40 +7,18 @@
   width: 100%;
   .questionText {
     margin-bottom: 16px;
-    font-style: normal;
     font-weight: bold;
-    font-size: 18px;
-    line-height: 20px;
-    color: #ffffff;
+    @include question-text;
   }
   .optionalAnswersWrapper {
     display: flex;
     .trueFalseAnswer {
+      @include optional-answer;
       width: 100%;
       max-width: 300px;
       &:first-child {
         margin-right: 8px;
       }
-    }
-  }
-
-  .quizOptionalAnswer {
-    // TODO: move to global mixin
-    display: flex;
-    height: 32px;
-    align-items: center;
-    padding: 5px 16px;
-  
-    background: rgba(255, 255, 255, 0.16);
-    border-radius: 4px;
-    font-size: 16px;
-    color: #ffffff;
-    cursor: pointer;
-  
-    &.active {
-      border: 1px solid #ffffff;
-      box-sizing: border-box;
-      background: rgba(255, 255, 255, 0.2);
     }
   }
 }

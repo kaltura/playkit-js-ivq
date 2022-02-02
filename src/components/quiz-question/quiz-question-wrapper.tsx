@@ -33,7 +33,7 @@ const translates = ({qui}: QuizQuestionWrapperProps): QuizTranslates => {
   };
 };
 
-const getSelected = (qui: QuizQuestionUI) => {
+const getSelected = (qui: QuizQuestionUI): string => {
   if (qui.q.questionType === KalturaQuizQuestionTypes.Reflection) {
     // Reflection question type uses '1' as flag that question answered
     return '1';
@@ -41,7 +41,7 @@ const getSelected = (qui: QuizQuestionUI) => {
   if (qui.q.questionType === KalturaQuizQuestionTypes.OpenQuestion) {
     return qui.a?.openAnswer || '';
   }
-  return qui.a?.answerKey ? qui.a.answerKey : '';
+  return qui.a?.answerKey || '';
 };
 
 export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrapperProps & QuizTranslates) => {
@@ -79,7 +79,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
     [setSelected]
   );
 
-  const renderQuestion = useMemo(() => {
+  const renderIvqQuestion = useMemo(() => {
     const {question, optionalAnswers, hint} = qui.q;
     const questionProps: QuestionProps = {
       question,
@@ -102,41 +102,55 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
     }
   }, [qui, selected]);
 
+  const renderIvqButtons = useMemo(() => {
+    const disabled = !selected.length;
+    return (
+      <div className={styles.ivqButtonsWrapper}>
+        <button
+          onClick={handleContinue}
+          disabled={disabled}
+          tabIndex={0}
+          aria-label={props.continueButtonAriaLabel}
+          className={[styles.continueButton, disabled ? styles.disabled : ''].join(' ')}>
+          {props.continueButton}
+        </button>
+        {qui.onSkip && (
+          <button onClick={handleSkip} tabIndex={0} aria-label={props.skipButtonAriaLabel} className={styles.skipButton}>
+            {props.skipButton}
+          </button>
+        )}
+      </div>
+    );
+  }, [qui, selected]);
+
+  const renderIvqSeekBar = useMemo(() => {
+    const seekBarContainer = document.getElementsByClassName('playkit-gui-area')[0];
+    return <SeekBarPlaybackContainer playerContainer={seekBarContainer} />;
+  }, []);
+
+  const renderIvqNavigation = useMemo(() => {
+    return (
+      <div className={styles.ivqNavigationWrapper}>
+        <button disabled={!qui.onPrev} onClick={qui.onPrev} className={[styles.navigationButton, !qui.onPrev ? styles.disabled : ''].join(' ')}>
+          <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
+        </button>
+        <div className={styles.questionIndex}>{props.questionCounter}</div>
+        <button disabled={!qui.onNext} onClick={qui.onNext} className={[styles.navigationButton, !qui.onNext ? styles.disabled : ''].join(' ')}>
+          <Icon id="ivq-chevron-right" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_RIGHT} />
+        </button>
+      </div>
+    );
+  }, [qui]);
+
   return (
     <Overlay open permanent>
       <div className={styles.ivqQuestionContainer}>
-        {renderQuestion}
-        <div className={styles.ivqButtonsWrapper}>
-          <button
-            onClick={handleContinue}
-            disabled={!selected.length}
-            tabIndex={0}
-            aria-label={props.continueButtonAriaLabel}
-            className={[styles.ivqButton, styles.continueButton, !selected.length ? styles.disabled : ''].join(' ')}>
-            {props.continueButton}
-          </button>
-          {qui.onSkip && (
-            <button
-              onClick={handleSkip}
-              tabIndex={0}
-              aria-label={props.skipButtonAriaLabel}
-              className={[styles.ivqButton, styles.skipButton].join(' ')}>
-              {props.skipButton}
-            </button>
-          )}
-        </div>
+        {renderIvqQuestion}
+        {renderIvqButtons}
       </div>
-      <div className={`playkit-bottom-bar ivq-bottom-bar`}>
-        <SeekBarPlaybackContainer playerContainer={document.getElementsByClassName('playkit-gui-area')[0]} />
-        <div className={styles.ivqNavigationWrapper}>
-          <button disabled={!qui.onPrev} onClick={qui.onPrev} className={[styles.navigationButton, !qui.onPrev ? styles.disabled : ''].join(' ')}>
-            <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
-          </button>
-          <div className={styles.questionIndex}>{props.questionCounter}</div>
-          <button disabled={!qui.onNext} onClick={qui.onNext} className={[styles.navigationButton, !qui.onNext ? styles.disabled : ''].join(' ')}>
-            <Icon id="ivq-chevron-right" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_RIGHT} />
-          </button>
-        </div>
+      <div className={['playkit-bottom-bar', styles.ivqBottomBar, styles.ivqSeekBarWrapper].join(' ')}>
+        {renderIvqSeekBar}
+        {renderIvqNavigation}
       </div>
     </Overlay>
   );
