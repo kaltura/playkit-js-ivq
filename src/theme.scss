@@ -1,7 +1,18 @@
 $theme-colors: (
   'white': #ffffff,
-  'submit': #006efa,
   'disabled': #888888
+);
+
+$primary-button-colors: (
+  'default': #006efa,
+  'hover': #004cad,
+  'focus': #4798ff
+);
+
+$secondary-button-colors: (
+  'default': transparent,
+  'hover': #888888,
+  'focus': #444444
 );
 
 @mixin question-text {
@@ -26,20 +37,20 @@ $theme-colors: (
   text-align: left;
   color: map-get($theme-colors, 'white');
   box-sizing: border-box;
-
   &:hover:not(.disabled) {
-    opacity: 0.9;
     cursor: pointer;
-  }
-
-  &.disabled {
-    cursor: not-allowed;
   }
 }
 
 @mixin ivq-primary-button {
   @include ivq-button;
-  background: map-get($theme-colors, 'submit');
+  background: map-get($primary-button-colors, 'default');
+  &:hover:not(.disabled) {
+    background: map-get($primary-button-colors, 'hover');
+  }
+  &:focus:not(.disabled) {
+    background: map-get($primary-button-colors, 'focus');
+  }
   &.disabled {
     border-width: 1px;
     border-style: solid;
@@ -51,7 +62,16 @@ $theme-colors: (
 
 @mixin ivq-secondary-button {
   @include ivq-button;
-  background: transparent;
+  background: map-get($secondary-button-colors, 'default');
+  &:hover:not(.disabled) {
+    background: map-get($secondary-button-colors, 'hover');
+  }
+  &:focus:not(.disabled) {
+    background: map-get($secondary-button-colors, 'focus');
+  }
+  &.disabled {
+    color: map-get($theme-colors, 'disabled');
+  }
 }
 
 @mixin optional-answer {

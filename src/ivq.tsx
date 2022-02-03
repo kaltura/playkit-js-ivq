@@ -1,10 +1,14 @@
 import {h} from 'preact';
+// @ts-ignore
+import {core} from 'kaltura-player-js';
 import {QuizLoader} from './providers/quiz-loader';
 import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsManager} from './questions-manager';
 import {KalturaQuiz} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
+
+const {EventType} = core;
 
 export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _player: KalturaPlayerTypes.Player;
@@ -20,11 +24,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   constructor(name: string, player: any, config: IvqConfig) {
     super(name, player, config);
     this._player = player;
-    player.configure({
-      playback: {
-        autoplay: false
-      }
-    });
     this._quizDataPromise = this._makeQuizDataPromise();
     this._quizQuestionsPromise = this._makeQuizQuestionsPromise();
     this._dataManager = new DataSyncManager(
@@ -115,7 +114,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             this._dataManager.addQuizData(quizData);
             this._dataManager.addQuizAnswers(quizAnswers);
             if (this._dataManager.quizData?.showWelcomePage) {
-              this._showWelcomeScreen(quizData);
+              this.eventManager.listenOnce(this._player, EventType.FIRST_PLAY, () => {
+                this._player.pause();
+                this._showWelcomeScreen(quizData);
+              });
             }
           }
         }
