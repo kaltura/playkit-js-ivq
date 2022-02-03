@@ -1,14 +1,15 @@
 import {h} from 'preact';
 // @ts-ignore
-import {core} from 'kaltura-player-js';
+// import {core} from 'kaltura-player-js';
 import {QuizLoader} from './providers/quiz-loader';
 import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsManager} from './questions-manager';
 import {KalturaQuiz} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
+import {TimelinePreview, TimelineMarker} from './components/timeline-preview/timeline-preview';
 
-const {EventType} = core;
+// const {EventType} = core;
 
 export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _player: KalturaPlayerTypes.Player;
@@ -46,6 +47,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._getQuiz();
       this._quizQuestionsPromise.then((qqm: QuizQuestionMap) => {
         this._questionsManager = new QuestionsManager(qqm, this._player, this.eventManager);
+        this._handleTimeline(qqm);
       });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered');
@@ -53,6 +55,31 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     }
   }
 
+  private _handleTimeline(qqm: QuizQuestionMap) {
+    const timelineService: any = this._player.getService('timeline');
+    if (!timelineService) {
+      this.logger.warn('No timeline service available');
+    } else {
+      qqm.forEach((qq: QuizQuestion) => {
+        timelineService.addCuePoint({
+          time: qq.startTime,
+          preview: {
+            get: (props: any) => <TimelinePreview player={this._player} defaultPreviewProps={props.defaultPreviewProps} />,
+            props: {
+              style: {paddingTop: '33%'}
+            },
+            className: 'preview',
+            width: this._player.getThumbnail(0).width,
+            hideTime: false,
+            sticky: true
+          },
+          marker: {
+            get: () => <TimelineMarker />
+          }
+        });
+      });
+    }
+  }
   static isValid(): boolean {
     return true;
   }

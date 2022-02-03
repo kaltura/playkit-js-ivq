@@ -1,0 +1,30 @@
+.container {
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  width: auto;
+  height: auto;
+  .header {
+    padding: 7px;
+    height: 32px;
+    color: white;
+    font-size: 14px;
+    i:first-of-type {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.marker {
+  border-radius: 4px;
+  width: 4px;
+  height: 8px;
+  transform: translateY(-2px);
+  background-color: white;
+
+  &.hover {
+    height: 12px;
+    transition: height 200ms ease, transform 200ms ease;
+  }
+}
