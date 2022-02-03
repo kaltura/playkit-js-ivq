@@ -1,0 +1,24 @@
+@import '../../../theme.scss';
+
+.trueFalseWrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  width: 100%;
+  .questionText {
+    margin-bottom: 16px;
+    font-weight: bold;
+    @include question-text;
+  }
+  .optionalAnswersWrapper {
+    display: flex;
+    .trueFalseAnswer {
+      @include optional-answer;
+      width: 100%;
+      max-width: 300px;
+      &:first-child {
+        margin-right: 8px;
+      }
+    }
+  }
+}

@@ -2,6 +2,8 @@
 import {core} from 'kaltura-player-js';
 import {getKeyValue, stringToBoolean} from './utils';
 import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
+import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes} from './types';
+import {QuizAnswerSubmitLoader} from './providers/quiz-question-submit-loader';
 
 const {TimedMetadata} = core;
 
@@ -11,64 +13,10 @@ interface TimedMetadataEvent {
   };
 }
 
-interface KalturaQuizOptionalAnswer {
-  isCorrect: boolean;
-  key: string;
-  text: string;
-  weight: number;
-}
-
-enum KalturaQuizQuestionTypes {
-  MultiChoise = 1,
-  TrueFalse = 2,
-  Reflection = 3,
-  OpenQuestion = 8
-}
-
-export interface KalturaQuizQuestion {
-  id: string;
-  startTime: number;
-  excludeFromScore: boolean;
-  optionalAnswers: Array<KalturaQuizOptionalAnswer>;
-  question: string;
-  questionType: KalturaQuizQuestionTypes;
-  hint?: string;
-  explanation?: string;
-  status: number;
-}
-
-export interface PrevNextCue {
-  id: string;
-  startTime: number;
-}
-
-export interface QuizQuestion {
-  id: string;
-  index: number;
-  startTime: number;
-  q: KalturaQuizQuestion;
-  a?: KalturaQuizAnswer;
-  onContinue: () => void;
-  skipAvailable: boolean;
-  seekAvailable: boolean;
-  next?: PrevNextCue;
-  prev?: PrevNextCue;
-}
-
-export interface QuizData extends KalturaQuiz {
-  welcomeMessage: string;
-  noSeekAlertText: string;
-  inVideoTip: boolean;
-  showWelcomePage: boolean;
-  canSkip: boolean;
-  banSeek: boolean;
-}
-
-export type QuizQuestionMap = Map<string, QuizQuestion>;
-
 export class DataSyncManager {
   public quizData: QuizData | null = null;
   private _quizAnswers: Array<KalturaQuizAnswer> = [];
+  private _quizUserEntryId: number = 0;
 
   constructor(
     private _onQuestionsLoad: (qqm: QuizQuestionMap) => void,
@@ -94,13 +42,46 @@ export class DataSyncManager {
       inVideoTip: stringToBoolean(getKeyValue(data.uiAttributes, 'inVideoTip')),
       showWelcomePage: stringToBoolean(getKeyValue(data.uiAttributes, 'showWelcomePage')),
       canSkip: stringToBoolean(getKeyValue(data.uiAttributes, 'canSkip')),
-      banSeek: stringToBoolean(getKeyValue(data.uiAttributes, 'banSeek'))
+      preventSeek: stringToBoolean(getKeyValue(data.uiAttributes, 'banSeek'))
     };
   }
-  public addQuizAnswers(data: Array<KalturaQuizAnswer>) {
+  public addQuizAnswers(data?: Array<KalturaQuizAnswer>) {
     this._logger.debug('addQuizAnswers', data);
-    this._quizAnswers = data;
+    if (data) {
+      this._quizAnswers = data;
+    }
   }
+  public setQuizUserEntryId(quizUserEntryId: number) {
+    this._quizUserEntryId = quizUserEntryId;
+  }
+
+  private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, updatedAnswerId?: string, questionId?: string) => {
+    let answerKey = '1'; // default answerKey for Reflection and OpenAnswer
+    if ([KalturaQuizQuestionTypes.TrueFalse, KalturaQuizQuestionTypes.MultiAnswer, KalturaQuizQuestionTypes.MultiChoice].includes(questionType)) {
+      answerKey = newAnswer;
+    }
+    const params: Record<string, any> = {
+      entryId: this._player.sources.id,
+      quizUserEntryId: this._quizUserEntryId,
+      parentId: questionId,
+      answerKey,
+      id: updatedAnswerId
+    };
+    if (questionType === KalturaQuizQuestionTypes.OpenQuestion) {
+      params.openAnswer = newAnswer;
+    }
+    return this._player.provider.doRequest([{loader: QuizAnswerSubmitLoader, params}]).then((data: Map<string, any>) => {
+      if (data && data.has(QuizAnswerSubmitLoader.id)) {
+        const loader = data.get(QuizAnswerSubmitLoader.id);
+        const answerData = loader?.response?.quizAnswer;
+        if (!answerData) {
+          this._logger.warn('submit answer failed');
+        } else {
+          return answerData;
+        }
+      }
+    });
+  };
 
   private _getQuizQuePoints = (data: Array<typeof TimedMetadata>) => {
     return data.filter(cue => cue?.type === TimedMetadata.TYPE.CUE_POINT && cue.metadata?.cuePointType === 'quiz.QUIZ_QUESTION');
@@ -119,7 +100,7 @@ export class DataSyncManager {
     const quizCues = this._getQuizQuePoints(payload.cues);
     const quizQuestionsMap: QuizQuestionMap = new Map();
     quizCues.forEach((cue, index) => {
-      const answer = this._quizAnswers.find((answer: KalturaQuizAnswer) => {
+      const a = this._quizAnswers.find((answer: KalturaQuizAnswer) => {
         return cue.id === answer.parentId;
       });
       let prev = quizCues[index - 1];
@@ -136,19 +117,29 @@ export class DataSyncManager {
           startTime: next.startTime
         };
       }
+      const onContinue = (data: Selected) => {
+        const answer = quizQuestionsMap.get(cue.id)!.a;
+        return this._sendQuizAnswer(data, cue.metadata.questionType, answer?.id, cue.id)
+          .then((newAnswer: KalturaQuizAnswer) => {
+            // update answer
+            quizQuestionsMap.set(cue.id, {...quizQuestionsMap.get(cue.id)!, a: newAnswer});
+          })
+          .catch((error: Error) => {
+            this._logger.warn(error);
+            throw error;
+          });
+      };
       quizQuestionsMap.set(cue.id, {
         id: cue.id,
         index,
         startTime: cue.startTime,
         q: cue.metadata,
-        a: answer,
+        a,
         next,
         prev,
         skipAvailable: this.quizData!.canSkip,
-        seekAvailable: !this.quizData!.banSeek,
-        onContinue: () => {
-          // TODO: send API call to submit question
-        }
+        seekAvailable: !this.quizData!.preventSeek,
+        onContinue
       });
     });
     this._onQuestionsLoad(quizQuestionsMap);

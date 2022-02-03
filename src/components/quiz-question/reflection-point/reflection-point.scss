@@ -1,0 +1,13 @@
+.reflectionPointWrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  width: 100%;
+  .reflectionText {
+    margin-bottom: 16px;
+    font-style: normal;
+    font-size: 16px;
+    line-height: 20px;
+    color: #ffffff;
+  }
+}

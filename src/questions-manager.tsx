@@ -1,75 +1,99 @@
+// @ts-ignore
+import {core} from 'kaltura-player-js';
 import {h} from 'preact';
-import {KalturaQuizAnswer} from './providers/response-types';
-import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap} from './data-sync-manager';
+import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap, QuizQuestionUI, Selected, KalturaQuizQuestionTypes} from './types';
 import {QuizQuestionWrapper} from './components/quiz-question';
 
-export interface QuizQuestionUI {
-  q: KalturaQuizQuestion;
-  a?: KalturaQuizAnswer;
-  onNext?: () => void;
-  onPrev?: () => void;
-  onContinue: () => void;
-}
+const {EventType} = core;
 
 export class QuestionsManager {
-  _removeActives = () => {};
-  constructor(private _quizQuestionMap: QuizQuestionMap, private _player: KalturaPlayerTypes.Player) {}
+  private _removeActives = () => {};
+  private _ignoreCuepointEvents = false;
+  constructor(
+    private _quizQuestionMap: QuizQuestionMap,
+    private _player: KalturaPlayerTypes.Player,
+    private _eventManager: KalturaPlayerTypes.EventManager
+  ) {}
 
-  public onQuestionBecomeActive({id}: KalturaQuizQuestion) {
+  public onQuestionCuepointActive({id}: KalturaQuizQuestion) {
+    if (this._ignoreCuepointEvents) {
+      return;
+    }
     const quizQuestion = this._quizQuestionMap.get(id);
     if (quizQuestion) {
-      this._showQuestion(quizQuestion);
+      this._prepareQuestion(quizQuestion);
     }
   }
 
-  private _showQuestion = (qq: QuizQuestion) => {
-    const {next, prev, q, a} = qq;
+  private _prepareQuestion = (qq: QuizQuestion, manualChange = false) => {
+    const {startTime} = qq;
     this._removeActives();
     this._player.pause();
+    if (manualChange && this._player.currentTime !== startTime) {
+      this._ignoreCuepointEvents = true;
+      this._player.currentTime = startTime;
+      this._eventManager.listenOnce(this._player, EventType.SEEKED, () => {
+        this._ignoreCuepointEvents = false;
+      });
+    }
+    this._showQuestion(qq);
+  };
+
+  private _showQuestion = (qq: QuizQuestion) => {
+    const {next, prev, q, a} = qq;
     let onNext;
     let onPrev;
     if (next) {
       onNext = () => {
-        if (qq.startTime !== next!.startTime) {
-          this._player.currentTime = next!.startTime;
-        } else {
-          this._showQuestion(this._quizQuestionMap.get(next.id)!);
-        }
+        this._prepareQuestion(this._quizQuestionMap.get(next.id)!, true);
       };
     }
     if (prev) {
       onPrev = () => {
-        if (qq.startTime !== prev!.startTime) {
-          this._player.currentTime = prev!.startTime;
-        } else {
-          this._showQuestion(this._quizQuestionMap.get(prev.id)!);
-        }
+        this._prepareQuestion(this._quizQuestionMap.get(prev.id)!, true);
       };
     }
 
-    const onContinue = () => {
-      qq.onContinue();
+    const onSkip = () => {
       this._removeActives();
       if (qq.startTime === next?.startTime) {
-        this._showQuestion(this._quizQuestionMap.get(next.id)!);
+        this._prepareQuestion(this._quizQuestionMap.get(next.id)!);
       } else {
         this._player.play();
+      }
+    };
+
+    const onContinue = (data: Selected | null) => {
+      if (data) {
+        return qq
+          .onContinue(data)
+          .then(onSkip)
+          .catch(e => {
+            // TODO: show notification
+          });
+      } else {
+        onSkip();
       }
     };
 
     const quizQuestionUi: QuizQuestionUI = {
       q,
       a,
+      questionIndex: [qq.index + 1, this._quizQuestionMap.size],
       onNext,
       onPrev,
       onContinue
     };
 
+    if (qq.skipAvailable && qq.q.questionType !== KalturaQuizQuestionTypes.Reflection) {
+      quizQuestionUi.onSkip = onSkip;
+    }
+
     this._removeActives = this._player.ui.addComponent({
       label: 'kaltura-ivq-question-wrapper',
       presets: ['Playback'],
       container: 'GuiArea',
-      get: () => <QuizQuestionWrapper q={quizQuestionUi} />
+      get: () => <QuizQuestionWrapper qui={quizQuestionUi} />
     });
   };
 }

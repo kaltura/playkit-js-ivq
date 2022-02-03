@@ -6,10 +6,16 @@ interface QuizLoaderParams {
   entryId: string;
 }
 
+interface QuizLoaderResponse {
+  userEntries: Array<any>;
+  quiz?: Object;
+  quizAnswers?: Array<any>;
+}
+
 export class QuizLoader implements ILoader {
   _entryId: string = '';
   _requests: any[] = [];
-  _response: any = {
+  _response: QuizLoaderResponse = {
     userEntries: [],
     quiz: {}
   };

@@ -1,10 +1,14 @@
 import {h} from 'preact';
+// @ts-ignore
+import {core} from 'kaltura-player-js';
 import {QuizLoader} from './providers/quiz-loader';
-import {IvqConfig} from './types/IvqConfig';
-import {DataSyncManager, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion} from './data-sync-manager';
+import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion} from './types';
+import {DataSyncManager} from './data-sync-manager';
 import {QuestionsManager} from './questions-manager';
 import {KalturaQuiz} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
+
+const {EventType} = core;
 
 export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _player: KalturaPlayerTypes.Player;
@@ -20,12 +24,11 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   constructor(name: string, player: any, config: IvqConfig) {
     super(name, player, config);
     this._player = player;
-    // TODO: disable autoplay
     this._quizDataPromise = this._makeQuizDataPromise();
     this._quizQuestionsPromise = this._makeQuizQuestionsPromise();
     this._dataManager = new DataSyncManager(
       this._resolveQuizQuestionsPromise,
-      (qq: KalturaQuizQuestion) => this._questionsManager?.onQuestionBecomeActive(qq),
+      (qq: KalturaQuizQuestion) => this._questionsManager?.onQuestionCuepointActive(qq),
       this.eventManager,
       this.player,
       this.logger
@@ -42,7 +45,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._getQuestions(kalturaCuePointService);
       this._getQuiz();
       this._quizQuestionsPromise.then((qqm: QuizQuestionMap) => {
-        this._questionsManager = new QuestionsManager(qqm, this._player);
+        this._questionsManager = new QuestionsManager(qqm, this._player, this.eventManager);
       });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered');
@@ -101,16 +104,22 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       .then((data: Map<string, any>) => {
         if (data && data.has(QuizLoader.id)) {
           const quizLoader = data.get(QuizLoader.id);
+          const quizUserEntryId = quizLoader?.response?.userEntries[0]?.id;
           const quizData = quizLoader?.response?.quiz;
           const quizAnswers = quizLoader?.response?.quizAnswers;
-          if (!quizData) {
-            this.logger.warn('quiz data absent');
+          if (!quizData || !quizUserEntryId) {
+            this.logger.warn('quiz data or userEntryId absent');
           } else {
+            this._dataManager.setQuizUserEntryId(quizUserEntryId);
             this._dataManager.addQuizData(quizData);
             this._dataManager.addQuizAnswers(quizAnswers);
-            if (this._dataManager.quizData?.showWelcomePage) {
-              this._showWelcomeScreen(quizData);
-            }
+            // TODO: discuss with product about auto-play
+            // if (this._dataManager.quizData?.showWelcomePage) {
+            //   this.eventManager.listenOnce(this._player, EventType.FIRST_PLAY, () => {
+            //     this._player.pause();
+            //     this._showWelcomeScreen(quizData);
+            //   });
+            // }
           }
         }
       })

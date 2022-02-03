@@ -1,0 +1,96 @@
+$theme-colors: (
+  'white': #ffffff,
+  'disabled': #888888
+);
+
+$primary-button-colors: (
+  'default': #006efa,
+  'hover': #004cad,
+  'focus': #4798ff
+);
+
+$secondary-button-colors: (
+  'default': transparent,
+  'hover': #888888,
+  'focus': #444444
+);
+
+@mixin question-text {
+  font-style: normal;
+  font-size: 18px;
+  line-height: 20px;
+  color: map-get($theme-colors, 'white');
+}
+
+@mixin ivq-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  height: 32px;
+  border-radius: 4px;
+  border: none;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: left;
+  color: map-get($theme-colors, 'white');
+  box-sizing: border-box;
+  &:hover:not(.disabled) {
+    cursor: pointer;
+  }
+}
+
+@mixin ivq-primary-button {
+  @include ivq-button;
+  background: map-get($primary-button-colors, 'default');
+  &:hover:not(.disabled) {
+    background: map-get($primary-button-colors, 'hover');
+  }
+  &:focus:not(.disabled) {
+    background: map-get($primary-button-colors, 'focus');
+  }
+  &.disabled {
+    border-width: 1px;
+    border-style: solid;
+    border-color: map-get($theme-colors, 'disabled');
+    color: map-get($theme-colors, 'disabled');
+    background: transparent;
+  }
+}
+
+@mixin ivq-secondary-button {
+  @include ivq-button;
+  background: map-get($secondary-button-colors, 'default');
+  &:hover:not(.disabled) {
+    background: map-get($secondary-button-colors, 'hover');
+  }
+  &:focus:not(.disabled) {
+    background: map-get($secondary-button-colors, 'focus');
+  }
+  &.disabled {
+    color: map-get($theme-colors, 'disabled');
+  }
+}
+
+@mixin optional-answer {
+  display: flex;
+  height: 32px;
+  align-items: center;
+  padding: 5px 16px;
+
+  background: rgba(255, 255, 255, 0.16);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+  border-color: transparent;
+  font-size: 16px;
+  color: map-get($theme-colors, 'white');
+  cursor: pointer;
+  box-sizing: border-box;
+  &.active {
+    border-color: map-get($theme-colors, 'white');
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
