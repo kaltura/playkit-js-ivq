@@ -113,12 +113,13 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             this._dataManager.setQuizUserEntryId(quizUserEntryId);
             this._dataManager.addQuizData(quizData);
             this._dataManager.addQuizAnswers(quizAnswers);
-            if (this._dataManager.quizData?.showWelcomePage) {
-              this.eventManager.listenOnce(this._player, EventType.FIRST_PLAY, () => {
-                this._player.pause();
-                this._showWelcomeScreen(quizData);
-              });
-            }
+            // TODO: discuss with product about auto-play
+            // if (this._dataManager.quizData?.showWelcomePage) {
+            //   this.eventManager.listenOnce(this._player, EventType.FIRST_PLAY, () => {
+            //     this._player.pause();
+            //     this._showWelcomeScreen(quizData);
+            //   });
+            // }
           }
         }
       })

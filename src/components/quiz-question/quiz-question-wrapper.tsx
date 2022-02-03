@@ -109,13 +109,12 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
         <button
           onClick={handleContinue}
           disabled={disabled}
-          tabIndex={0}
           aria-label={props.continueButtonAriaLabel}
           className={[styles.continueButton, disabled ? styles.disabled : ''].join(' ')}>
           {props.continueButton}
         </button>
         {qui.onSkip && (
-          <button onClick={handleSkip} tabIndex={0} aria-label={props.skipButtonAriaLabel} className={styles.skipButton}>
+          <button onClick={handleSkip} aria-label={props.skipButtonAriaLabel} className={styles.skipButton}>
             {props.skipButton}
           </button>
         )}

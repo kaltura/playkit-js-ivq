@@ -25,16 +25,17 @@
   &.ivqSeekBarWrapper {
     visibility: visible;
     max-height: 56px;
-    bottom: 32px;
+    bottom: 30px;
     transition: none;
   }
 
   .ivqNavigationWrapper {
     width: 100%;
-    height: 38px;
+    height: 32px;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: -2px;
     .navigationButton {
       background: transparent;
       padding: 0;
