@@ -2,7 +2,7 @@ import {h} from 'preact';
 // @ts-ignore
 // import {core} from 'kaltura-player-js';
 import {QuizLoader} from './providers/quiz-loader';
-import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion} from './types';
+import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsManager} from './questions-manager';
 import {KalturaQuiz} from './providers/response-types';
@@ -60,11 +60,29 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if (!timelineService) {
       this.logger.warn('No timeline service available');
     } else {
+      const questionBunchMap = new Map<string, Array<number>>();
+      let questionBunch: Array<number> = [];
       qqm.forEach((qq: QuizQuestion) => {
+        questionBunch.push(qq.index);
+        if (qq.startTime === qq.next?.startTime) {
+          return;
+        }
+        questionBunchMap.set(qq.id, questionBunch);
         timelineService.addCuePoint({
           time: qq.startTime,
           preview: {
-            get: (props: any) => <TimelinePreview player={this._player} defaultPreviewProps={props.defaultPreviewProps} />,
+            get: ({defaultPreviewProps}: PreviewProps) => {
+              return (
+                <TimelinePreview
+                  onQuestionLinkClick={() => {
+                    this._player.currentTime = qq.startTime;
+                  }}
+                  thumbnailInfo={this.player.getThumbnail(defaultPreviewProps.virtualTime)}
+                  questionBunch={questionBunchMap.get(qq.id)!}
+                  questionType={qq.q.questionType}
+                />
+              );
+            },
             props: {
               style: {paddingTop: '33%'}
             },
@@ -74,9 +92,12 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             sticky: true
           },
           marker: {
-            get: () => <TimelineMarker />
+            get: (props: MarkerProps) => {
+              return <TimelineMarker {...props} />;
+            }
           }
         });
+        questionBunch = [];
       });
     }
   }

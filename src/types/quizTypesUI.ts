@@ -23,3 +23,25 @@ export interface QuestionProps {
 }
 
 export type QuizTranslates = Record<string, VNode | string>;
+
+export interface DefaultPreviewProps {
+  virtualTime: number;
+}
+
+export interface PreviewProps {
+  defaultPreviewProps: DefaultPreviewProps;
+}
+
+export interface ThumbnailInfo {
+  height: number;
+  url: string;
+  width: number;
+  x: number;
+  y: number;
+}
+
+export interface MarkerProps {
+  class: string;
+  className: string;
+  style: Record<string, any>;
+}

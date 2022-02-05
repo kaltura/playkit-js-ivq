@@ -4,14 +4,37 @@
   border-radius: 4px;
   width: auto;
   height: auto;
+  cursor: default;
   .header {
+    display: flex;
+    align-items: center;
     padding: 7px;
-    height: 32px;
+    height: 100%;
+    min-height: 32px;
     color: white;
     font-size: 14px;
-    i:first-of-type {
+    > i {
       width: 16px;
       height: 16px;
+    }
+    .title {
+      flex-grow: 1;
+      margin: 0 2px 0 6px;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .questionLink {
+      display: flex;
+      padding: 0;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      i {
+        width: 18px;
+        height: 18px;
+      }
     }
   }
 }
