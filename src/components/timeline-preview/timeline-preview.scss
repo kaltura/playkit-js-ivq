@@ -1,5 +1,6 @@
 .container {
   background: rgba(0, 0, 0, 0.7);
+  background-clip: content-box;
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   width: auto;

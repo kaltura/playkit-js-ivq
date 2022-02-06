@@ -48,7 +48,7 @@ export const TimelinePreview = withText(translates)(
         return {
           type: questionTranslate,
           firstIndex,
-          lastIndex: ` - ${questionBunch[questionBunch.length - 1] + 1}`
+          lastIndex: `-${questionBunch[questionBunch.length - 1] + 1}`
         };
       } else {
         return {
