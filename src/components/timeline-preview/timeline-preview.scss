@@ -1,0 +1,54 @@
+.container {
+  background: rgba(0, 0, 0, 0.7);
+  background-clip: content-box;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  width: auto;
+  height: auto;
+  cursor: default;
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 7px;
+    height: 100%;
+    min-height: 32px;
+    color: white;
+    font-size: 14px;
+    > i {
+      width: 16px;
+      height: 16px;
+    }
+    .title {
+      flex-grow: 1;
+      margin: 0 2px 0 6px;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .questionLink {
+      display: flex;
+      padding: 0;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      i {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
+
+.marker {
+  border-radius: 4px;
+  width: 4px;
+  height: 8px;
+  transform: translateY(-2px);
+  background-color: white;
+
+  &.hover {
+    height: 12px;
+    transition: height 200ms ease, transform 200ms ease;
+  }
+}

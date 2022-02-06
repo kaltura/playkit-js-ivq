@@ -6,7 +6,9 @@
       "skip_button": "Skip",
       "skip_button_area_label": "Click to skip",
       "question_counter": "Question {{current}} of {{total}}",
-      "open_question_placeholder": "Type your answer here..."
+      "open_question_placeholder": "Type your answer here...",
+      "question": "Question",
+      "reflection_point": "Reflection Point"
     }
   }
 }
