@@ -45,11 +45,9 @@ export class DataSyncManager {
       preventSeek: stringToBoolean(getKeyValue(data.uiAttributes, 'banSeek'))
     };
   }
-  public addQuizAnswers(data?: Array<KalturaQuizAnswer>) {
+  public addQuizAnswers(data: KalturaQuizAnswer[]) {
     this._logger.debug('addQuizAnswers', data);
-    if (data) {
-      this._quizAnswers = data;
-    }
+    this._quizAnswers = data;
   }
   public setQuizUserEntryId(quizUserEntryId: number) {
     this._quizUserEntryId = quizUserEntryId;
@@ -97,6 +95,12 @@ export class DataSyncManager {
     }
   };
   private _onTimedMetadataAdded = ({payload}: TimedMetadataEvent) => {
+    if (!this.quizData || !this._quizUserEntryId) {
+      this._logger.warn("quizData or quizUserEntryId haven't set, deactivate IVQ plugin");
+      this._eventManager.unlisten(this._player, this._player.Event.TIMED_METADATA_CHANGE, this._onTimedMetadataChange);
+      this._eventManager.unlisten(this._player, this._player.Event.TIMED_METADATA_ADDED, this._onTimedMetadataAdded);
+      return;
+    }
     const quizCues = this._getQuizQuePoints(payload.cues);
     const quizQuestionsMap: QuizQuestionMap = new Map();
     quizCues.forEach((cue, index) => {
