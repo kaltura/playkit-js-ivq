@@ -27,7 +27,9 @@
     max-height: 56px;
     bottom: 30px;
     transition: none;
-    pointer-events: none;
+    > :global(.playkit-seek-bar) {
+      pointer-events: none;
+    }
   }
 
   .ivqNavigationWrapper {
