@@ -24,11 +24,9 @@ export class DataSyncManager {
     private _eventManager: KalturaPlayerTypes.EventManager,
     private _player: KalturaPlayerTypes.Player,
     private _logger: any
-  ) {
-    this._syncEvents();
-  }
+  ) {}
 
-  private _syncEvents = () => {
+  public syncEvents = () => {
     this._eventManager.listen(this._player, this._player.Event.TIMED_METADATA_CHANGE, this._onTimedMetadataChange);
     this._eventManager.listen(this._player, this._player.Event.TIMED_METADATA_ADDED, this._onTimedMetadataAdded);
   };
@@ -95,12 +93,6 @@ export class DataSyncManager {
     }
   };
   private _onTimedMetadataAdded = ({payload}: TimedMetadataEvent) => {
-    if (!this.quizData || !this._quizUserEntryId) {
-      this._logger.warn("quizData or quizUserEntryId haven't set, deactivate IVQ plugin");
-      this._eventManager.unlisten(this._player, this._player.Event.TIMED_METADATA_CHANGE, this._onTimedMetadataChange);
-      this._eventManager.unlisten(this._player, this._player.Event.TIMED_METADATA_ADDED, this._onTimedMetadataAdded);
-      return;
-    }
     const quizCues = this._getQuizQuePoints(payload.cues);
     const quizQuestionsMap: QuizQuestionMap = new Map();
     quizCues.forEach((cue, index) => {

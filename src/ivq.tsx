@@ -176,6 +176,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
                     if (!quizNewUserEntryId) {
                       this.logger.warn('quizUserEntryId absent');
                     } else {
+                      this._dataManager.syncEvents();
                       this._setQuizData(quizNewUserEntryId, quizData, quizAnswers);
                     }
                   }
@@ -184,6 +185,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
                   this.logger.warn(e);
                 });
             } else {
+              this._dataManager.syncEvents();
               this._setQuizData(quizUserEntryId, quizData, quizAnswers);
             }
             // TODO: discuss with product about auto-play
