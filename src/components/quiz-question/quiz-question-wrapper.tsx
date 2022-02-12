@@ -1,4 +1,4 @@
-import {h} from 'preact';
+import {h, VNode} from 'preact';
 import {useMemo, useCallback, useEffect, useState} from 'preact/hooks';
 import {QuizQuestionUI} from '../../types';
 import {TrueFalse} from './true-false';
@@ -47,6 +47,13 @@ const getSelected = (qui: QuizQuestionUI): string => {
 export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrapperProps & QuizTranslates) => {
   const {qui} = props;
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
+  const [ivqSeekBar, setIvqSeekBar] = useState<VNode<typeof SeekBarPlaybackContainer> | null>(null);
+
+  useEffect(() => {
+    // SeekBar for caulculation uses width of parent element,
+    // so proper calculation happens only if parent element already mount
+    setIvqSeekBar(<SeekBarPlaybackContainer />);
+  }, []);
 
   const handleContinue = useCallback(() => {
     if (!selected) {
@@ -122,11 +129,6 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
     );
   }, [qui, selected]);
 
-  const renderIvqSeekBar = useMemo(() => {
-    const seekBarContainer = document.getElementsByClassName('playkit-gui-area')[0];
-    return <SeekBarPlaybackContainer playerContainer={seekBarContainer} />;
-  }, []);
-
   const renderIvqNavigation = useMemo(() => {
     return (
       <div className={styles.ivqNavigationWrapper}>
@@ -142,15 +144,17 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   }, [qui]);
 
   return (
-    <Overlay open permanent>
-      <div className={styles.ivqQuestionContainer}>
-        {renderIvqQuestion}
-        {renderIvqButtons}
-      </div>
-      <div className={['playkit-bottom-bar', styles.ivqBottomBar, styles.ivqSeekBarWrapper].join(' ')}>
-        {renderIvqSeekBar}
-        {renderIvqNavigation}
-      </div>
-    </Overlay>
+    <div className={styles.ivqOverlayWrapper}>
+      <Overlay open permanent>
+        <div className={styles.ivqQuestionContainer}>
+          {renderIvqQuestion}
+          {renderIvqButtons}
+        </div>
+        <div className={styles.ivqBottomBar}>
+          {ivqSeekBar}
+          {renderIvqNavigation}
+        </div>
+      </Overlay>
+    </div>
   );
 });
