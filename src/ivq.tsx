@@ -1,11 +1,11 @@
 import {h} from 'preact';
 // @ts-ignore
 // import {core} from 'kaltura-player-js';
-import {QuizLoader} from './providers/quiz-loader';
+import {QuizLoader, QuizUserEntryIdLoader} from './providers';
 import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsManager} from './questions-manager';
-import {KalturaQuiz} from './providers/response-types';
+import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
 import {TimelinePreview, TimelineMarker} from './components/timeline-preview/timeline-preview';
 
@@ -151,16 +151,35 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       .doRequest([{loader: QuizLoader, params: {entryId: this._player.sources.id}}])
       .then((data: Map<string, any>) => {
         if (data && data.has(QuizLoader.id)) {
+          // get general quiz data, userEntryId and answers
           const quizLoader = data.get(QuizLoader.id);
           const quizUserEntryId = quizLoader?.response?.userEntries[0]?.id;
           const quizData = quizLoader?.response?.quiz;
           const quizAnswers = quizLoader?.response?.quizAnswers;
-          if (!quizData || !quizUserEntryId) {
-            this.logger.warn('quiz data or userEntryId absent');
+          if (!quizData) {
+            this.logger.warn('quiz data absent');
           } else {
-            this._dataManager.setQuizUserEntryId(quizUserEntryId);
-            this._dataManager.addQuizData(quizData);
-            this._dataManager.addQuizAnswers(quizAnswers);
+            if (!quizUserEntryId) {
+              // in case if quizUserEntryId doesn't exist - create new one
+              return this._player.provider
+                .doRequest([{loader: QuizUserEntryIdLoader, params: {entryId: this._player.sources.id}}])
+                .then((data: Map<string, any>) => {
+                  if (data && data.has(QuizUserEntryIdLoader.id)) {
+                    const quizUserEntryIdLoader = data.get(QuizUserEntryIdLoader.id);
+                    const quizNewUserEntryId = quizUserEntryIdLoader?.response?.userEntry?.id;
+                    if (!quizNewUserEntryId) {
+                      this.logger.warn('quizUserEntryId absent');
+                    } else {
+                      this._dataManager.initDataManager(quizData, quizNewUserEntryId, quizAnswers);
+                    }
+                  }
+                })
+                .catch((e: any) => {
+                  this.logger.warn(e);
+                });
+            } else {
+              this._dataManager.initDataManager(quizData, quizUserEntryId, quizAnswers);
+            }
             // TODO: discuss with product about auto-play
             // if (this._dataManager.quizData?.showWelcomePage) {
             //   this.eventManager.listenOnce(this._player, EventType.FIRST_PLAY, () => {
