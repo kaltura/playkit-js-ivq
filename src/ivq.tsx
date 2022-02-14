@@ -146,12 +146,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     });
   };
 
-  private _setQuizData(quizUserEntryId: number, quizData: KalturaQuiz, quizAnswers: KalturaQuizAnswer[] = []) {
-    this._dataManager.setQuizUserEntryId(quizUserEntryId);
-    this._dataManager.addQuizData(quizData);
-    this._dataManager.addQuizAnswers(quizAnswers);
-  }
-
   private _getQuiz() {
     this._player.provider
       .doRequest([{loader: QuizLoader, params: {entryId: this._player.sources.id}}])
@@ -176,8 +170,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
                     if (!quizNewUserEntryId) {
                       this.logger.warn('quizUserEntryId absent');
                     } else {
-                      this._dataManager.syncEvents();
-                      this._setQuizData(quizNewUserEntryId, quizData, quizAnswers);
+                      this._dataManager.initDataManager(quizData, quizNewUserEntryId, quizAnswers);
                     }
                   }
                 })
@@ -185,8 +178,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
                   this.logger.warn(e);
                 });
             } else {
-              this._dataManager.syncEvents();
-              this._setQuizData(quizUserEntryId, quizData, quizAnswers);
+              this._dataManager.initDataManager(quizData, quizUserEntryId, quizAnswers);
             }
             // TODO: discuss with product about auto-play
             // if (this._dataManager.quizData?.showWelcomePage) {

@@ -26,29 +26,25 @@ export class DataSyncManager {
     private _logger: any
   ) {}
 
-  public syncEvents = () => {
+  private _syncEvents = () => {
     this._eventManager.listen(this._player, this._player.Event.TIMED_METADATA_CHANGE, this._onTimedMetadataChange);
     this._eventManager.listen(this._player, this._player.Event.TIMED_METADATA_ADDED, this._onTimedMetadataAdded);
   };
 
-  public addQuizData(data: KalturaQuiz) {
-    this._logger.debug('addQuizData', data);
+  public initDataManager(rawQuizData: KalturaQuiz, quizUserEntryId: number, quizAnswers: KalturaQuizAnswer[] = []) {
+    this._logger.debug('initDataManager', rawQuizData, quizUserEntryId, quizAnswers);
     this.quizData = {
-      ...data,
-      welcomeMessage: getKeyValue(data.uiAttributes, 'welcomeMessage'),
-      noSeekAlertText: getKeyValue(data.uiAttributes, 'noSeekAlertText'),
-      inVideoTip: stringToBoolean(getKeyValue(data.uiAttributes, 'inVideoTip')),
-      showWelcomePage: stringToBoolean(getKeyValue(data.uiAttributes, 'showWelcomePage')),
-      canSkip: stringToBoolean(getKeyValue(data.uiAttributes, 'canSkip')),
-      preventSeek: stringToBoolean(getKeyValue(data.uiAttributes, 'banSeek'))
+      ...rawQuizData,
+      welcomeMessage: getKeyValue(rawQuizData.uiAttributes, 'welcomeMessage'),
+      noSeekAlertText: getKeyValue(rawQuizData.uiAttributes, 'noSeekAlertText'),
+      inVideoTip: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'inVideoTip')),
+      showWelcomePage: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'showWelcomePage')),
+      canSkip: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'canSkip')),
+      preventSeek: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'banSeek'))
     };
-  }
-  public addQuizAnswers(data: KalturaQuizAnswer[]) {
-    this._logger.debug('addQuizAnswers', data);
-    this._quizAnswers = data;
-  }
-  public setQuizUserEntryId(quizUserEntryId: number) {
     this._quizUserEntryId = quizUserEntryId;
+    this._quizAnswers = quizAnswers;
+    this._syncEvents();
   }
 
   private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, updatedAnswerId?: string, questionId?: string) => {
