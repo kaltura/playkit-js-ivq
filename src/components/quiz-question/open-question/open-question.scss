@@ -1,3 +1,5 @@
+@import '../../../theme.scss';
+
 .openQuestionWrapper {
   display: flex;
   flex-direction: column;
@@ -5,22 +7,38 @@
   width: 100%;
   .questionText {
     margin-bottom: 16px;
-    font-style: normal;
     font-weight: bold;
-    font-size: 18px;
-    line-height: 20px;
-    color: #ffffff;
+    @include question-text;
   }
-  .questionAnswer {
-    padding: 8px;
-    border: 1px solid #888888;
-    box-sizing: border-box;
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.3);
-    color: #ffffff;
-    font-family: inherit;
-    min-height: 80px;
-    font-size: 14px;
-    line-height: 18px;
+  .textAreaWrapper {
+    position: relative;
+    width: 100%;
+    .questionAnswer {
+      width: 100%;
+      resize: vertical;
+      padding: 8px;
+      border-width: 1px;
+      border-style: solid;
+      border-color: map-get($theme-colors, 'disabled');
+      border-radius: 4px;
+      box-sizing: border-box;
+      background: rgba(0, 0, 0, 0.3);
+      color: map-get($theme-colors, 'white');
+      font-family: inherit;
+      min-height: 80px;
+      max-height: 120px;
+      font-size: 14px;
+      line-height: 18px;
+    }
+    .charCounter {
+      position: absolute;
+      right: 0;
+      bottom: -24px;
+      @include question-text;
+      font-size: 14px;
+    }
+    ::selection {
+      background-color: #5b80a7;
+    }
   }
 }
