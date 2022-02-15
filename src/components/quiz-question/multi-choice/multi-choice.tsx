@@ -5,9 +5,10 @@ import * as styles from './multi-choice.scss';
 
 interface MultiChoiceProps {
   multiAnswer?: boolean;
+  questionLabels: Array<string>;
 }
 
-export const MultiChoice = ({question, optionalAnswers, selected, onSelect, multiAnswer}: QuestionProps & MultiChoiceProps) => {
+export const MultiChoice = ({question, optionalAnswers, selected, onSelect, multiAnswer, questionLabels}: QuestionProps & MultiChoiceProps) => {
   const selectedArray = selected ? selected.split(',') : [];
 
   const handleSelect = useCallback(
@@ -30,7 +31,7 @@ export const MultiChoice = ({question, optionalAnswers, selected, onSelect, mult
       <div className={styles.questionText}>{question}</div>
       <div className={styles.optionalAnswersWrapper}>
         <div className={styles.optionalAnswersContainer}>
-          {optionalAnswers.map(({key, text}) => {
+          {optionalAnswers.map(({key, text}, index) => {
             const isActive = selectedArray.includes(key);
             return (
               <div
@@ -38,8 +39,9 @@ export const MultiChoice = ({question, optionalAnswers, selected, onSelect, mult
                 role="button"
                 tabIndex={0}
                 onClick={handleSelect(key, isActive)}
-                className={[styles.quizOptionalAnswer, styles.multiSelectAnswer, isActive ? styles.active : ''].join(' ')}>
-                {text}
+                className={[styles.multiSelectAnswer, isActive ? styles.active : ''].join(' ')}>
+                <div className={styles.questionLabel}>{questionLabels[index]}</div>
+                <div className={styles.questionContent}>{text}</div>
               </div>
             );
           })}
@@ -48,4 +50,10 @@ export const MultiChoice = ({question, optionalAnswers, selected, onSelect, mult
       </div>
     </div>
   );
+};
+
+MultiChoice.defaultProps = {
+  questionLabels: Array.from(Array(26))
+    .map((e, i) => i + 65)
+    .map(x => String.fromCharCode(x)) // ["A", "B", "C", ... , "Z"]
 };
