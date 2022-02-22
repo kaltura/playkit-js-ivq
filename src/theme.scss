@@ -1,6 +1,7 @@
 $theme-colors: (
   'white': #ffffff,
-  'disabled': #888888
+  'disabled': #888888,
+  'semi-gray': rgba(255, 255, 255, 0.16)
 );
 
 $primary-button-colors: (
@@ -20,6 +21,7 @@ $secondary-button-colors: (
   font-size: 18px;
   line-height: 20px;
   color: map-get($theme-colors, 'white');
+  overflow: auto;
 }
 
 @mixin ivq-button {
@@ -77,11 +79,12 @@ $secondary-button-colors: (
 
 @mixin optional-answer {
   display: flex;
+  flex-shrink: 0;
   height: 32px;
   align-items: center;
   padding: 5px 16px;
 
-  background: rgba(255, 255, 255, 0.16);
+  background: map-get($theme-colors, 'semi-gray');
   border-style: solid;
   border-width: 1px;
   border-radius: 4px;

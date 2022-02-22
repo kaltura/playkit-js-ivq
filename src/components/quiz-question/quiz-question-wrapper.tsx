@@ -147,7 +147,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
     <div className={styles.ivqOverlayWrapper}>
       <Overlay open permanent>
         <div className={styles.ivqQuestionContainer}>
-          {renderIvqQuestion}
+          <div className={styles.ivqQuestionWrapper}>{renderIvqQuestion}</div>
           {renderIvqButtons}
         </div>
         <div className={styles.ivqBottomBar}>
