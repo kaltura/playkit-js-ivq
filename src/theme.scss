@@ -1,7 +1,8 @@
 $theme-colors: (
   'white': #ffffff,
   'disabled': #888888,
-  'semi-gray': rgba(255, 255, 255, 0.16)
+  'semi-gray': rgba(255, 255, 255, 0.16),
+  'active': rgba(255, 255, 255, 0.2)
 );
 
 $primary-button-colors: (
@@ -93,8 +94,14 @@ $secondary-button-colors: (
   color: map-get($theme-colors, 'white');
   cursor: pointer;
   box-sizing: border-box;
+  &:hover:not(.disabled) {
+    background: map-get($theme-colors, 'active');
+  }
   &.active {
     border-color: map-get($theme-colors, 'white');
-    background: rgba(255, 255, 255, 0.2);
+    background: map-get($theme-colors, 'active');
+  }
+  &.disabled {
+    cursor: default;
   }
 }

@@ -40,7 +40,7 @@ export class QuestionsManager {
   };
 
   private _showQuestion = (qq: QuizQuestion) => {
-    const {next, prev, q, a} = qq;
+    const {next, prev, q, a, disabled} = qq;
     let onNext;
     let onPrev;
     if (next) {
@@ -82,7 +82,8 @@ export class QuestionsManager {
       questionIndex: [qq.index + 1, this._quizQuestionMap.size],
       onNext,
       onPrev,
-      onContinue
+      onContinue,
+      disabled
     };
 
     if (qq.skipAvailable && qq.q.questionType !== KalturaQuizQuestionTypes.Reflection) {

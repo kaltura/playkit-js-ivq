@@ -6,7 +6,7 @@ import * as styles from './true-false.scss';
 export const TrueFalse = ({question, optionalAnswers, selected, onSelect}: QuestionProps) => {
   const handleSelect = useCallback(
     (key: string) => () => {
-      onSelect(key);
+      onSelect && onSelect(key);
     },
     [onSelect]
   );
@@ -16,7 +16,7 @@ export const TrueFalse = ({question, optionalAnswers, selected, onSelect}: Quest
       <div className={styles.optionalAnswersWrapper}>
         {optionalAnswers.map(({key, text}) => {
           const isActive = selected.includes(key);
-          const classes = [styles.trueFalseAnswer, isActive ? styles.active : ''].join(' ');
+          const classes = [styles.trueFalseAnswer, isActive ? styles.active : '', onSelect ? '' : styles.disabled].join(' ');
           return (
             <div key={key} role="button" tabIndex={0} onClick={handleSelect(key)} className={classes}>
               {text}

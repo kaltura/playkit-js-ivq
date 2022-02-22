@@ -15,7 +15,7 @@ const translates = (): QuizTranslates => {
 
 export const OpenQuestion = withText(translates)(({question, selected, onSelect, openQuestionPlaceHolder}: QuestionProps & QuizTranslates) => {
   const handleChange = useCallback((e: any) => {
-    onSelect(e.target.value);
+    onSelect && onSelect(e.target.value);
   }, []);
   return (
     <div className={styles.openQuestionWrapper}>
@@ -27,6 +27,7 @@ export const OpenQuestion = withText(translates)(({question, selected, onSelect,
           placeholder={openQuestionPlaceHolder as string}
           maxLength={MAX_LENGTH}
           onChange={handleChange}
+          disabled={!onSelect}
         />
         <div className={styles.charCounter}>{`${selected.length}/${MAX_LENGTH}`}</div>
       </div>

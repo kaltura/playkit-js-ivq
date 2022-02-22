@@ -42,6 +42,7 @@ export interface QuizQuestion {
   onContinue: (data: Selected) => Promise<void>;
   skipAvailable: boolean;
   seekAvailable: boolean;
+  disabled: boolean;
   next?: PrevNextCue;
   prev?: PrevNextCue;
 }

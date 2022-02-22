@@ -12,13 +12,14 @@ export interface QuizQuestionUI {
   onPrev?: () => void;
   onContinue: (data: Selected | null) => void;
   onSkip?: () => void;
+  disabled: boolean;
 }
 
 export interface QuestionProps {
   question: string;
   optionalAnswers: Array<KalturaQuizOptionalAnswer>;
   hint?: string;
-  onSelect: (data: Selected) => void;
+  onSelect?: (data: Selected) => void;
   selected: Selected;
 }
 

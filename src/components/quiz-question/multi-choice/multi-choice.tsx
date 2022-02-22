@@ -21,7 +21,7 @@ export const MultiChoice = ({question, optionalAnswers, selected, onSelect, mult
           newAnswer = [...selectedArray, key].toString();
         }
       }
-      onSelect(newAnswer);
+      onSelect && onSelect(newAnswer);
     },
     [onSelect, selectedArray]
   );
@@ -39,7 +39,7 @@ export const MultiChoice = ({question, optionalAnswers, selected, onSelect, mult
                 role="button"
                 tabIndex={0}
                 onClick={handleSelect(key, isActive)}
-                className={[styles.multiSelectAnswer, isActive ? styles.active : ''].join(' ')}>
+                className={[styles.multiSelectAnswer, isActive ? styles.active : '', onSelect ? '' : styles.disabled].join(' ')}>
                 <div className={styles.questionLabel}>{questionLabels[index]}</div>
                 <div className={styles.questionContent}>{text}</div>
               </div>
