@@ -54,6 +54,6 @@ export const MultiChoice = ({question, optionalAnswers, selected, onSelect, mult
 
 MultiChoice.defaultProps = {
   questionLabels: Array.from(Array(26))
-    .map((e, i) => i + 65)
+    .map((e, i) => i + 'A'.charCodeAt(0))
     .map(x => String.fromCharCode(x)) // ["A", "B", "C", ... , "Z"]
 };
