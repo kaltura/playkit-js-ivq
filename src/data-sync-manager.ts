@@ -23,7 +23,7 @@ export class DataSyncManager {
     private _onQuestionBecomeActive: (qq: KalturaQuizQuestion) => void,
     private _eventManager: KalturaPlayerTypes.EventManager,
     private _player: KalturaPlayerTypes.Player,
-    private _logger: any
+    private _logger: KalturaPlayerTypes.Logger
   ) {}
 
   private _syncEvents = () => {

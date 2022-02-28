@@ -22,7 +22,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
 
   static defaultConfig: IvqConfig = {};
 
-  constructor(name: string, player: any, config: IvqConfig) {
+  constructor(name: string, player: KalturaPlayerTypes.Player, config: IvqConfig) {
     super(name, player, config);
     this._player = player;
     this._quizDataPromise = this._makeQuizDataPromise();
@@ -104,13 +104,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   static isValid(): boolean {
     return true;
   }
-
-  reset(): void {
-    this._quizDataPromise = this._makeQuizDataPromise();
-    this._quizQuestionsPromise = this._makeQuizQuestionsPromise();
-  }
-
-  destroy(): void {}
 
   private _makeQuizDataPromise = () => {
     return new Promise<void>(res => {
@@ -196,5 +189,14 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       .finally(() => {
         this._resolveQuizDataPromise();
       });
+  }
+
+  reset(): void {
+    this._quizDataPromise = this._makeQuizDataPromise();
+    this._quizQuestionsPromise = this._makeQuizQuestionsPromise();
+  }
+
+  destroy(): void {
+    this.eventManager.destroy();
   }
 }

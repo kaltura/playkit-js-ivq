@@ -44,14 +44,22 @@ export class QuestionsManager {
     let onNext;
     let onPrev;
     if (next) {
-      onNext = () => {
-        this._prepareQuestion(this._quizQuestionMap.get(next.id)!, true);
-      };
+      // allow go to next CP: 1 - if canSkip is true; 2 - if canSkip is false but current CP and next CP is already answered
+      const nextQuestion = this._quizQuestionMap.get(next.id)!;
+      if (qq.skipAvailable || (a && nextQuestion.a)) {
+        onNext = () => {
+          this._prepareQuestion(nextQuestion, true);
+        };
+      }
     }
     if (prev) {
-      onPrev = () => {
-        this._prepareQuestion(this._quizQuestionMap.get(prev.id)!, true);
-      };
+      // allow go to prev CP: 1 - if canSkip is true; 2 - if canSkip is false but current CP and prev CP is already answered
+      const prevQuestion = this._quizQuestionMap.get(prev.id)!;
+      if (qq.skipAvailable || (a && prevQuestion.a)) {
+        onPrev = () => {
+          this._prepareQuestion(this._quizQuestionMap.get(prev.id)!, true);
+        };
+      }
     }
 
     const onSkip = () => {
