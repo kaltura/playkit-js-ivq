@@ -1,6 +1,4 @@
 import {h} from 'preact';
-// @ts-ignore
-// import {core} from 'kaltura-player-js';
 import {QuizLoader, QuizUserEntryIdLoader} from './providers';
 import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps} from './types';
 import {DataSyncManager} from './data-sync-manager';
@@ -9,8 +7,6 @@ import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
 import {TimelinePreview, TimelineMarker} from './components/timeline-preview/timeline-preview';
 import {KalturaIvqMiddleware} from './quiz-middleware';
-
-// const {EventType} = core;
 
 // @ts-ignore
 export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewareProvider {
@@ -34,7 +30,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
     this._dataManager = new DataSyncManager(
       this._resolveQuizQuestionsPromise,
       (qq: KalturaQuizQuestion) => this._questionsManager?.onQuestionCuepointActive(qq),
-      this._seekControll,
+      this._seekControl,
       this.eventManager,
       this.player,
       this.logger
@@ -148,7 +144,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
     });
   };
 
-  private _seekControll = () => {
+  private _seekControl = () => {
     this._seekControlEnabled = true;
     this.eventManager.listen(this._player, this._player.Event.TIME_UPDATE, () => {
       if (this._maxCurrentTime < this._player.currentTime) {
@@ -157,7 +153,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
     });
   };
   private _shouldPreventSeek = (to: number) => {
-    return this._seekControlEnabled && !this._questionsManager?.ignoreCuepointEvents && to > this._maxCurrentTime;
+    return this._seekControlEnabled && !this._questionsManager?.quizQuestionJumping && to > this._maxCurrentTime;
   };
 
   private _getQuiz() {
