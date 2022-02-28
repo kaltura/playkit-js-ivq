@@ -92,9 +92,11 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       question,
       optionalAnswers,
       hint,
-      onSelect,
       selected
     };
+    if (!qui.disabled) {
+      questionProps.onSelect = onSelect;
+    }
     switch (qui.q.questionType) {
       case KalturaQuizQuestionTypes.TrueFalse:
         return <TrueFalse {...questionProps} />;

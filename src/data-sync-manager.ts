@@ -131,6 +131,7 @@ export class DataSyncManager {
         prev,
         skipAvailable: this.quizData!.canSkip,
         seekAvailable: !this.quizData!.preventSeek,
+        disabled: !this.quizData!.allowAnswerUpdate,
         onContinue
       });
     });
