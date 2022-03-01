@@ -46,3 +46,8 @@ export interface MarkerProps {
   className: string;
   style: Record<string, any>;
 }
+
+export interface SubmissionDetails {
+  onSubmit?: () => Promise<void>;
+  onReview: () => void;
+}

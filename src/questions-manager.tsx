@@ -1,7 +1,7 @@
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {h} from 'preact';
-import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap, QuizQuestionUI, Selected, KalturaQuizQuestionTypes} from './types';
+import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap, QuizQuestionUI, Selected, KalturaQuizQuestionTypes, SubmissionDetails} from './types';
 import {QuizQuestionWrapper} from './components/quiz-question';
 
 const {EventType} = core;
@@ -24,6 +24,23 @@ export class QuestionsManager {
       this._prepareQuestion(quizQuestion);
     }
   }
+
+  public getSubmissionDetails = (): SubmissionDetails => {
+    const unansweredQuestions: Array<QuizQuestion> = [];
+    this._quizQuestionMap.forEach(qq => {
+      if (!qq.a) {
+        unansweredQuestions.push(qq);
+      }
+    });
+    const reviewQuestion = unansweredQuestions[0] || this._quizQuestionMap.values().next().value;
+    const submissionDetails: SubmissionDetails = {
+      onReview: () => this._prepareQuestion(reviewQuestion, true)
+    };
+    if (!unansweredQuestions[0]) {
+      submissionDetails.onSubmit = () => Promise.resolve();
+    }
+    return submissionDetails;
+  };
 
   private _prepareQuestion = (qq: QuizQuestion, manualChange = false) => {
     const {startTime} = qq;

@@ -5,6 +5,7 @@ import {DataSyncManager} from './data-sync-manager';
 import {QuestionsManager} from './questions-manager';
 import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
+import {QuizSubmit} from './components/quiz-submit';
 import {TimelinePreview, TimelineMarker} from './components/timeline-preview/timeline-preview';
 import {KalturaIvqMiddleware} from './quiz-middleware';
 
@@ -53,6 +54,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
       this._quizQuestionsPromise.then((qqm: QuizQuestionMap) => {
         this._questionsManager = new QuestionsManager(qqm, this._player, this.eventManager);
         this._handleTimeline(qqm);
+        this.eventManager.listen(this._player, this._player.Event.ENDED, this._displayQuizSubmit);
       });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered');
@@ -142,6 +144,18 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
         />
       )
     });
+  };
+
+  private _displayQuizSubmit = () => {
+    const submissionDetails = this._questionsManager?.getSubmissionDetails();
+    if (submissionDetails) {
+      const removeSubmitScreen = this._player.ui.addComponent({
+        label: 'kaltura-ivq-submit-screen',
+        presets: ['Playback'],
+        container: 'GuiArea',
+        get: () => <QuizSubmit {...submissionDetails} onClose={removeSubmitScreen} />
+      });
+    }
   };
 
   private _seekControl = () => {

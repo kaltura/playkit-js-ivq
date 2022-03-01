@@ -8,7 +8,15 @@
       "question_counter": "Question {{current}} of {{total}}",
       "open_question_placeholder": "Type your answer here...",
       "question": "Question",
-      "reflection_point": "Reflection Point"
+      "reflection_point": "Reflection Point",
+      "submit_button": "Submit",
+      "submit_button_area_label": "Click to submit quiz",
+      "review_button": "Review",
+      "reviewButtonAriaLabel": "Click to review quiz",
+      "review_title": "You Almost Done",
+      "review_description": "It appears that some questions remained unanswered You must answer all questions before you can submit",
+      "submit_title": "Quiz Completed",
+      "submit_description": "Take a moment to review your answers or go ahead and submit"
     }
   }
 }
