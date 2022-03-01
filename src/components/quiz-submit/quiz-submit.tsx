@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {useCallback, useState} from 'preact/hooks';
+import {useCallback, useState, useMemo} from 'preact/hooks';
 import {QuizTranslates, SubmissionDetails} from '../../types';
 import * as styles from './quiz-submit.scss';
 
@@ -34,13 +34,17 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, onClose, ..
   const handleSubmitClick = useCallback(() => {
     if (onSubmit) {
       setIsLoading(true);
-      onSubmit().then(() => {
+      onSubmit().finally(() => {
         setIsLoading(false);
+        onClose();
       });
     }
   }, []);
-  return (
-    <Overlay open permanent>
+  const renderSubmitAnimation = useMemo(() => {
+    return <div className="submit_animation">TODO</div>;
+  }, []);
+  const renderSubmitComponent = useMemo(() => {
+    return (
       <div className={styles.quizSubmitWrapper}>
         <div className={styles.title}>{translates.title}</div>
         <div className={styles.description}>{translates.description}</div>
@@ -58,6 +62,11 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, onClose, ..
           </button>
         </div>
       </div>
+    );
+  }, [onSubmit]);
+  return (
+    <Overlay open permanent>
+      {isLoading ? renderSubmitAnimation : renderSubmitComponent}
     </Overlay>
   );
 });

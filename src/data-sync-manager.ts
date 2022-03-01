@@ -1,9 +1,9 @@
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {getKeyValue, stringToBoolean} from './utils';
-import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
+import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry} from './providers/response-types';
 import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes} from './types';
-import {QuizAnswerSubmitLoader} from './providers/quiz-question-submit-loader';
+import {QuizAnswerSubmitLoader, QuizSubmitLoader} from './providers';
 
 const {TimedMetadata} = core;
 
@@ -16,7 +16,7 @@ interface TimedMetadataEvent {
 export class DataSyncManager {
   public quizData: QuizData | null = null;
   private _quizAnswers: Array<KalturaQuizAnswer> = [];
-  private _quizUserEntryId: number = 0;
+  private _quizUserEntry: KalturaUserEntry | null = null;
 
   constructor(
     private _onQuestionsLoad: (qqm: QuizQuestionMap) => void,
@@ -32,8 +32,8 @@ export class DataSyncManager {
     this._eventManager.listen(this._player, this._player.Event.TIMED_METADATA_ADDED, this._onTimedMetadataAdded);
   };
 
-  public initDataManager(rawQuizData: KalturaQuiz, quizUserEntryId: number, quizAnswers: KalturaQuizAnswer[] = []) {
-    this._logger.debug('initDataManager', rawQuizData, quizUserEntryId, quizAnswers);
+  public initDataManager(rawQuizData: KalturaQuiz, quizUserEntry: KalturaUserEntry, quizAnswers: KalturaQuizAnswer[] = []) {
+    this._logger.debug('initDataManager', rawQuizData, quizUserEntry, quizAnswers);
     this.quizData = {
       ...rawQuizData,
       welcomeMessage: getKeyValue(rawQuizData.uiAttributes, 'welcomeMessage'),
@@ -43,13 +43,31 @@ export class DataSyncManager {
       canSkip: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'canSkip')),
       preventSeek: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'banSeek'))
     };
-    this._quizUserEntryId = quizUserEntryId;
+    this._quizUserEntry = quizUserEntry;
     this._quizAnswers = quizAnswers;
     if (this.quizData.preventSeek) {
       this._enableSeekControl();
     }
     this._syncEvents();
   }
+
+  public submitQuiz = () => {
+    const params = {
+      entryId: this._player.sources.id,
+      quizUserEntryId: this._quizUserEntry?.id
+    };
+    return this._player.provider.doRequest([{loader: QuizSubmitLoader, params}]).then((data: Map<string, any>) => {
+      if (data && data.has(QuizSubmitLoader.id)) {
+        const loader = data.get(QuizSubmitLoader.id);
+        const userEntry = loader?.response?.userEntry;
+        if (!userEntry) {
+          this._logger.warn('submit quiz failed');
+        } else {
+          this._quizUserEntry = userEntry;
+        }
+      }
+    });
+  };
 
   private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, updatedAnswerId?: string, questionId?: string) => {
     let answerKey = '1'; // default answerKey for Reflection and OpenAnswer
@@ -58,7 +76,7 @@ export class DataSyncManager {
     }
     const params: Record<string, any> = {
       entryId: this._player.sources.id,
-      quizUserEntryId: this._quizUserEntryId,
+      quizUserEntryId: this._quizUserEntry?.id,
       parentId: questionId,
       answerKey,
       id: updatedAnswerId

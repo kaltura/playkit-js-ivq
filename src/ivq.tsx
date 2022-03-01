@@ -149,11 +149,15 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
   private _displayQuizSubmit = () => {
     const submissionDetails = this._questionsManager?.getSubmissionDetails();
     if (submissionDetails) {
+      const params = {
+        onReview: submissionDetails.onReview,
+        onSubmit: submissionDetails.unansweredQuestions.length ? undefined : this._dataManager.submitQuiz
+      };
       const removeSubmitScreen = this._player.ui.addComponent({
         label: 'kaltura-ivq-submit-screen',
         presets: ['Playback'],
         container: 'GuiArea',
-        get: () => <QuizSubmit {...submissionDetails} onClose={removeSubmitScreen} />
+        get: () => <QuizSubmit {...params} onClose={removeSubmitScreen} />
       });
     }
   };
@@ -177,24 +181,24 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
         if (data && data.has(QuizLoader.id)) {
           // get general quiz data, userEntryId and answers
           const quizLoader = data.get(QuizLoader.id);
-          const quizUserEntryId = quizLoader?.response?.userEntries[0]?.id;
+          const quizUserEntry = quizLoader?.response?.userEntries[0];
           const quizData = quizLoader?.response?.quiz;
           const quizAnswers = quizLoader?.response?.quizAnswers;
           if (!quizData) {
             this.logger.warn('quiz data absent');
           } else {
-            if (!quizUserEntryId) {
+            if (!quizUserEntry) {
               // in case if quizUserEntryId doesn't exist - create new one
               return this._player.provider
                 .doRequest([{loader: QuizUserEntryIdLoader, params: {entryId: this._player.sources.id}}])
                 .then((data: Map<string, any>) => {
                   if (data && data.has(QuizUserEntryIdLoader.id)) {
                     const quizUserEntryIdLoader = data.get(QuizUserEntryIdLoader.id);
-                    const quizNewUserEntryId = quizUserEntryIdLoader?.response?.userEntry?.id;
-                    if (!quizNewUserEntryId) {
+                    const quizNewUserEntry = quizUserEntryIdLoader?.response?.userEntry;
+                    if (!quizNewUserEntry) {
                       this.logger.warn('quizUserEntryId absent');
                     } else {
-                      this._dataManager.initDataManager(quizData, quizNewUserEntryId, quizAnswers);
+                      this._dataManager.initDataManager(quizData, quizNewUserEntry, quizAnswers);
                     }
                   }
                 })
@@ -202,7 +206,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
                   this.logger.warn(e);
                 });
             } else {
-              this._dataManager.initDataManager(quizData, quizUserEntryId, quizAnswers);
+              this._dataManager.initDataManager(quizData, quizUserEntry, quizAnswers);
             }
             // TODO: discuss with product about auto-play
             // if (this._dataManager.quizData?.showWelcomePage) {

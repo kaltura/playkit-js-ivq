@@ -34,11 +34,9 @@ export class QuestionsManager {
     });
     const reviewQuestion = unansweredQuestions[0] || this._quizQuestionMap.values().next().value;
     const submissionDetails: SubmissionDetails = {
-      onReview: () => this._prepareQuestion(reviewQuestion, true)
+      onReview: () => this._prepareQuestion(reviewQuestion, true),
+      unansweredQuestions
     };
-    if (!unansweredQuestions[0]) {
-      submissionDetails.onSubmit = () => Promise.resolve();
-    }
     return submissionDetails;
   };
 
