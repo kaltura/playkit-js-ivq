@@ -169,10 +169,9 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
             onClose: removeSubmitScreen,
             reviewDetails
           };
-          if (1) {
-            // TODO: check if retake allowed
+          if ('TODO: check if retake allowed') {
             params.onRetake = () => {
-              this._player.currentTime = 0; // TODO: check how retake works in V2
+              removeSubmitScreen(); // TODO: check how retake works in V2
             };
           }
           return <QuizReview {...params} onClose={removeSubmitScreen} />;
