@@ -35,9 +35,13 @@ export class QuestionsManager {
     const reviewQuestion = unansweredQuestions[0] || this._quizQuestionMap.values().next().value;
     const submissionDetails: SubmissionDetails = {
       onReview: () => this._prepareQuestion(reviewQuestion, true),
-      unansweredQuestions
+      showSubmitButton: !unansweredQuestions.length
     };
     return submissionDetails;
+  };
+
+  public getReviewDetails = (): Array<QuizQuestion> => {
+    return Array.from(this._quizQuestionMap.values());
   };
 
   private _prepareQuestion = (qq: QuizQuestion, manualChange = false) => {

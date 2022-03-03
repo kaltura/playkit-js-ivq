@@ -3,9 +3,10 @@ import {QuizLoader, QuizUserEntryIdLoader} from './providers';
 import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsManager} from './questions-manager';
-import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
+import {KalturaQuiz} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
-import {QuizSubmit} from './components/quiz-submit';
+import {QuizSubmit, QuizSubmitProps} from './components/quiz-submit';
+import {QuizReview, QuizReviewProps} from './components/quiz-review';
 import {TimelinePreview, TimelineMarker} from './components/timeline-preview/timeline-preview';
 import {KalturaIvqMiddleware} from './quiz-middleware';
 
@@ -54,7 +55,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
       this._quizQuestionsPromise.then((qqm: QuizQuestionMap) => {
         this._questionsManager = new QuestionsManager(qqm, this._player, this.eventManager);
         this._handleTimeline(qqm);
-        this.eventManager.listen(this._player, this._player.Event.ENDED, this._displayQuizSubmit);
+        this.eventManager.listen(this._player, this._player.Event.ENDED, this._handleEndEvent);
       });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered');
@@ -128,6 +129,14 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
     kalturaCuePointService?.registerTypes([kalturaCuePointService.CuepointType.QUIZ]);
   }
 
+  private _handleEndEvent = () => {
+    if (typeof this._dataManager.quizUserEntry?.score == 'number') {
+      this._displayQuizReview();
+    } else {
+      this._displayQuizSubmit();
+    }
+  };
+
   private _showWelcomeScreen = (quizData: KalturaQuiz) => {
     const removeWelcomeScreen = this._player.ui.addComponent({
       label: 'kaltura-ivq-welcome-screen',
@@ -146,18 +155,59 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
     });
   };
 
+  private _displayQuizReview = () => {
+    const reviewDetails = this._questionsManager?.getReviewDetails();
+    if (reviewDetails) {
+      const removeSubmitScreen = this._player.ui.addComponent({
+        label: 'kaltura-ivq-review-screen',
+        presets: ['Playback'],
+        container: 'GuiArea',
+        replaceComponent: 'PrePlaybackPlayOverlay',
+        get: () => {
+          const params: QuizReviewProps = {
+            score: this._dataManager.quizUserEntry?.score || 0,
+            onClose: removeSubmitScreen,
+            reviewDetails
+          };
+          if (1) {
+            // TODO: check if retake allowed
+            params.onRetake = () => {
+              this._player.currentTime = 0; // TODO: check how retake works in V2
+            };
+          }
+          return <QuizReview {...params} onClose={removeSubmitScreen} />;
+        }
+      });
+    }
+  };
+
   private _displayQuizSubmit = () => {
     const submissionDetails = this._questionsManager?.getSubmissionDetails();
     if (submissionDetails) {
-      const params = {
-        onReview: submissionDetails.onReview,
-        onSubmit: submissionDetails.unansweredQuestions.length ? undefined : this._dataManager.submitQuiz
-      };
       const removeSubmitScreen = this._player.ui.addComponent({
         label: 'kaltura-ivq-submit-screen',
         presets: ['Playback'],
         container: 'GuiArea',
-        get: () => <QuizSubmit {...params} onClose={removeSubmitScreen} />
+        replaceComponent: 'PrePlaybackPlayOverlay',
+        get: () => {
+          const params: QuizSubmitProps = {
+            onReview: () => {
+              removeSubmitScreen();
+              submissionDetails.onReview();
+            }
+          };
+          if (submissionDetails.showSubmitButton) {
+            params.onSubmit = () => {
+              return this._dataManager.submitQuiz().then(() => {
+                removeSubmitScreen();
+                if (this._dataManager.quizData?.showCorrectAfterSubmission) {
+                  this._displayQuizReview();
+                }
+              });
+            };
+          }
+          return <QuizSubmit {...params} />;
+        }
       });
     }
   };

@@ -13,6 +13,7 @@ export enum KalturaUserEntryStatus {
 
 export interface KalturaUserEntryArgs {
   calculatedScore: number;
+  score: number;
   id: string;
   entryId: string;
   userId: string;
@@ -25,6 +26,7 @@ export interface KalturaUserEntryArgs {
 
 export class KalturaUserEntry {
   calculatedScore: number;
+  score: number;
   id: string;
   entryId: string;
   userId: string;
@@ -36,6 +38,7 @@ export class KalturaUserEntry {
 
   constructor(userEntry: KalturaUserEntryArgs) {
     this.calculatedScore = userEntry.calculatedScore;
+    this.score = userEntry.score;
     this.id = userEntry.id;
     this.entryId = userEntry.entryId;
     this.userId = userEntry.userId;

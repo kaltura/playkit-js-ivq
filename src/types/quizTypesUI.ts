@@ -48,7 +48,6 @@ export interface MarkerProps {
 }
 
 export interface SubmissionDetails {
-  onSubmit?: () => Promise<void>;
   onReview: () => void;
-  unansweredQuestions: Array<QuizQuestion>;
+  showSubmitButton: boolean;
 }

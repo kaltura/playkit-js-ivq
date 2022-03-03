@@ -15,8 +15,8 @@ interface TimedMetadataEvent {
 
 export class DataSyncManager {
   public quizData: QuizData | null = null;
+  public quizUserEntry: KalturaUserEntry | null = null;
   private _quizAnswers: Array<KalturaQuizAnswer> = [];
-  private _quizUserEntry: KalturaUserEntry | null = null;
 
   constructor(
     private _onQuestionsLoad: (qqm: QuizQuestionMap) => void,
@@ -43,7 +43,7 @@ export class DataSyncManager {
       canSkip: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'canSkip')),
       preventSeek: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'banSeek'))
     };
-    this._quizUserEntry = quizUserEntry;
+    this.quizUserEntry = quizUserEntry;
     this._quizAnswers = quizAnswers;
     if (this.quizData.preventSeek) {
       this._enableSeekControl();
@@ -54,7 +54,7 @@ export class DataSyncManager {
   public submitQuiz = () => {
     const params = {
       entryId: this._player.sources.id,
-      quizUserEntryId: this._quizUserEntry?.id
+      quizUserEntryId: this.quizUserEntry?.id
     };
     return this._player.provider.doRequest([{loader: QuizSubmitLoader, params}]).then((data: Map<string, any>) => {
       if (data && data.has(QuizSubmitLoader.id)) {
@@ -63,7 +63,7 @@ export class DataSyncManager {
         if (!userEntry) {
           this._logger.warn('submit quiz failed');
         } else {
-          this._quizUserEntry = userEntry;
+          this.quizUserEntry = userEntry;
         }
       }
     });
@@ -76,7 +76,7 @@ export class DataSyncManager {
     }
     const params: Record<string, any> = {
       entryId: this._player.sources.id,
-      quizUserEntryId: this._quizUserEntry?.id,
+      quizUserEntryId: this.quizUserEntry?.id,
       parentId: questionId,
       answerKey,
       id: updatedAnswerId

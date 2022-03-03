@@ -7,6 +7,7 @@ import {ReflectionPoint} from './reflection-point';
 import {OpenQuestion} from './open-question';
 import {KalturaQuizQuestionTypes, Selected, QuestionProps, QuizTranslates} from '../../types';
 import {icons} from '../icons';
+import {IvqOverlay} from '../ivq-overlay';
 import * as styles from './quiz-question-wrapper.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -146,17 +147,15 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   }, [qui]);
 
   return (
-    <div className={styles.ivqOverlayWrapper}>
-      <Overlay open permanent>
-        <div className={styles.ivqQuestionContainer}>
-          <div className={styles.ivqQuestionWrapper}>{renderIvqQuestion}</div>
-          {renderIvqButtons}
-        </div>
-        <div className={styles.ivqBottomBar}>
-          {ivqSeekBar}
-          {renderIvqNavigation}
-        </div>
-      </Overlay>
-    </div>
+    <IvqOverlay>
+      <div className={styles.ivqQuestionContainer}>
+        <div className={styles.ivqQuestionWrapper}>{renderIvqQuestion}</div>
+        {renderIvqButtons}
+      </div>
+      <div className={styles.ivqBottomBar}>
+        {ivqSeekBar}
+        {renderIvqNavigation}
+      </div>
+    </IvqOverlay>
   );
 });

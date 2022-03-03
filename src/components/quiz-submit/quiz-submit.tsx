@@ -1,13 +1,14 @@
 import {h} from 'preact';
-import {useCallback, useState, useMemo} from 'preact/hooks';
-import {QuizTranslates, SubmissionDetails} from '../../types';
+import {useCallback, useState} from 'preact/hooks';
+import {QuizTranslates} from '../../types';
+import {IvqOverlay} from '../ivq-overlay';
 import * as styles from './quiz-submit.scss';
 
-const {Overlay} = KalturaPlayer.ui.components;
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
-interface QuizSubmitProps extends SubmissionDetails {
-  onClose: () => void;
+export interface QuizSubmitProps {
+  onReview: () => void;
+  onSubmit?: () => Promise<void>;
 }
 
 const translates = ({onSubmit}: QuizSubmitProps): QuizTranslates => {
@@ -25,48 +26,39 @@ const translates = ({onSubmit}: QuizSubmitProps): QuizTranslates => {
   };
 };
 
-export const QuizSubmit = withText(translates)(({onReview, onSubmit, onClose, ...translates}: QuizSubmitProps & QuizTranslates) => {
+export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...translates}: QuizSubmitProps & QuizTranslates) => {
   const [isLoading, setIsLoading] = useState(false);
   const handleReviewClick = useCallback(() => {
     onReview();
-    onClose();
   }, [onReview]);
   const handleSubmitClick = useCallback(() => {
     if (onSubmit) {
       setIsLoading(true);
       onSubmit().finally(() => {
         setIsLoading(false);
-        onClose();
       });
     }
   }, []);
-  const renderSubmitAnimation = useMemo(() => {
-    return <div className="submit_animation">TODO</div>;
-  }, []);
-  const renderSubmitComponent = useMemo(() => {
-    return (
+  return (
+    <IvqOverlay>
       <div className={styles.quizSubmitWrapper}>
         <div className={styles.title}>{translates.title}</div>
         <div className={styles.description}>{translates.description}</div>
         <div className={styles.buttonWrapper}>
           {onSubmit && (
-            <button onClick={handleSubmitClick} className={styles.primaryButton} aria-label={translates.submitButtonAriaLabel}>
+            <button onClick={handleSubmitClick} className={styles.primaryButton} aria-label={translates.submitButtonAriaLabel} disabled={isLoading}>
               {translates.submitButton}
             </button>
           )}
           <button
             onClick={handleReviewClick}
+            disabled={isLoading}
             className={onSubmit ? styles.secondaryButton : styles.primaryButton}
             aria-label={translates.reviewButtonAriaLabel}>
             {translates.reviewButton}
           </button>
         </div>
       </div>
-    );
-  }, [onSubmit]);
-  return (
-    <Overlay open permanent>
-      {isLoading ? renderSubmitAnimation : renderSubmitComponent}
-    </Overlay>
+    </IvqOverlay>
   );
 });

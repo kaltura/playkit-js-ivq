@@ -23,7 +23,7 @@ export interface KalturaQuizArgs {
   showResultOnAnswer: KalturaNullableBoolean;
   showCorrectKeyOnAnswer: KalturaNullableBoolean;
   allowAnswerUpdate: boolean;
-  showCorrectAfterSubmission: KalturaNullableBoolean;
+  showCorrectAfterSubmission: boolean;
   allowDownload: KalturaNullableBoolean;
   showGradeAfterSubmission: KalturaNullableBoolean;
   attemptsAllowed: number;
@@ -36,7 +36,7 @@ export class KalturaQuiz {
   showResultOnAnswer : KalturaNullableBoolean;
   showCorrectKeyOnAnswer : KalturaNullableBoolean;
   allowAnswerUpdate : boolean;
-  showCorrectAfterSubmission : KalturaNullableBoolean;
+  showCorrectAfterSubmission : boolean;
   allowDownload : KalturaNullableBoolean;
   showGradeAfterSubmission : KalturaNullableBoolean;
   attemptsAllowed : number;
