@@ -44,6 +44,14 @@ export class QuestionsManager {
     return Array.from(this._quizQuestionMap.values());
   };
 
+  public clearAnswers = () => {
+    this._quizQuestionMap.forEach(qq => this._quizQuestionMap.set(qq.id, {...qq, a: undefined}));
+  };
+
+  public disableQuestions = () => {
+    this._quizQuestionMap.forEach(qq => this._quizQuestionMap.set(qq.id, {...qq, disabled: true}));
+  };
+
   private _prepareQuestion = (qq: QuizQuestion, manualChange = false) => {
     const {startTime} = qq;
     this._removeActives();

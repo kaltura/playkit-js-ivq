@@ -21,7 +21,8 @@
       "retake_button": "Retake",
       "retake_button_area_label": "Click to retake the quiz",
       "done_button": "Done",
-      "done_button_area_label": "Click to close the review"
+      "done_button_area_label": "Click to close the review",
+      "quiz_completed": "You completed the quiz"
     }
   }
 }

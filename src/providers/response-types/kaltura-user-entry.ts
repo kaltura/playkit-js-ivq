@@ -22,6 +22,7 @@ export interface KalturaUserEntryArgs {
   createdAt: string;
   updatedAt: string;
   type: KalturaUserEntryType;
+  version: number;
 }
 
 export class KalturaUserEntry {
@@ -35,6 +36,7 @@ export class KalturaUserEntry {
   createdAt: string;
   updatedAt: string;
   type: KalturaUserEntryType;
+  version: number;
 
   constructor(userEntry: KalturaUserEntryArgs) {
     this.calculatedScore = userEntry.calculatedScore;
@@ -47,5 +49,6 @@ export class KalturaUserEntry {
     this.createdAt = userEntry.createdAt;
     this.updatedAt = userEntry.updatedAt;
     this.type = userEntry.type;
+    this.version = userEntry.version;
   }
 }

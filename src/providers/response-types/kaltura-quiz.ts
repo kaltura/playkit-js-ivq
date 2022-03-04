@@ -25,7 +25,7 @@ export interface KalturaQuizArgs {
   allowAnswerUpdate: boolean;
   showCorrectAfterSubmission: boolean;
   allowDownload: KalturaNullableBoolean;
-  showGradeAfterSubmission: KalturaNullableBoolean;
+  showGradeAfterSubmission: boolean;
   attemptsAllowed: number;
   scoreType: KalturaScoreType;
 }
@@ -38,7 +38,7 @@ export class KalturaQuiz {
   allowAnswerUpdate : boolean;
   showCorrectAfterSubmission : boolean;
   allowDownload : KalturaNullableBoolean;
-  showGradeAfterSubmission : KalturaNullableBoolean;
+  showGradeAfterSubmission : boolean;
   attemptsAllowed : number;
   scoreType : KalturaScoreType;
 

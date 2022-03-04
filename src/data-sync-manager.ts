@@ -3,7 +3,7 @@ import {core} from 'kaltura-player-js';
 import {getKeyValue, stringToBoolean} from './utils';
 import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry} from './providers/response-types';
 import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes} from './types';
-import {QuizAnswerSubmitLoader, QuizSubmitLoader} from './providers';
+import {QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader} from './providers';
 
 const {TimedMetadata} = core;
 
@@ -43,13 +43,17 @@ export class DataSyncManager {
       canSkip: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'canSkip')),
       preventSeek: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'banSeek'))
     };
-    this.quizUserEntry = quizUserEntry;
     this._quizAnswers = quizAnswers;
+    this.setQuizUserEntry(quizUserEntry);
     if (this.quizData.preventSeek) {
       this._enableSeekControl();
     }
     this._syncEvents();
   }
+
+  public setQuizUserEntry = (quizUserEntry: KalturaUserEntry) => {
+    this.quizUserEntry = quizUserEntry;
+  };
 
   public submitQuiz = () => {
     const params = {
@@ -67,6 +71,36 @@ export class DataSyncManager {
         }
       }
     });
+  };
+
+  public createNewQuizUserEntry = (): Promise<KalturaUserEntry> => {
+    return this._player.provider
+      .doRequest([{loader: QuizUserEntryIdLoader, params: {entryId: this._player.sources.id}}])
+      .then((data: Map<string, any>) => {
+        if (data && data.has(QuizUserEntryIdLoader.id)) {
+          const quizUserEntryIdLoader = data.get(QuizUserEntryIdLoader.id);
+          const quizNewUserEntry = quizUserEntryIdLoader?.response?.userEntry;
+          return quizNewUserEntry;
+        }
+      })
+      .catch((e: any) => {
+        this._logger.warn(e);
+      });
+  };
+
+  public isSubmitAllowed = () => {
+    const submittedAttempts = this._getSubmittedAttempts();
+    return submittedAttempts === 0 || submittedAttempts < (this.quizData?.attemptsAllowed || 0);
+  };
+
+  public _getSubmittedAttempts = () => {
+    if (typeof this.quizUserEntry?.score !== 'number') {
+      return 0; // not submitted
+    } else if (this.quizUserEntry.version === 0) {
+      return 1; // submitted once
+    } else {
+      return this.quizUserEntry.version + 1;
+    }
   };
 
   private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, updatedAnswerId?: string, questionId?: string) => {
@@ -153,7 +187,7 @@ export class DataSyncManager {
         prev,
         skipAvailable: this.quizData!.canSkip,
         seekAvailable: !this.quizData!.preventSeek,
-        disabled: !this.quizData!.allowAnswerUpdate,
+        disabled: !this.quizData!.allowAnswerUpdate || !this.isSubmitAllowed(),
         onContinue
       });
     });
