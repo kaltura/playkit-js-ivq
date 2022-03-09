@@ -1,6 +1,6 @@
 import {h} from 'preact';
 // @ts-ignore
-// import {core} from 'kaltura-player-js';
+import {core} from 'kaltura-player-js';
 import {QuizLoader, QuizUserEntryIdLoader} from './providers';
 import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps} from './types';
 import {DataSyncManager} from './data-sync-manager';
@@ -8,8 +8,9 @@ import {QuestionsManager} from './questions-manager';
 import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
 import {TimelinePreview, TimelineMarker} from './components/timeline-preview/timeline-preview';
+import {QuizDownloadLoader} from './providers/quiz-download-loader';
 
-// const {EventType} = core;
+const {EventType} = core;
 
 export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _player: KalturaPlayerTypes.Player;
@@ -121,7 +122,14 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     kalturaCuePointService?.registerTypes([kalturaCuePointService.CuepointType.QUIZ]);
   }
 
-  private _showWelcomeScreen = (quizData: KalturaQuiz) => {
+  private _showWelcomeScreen = () => {
+    const handleDownload = () => {
+      this._player.provider.doRequest([{loader: QuizDownloadLoader, params: {entryId: this._player.sources.id}}]).then((data: Map<string, any>) => {
+        if (data && data.has(QuizDownloadLoader.id)) {
+          window.location.assign(data.get(QuizDownloadLoader.id).response);
+        }
+      });
+    };
     const removeWelcomeScreen = this._player.ui.addComponent({
       label: 'kaltura-ivq-welcome-screen',
       presets: ['Playback'],
@@ -134,8 +142,12 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           }}
           welcomeMessage={this._dataManager.quizData?.welcomeMessage}
           allowDownload={this._dataManager.quizData?.allowDownload}
+          onDownload={handleDownload}
         />
       )
+    });
+    this.eventManager.listenOnce(this._player, EventType.PLAY, () => {
+      removeWelcomeScreen && removeWelcomeScreen();
     });
   };
 
@@ -173,13 +185,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             } else {
               this._dataManager.initDataManager(quizData, quizUserEntryId, quizAnswers);
             }
-            // TODO: discuss with product about auto-play
-            // if (this._dataManager.quizData?.showWelcomePage) {
-            //   this.eventManager.listenOnce(this._player, EventType.FIRST_PLAY, () => {
-            //     this._player.pause();
-            //     this._showWelcomeScreen(quizData);
-            //   });
-            // }
+            if (this._dataManager.quizData?.showWelcomePage) {
+              this._player.pause();
+              this._showWelcomeScreen();
+            }
           }
         }
       })

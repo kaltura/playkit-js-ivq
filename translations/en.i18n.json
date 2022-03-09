@@ -8,7 +8,8 @@
       "question_counter": "Question {{current}} of {{total}}",
       "open_question_placeholder": "Type your answer here...",
       "question": "Question",
-      "reflection_point": "Reflection Point"
+      "reflection_point": "Reflection Point",
+      "welcome_title": "Start your video quiz!"
     }
   }
 }
