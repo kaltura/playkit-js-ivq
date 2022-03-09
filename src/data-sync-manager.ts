@@ -177,6 +177,7 @@ export class DataSyncManager {
             throw error;
           });
       };
+      const submitAllowed = this.isSubmitAllowed();
       quizQuestionsMap.set(cue.id, {
         id: cue.id,
         index,
@@ -185,9 +186,9 @@ export class DataSyncManager {
         a,
         next,
         prev,
-        skipAvailable: this.quizData!.canSkip,
+        skipAvailable: this.quizData!.canSkip && submitAllowed,
         seekAvailable: !this.quizData!.preventSeek,
-        disabled: !this.quizData!.allowAnswerUpdate || !this.isSubmitAllowed(),
+        disabled: !this.quizData!.allowAnswerUpdate || !submitAllowed,
         onContinue
       });
     });
