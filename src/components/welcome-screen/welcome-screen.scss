@@ -33,6 +33,11 @@
       padding-top: 16px;
     }
     .download {
+      .icon {
+        height: 24px;
+        width: 24px;
+        margin-right: 4px;
+      }
       &:hover {
         background-color: #888888;
       }
@@ -50,9 +55,6 @@
       flex-direction: row;
       align-items: center;
       cursor: pointer;
-      svg {
-        padding-right: 4px;
-      }
     }
   }
   button {
