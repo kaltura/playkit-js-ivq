@@ -24,6 +24,7 @@ $bottom-bar-height: 60px;
     margin-top: 16px;
     .continueButton {
       @include ivq-primary-button;
+      min-width: 80px;
       margin-right: 8px;
     }
     .skipButton {

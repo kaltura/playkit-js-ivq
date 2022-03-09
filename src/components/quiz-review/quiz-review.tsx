@@ -3,6 +3,7 @@ import {useCallback, useState, useMemo} from 'preact/hooks';
 import {KalturaQuizQuestionTypes, QuizQuestion, QuizTranslates} from '../../types';
 import {icons} from '../icons';
 import {IvqOverlay} from '../ivq-overlay';
+import {Spinner} from '../spinner';
 import * as styles from './quiz-review.scss';
 
 const {Icon} = KalturaPlayer.ui.components;
@@ -11,7 +12,7 @@ const {withText, Text} = KalturaPlayer.ui.preacti18n;
 export interface QuizReviewProps {
   score: number;
   onClose: () => void;
-  onRetake?: () => void;
+  onRetake?: () => Promise<void>;
   reviewDetails: Array<QuizQuestion>;
   showAnswers: boolean;
   showScores: boolean;
@@ -78,12 +79,20 @@ const renderQuestionIcon = (qq: QuizQuestion) => {
 
 export const QuizReview = withText(translates)(
   ({score, onRetake, onClose, reviewDetails, showAnswers, showScores, ...translates}: QuizReviewProps & QuizTranslates) => {
+    const [isLoading, setIsLoading] = useState(false);
     const handleQuestionClick = useCallback(
       (qq: QuizQuestion) => () => {
         // TODO: handle review of question
       },
       []
     );
+    const handleRetake = useCallback(() => {
+      setIsLoading(true);
+      onRetake &&
+        onRetake().finally(() => {
+          setIsLoading(false);
+        });
+    }, [onRetake]);
     const renderScore = useMemo(() => {
       return <div className={styles.quizScore}>{`${translates.quizScore} ${(score * 100).toFixed(0)}/100`}</div>;
     }, [score]);
@@ -110,13 +119,13 @@ export const QuizReview = withText(translates)(
           <div className={styles.questionsWrapper}>{showAnswers && renderAnswers}</div>
           <div className={styles.buttonWrapper}>
             {onRetake && (
-              <button onClick={onRetake} className={styles.primaryButton} aria-label={translates.retakeButtonAreaLabel}>
-                {translates.retakeButton}
+              <button onClick={handleRetake} className={styles.primaryButton} aria-label={translates.retakeButtonAreaLabel} disabled={isLoading}>
+                {isLoading ? <Spinner /> : translates.retakeButton}
               </button>
             )}
             <button
               onClick={onClose}
-              className={onRetake ? styles.secondaryButton : styles.primaryButton}
+              className={[onRetake ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
               aria-label={translates.doneButtonAreaLabel}>
               {translates.doneButton}
             </button>

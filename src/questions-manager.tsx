@@ -1,7 +1,16 @@
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {h} from 'preact';
-import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap, QuizQuestionUI, Selected, KalturaQuizQuestionTypes, SubmissionDetails, PresetAreas} from './types';
+import {
+  QuizQuestion,
+  KalturaQuizQuestion,
+  QuizQuestionMap,
+  QuizQuestionUI,
+  Selected,
+  KalturaQuizQuestionTypes,
+  SubmissionDetails,
+  PresetAreas
+} from './types';
 import {QuizQuestionWrapper} from './components/quiz-question';
 
 const {EventType} = core;
@@ -108,6 +117,7 @@ export class QuestionsManager {
           });
       } else {
         onSkip();
+        return Promise.resolve();
       }
     };
 

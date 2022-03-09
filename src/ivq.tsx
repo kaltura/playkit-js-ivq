@@ -177,7 +177,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
           };
           if (this._dataManager.isSubmitAllowed()) {
             params.onRetake = () => {
-              this._onQuizRetake().then(() => {
+              return this._onQuizRetake().then(() => {
                 removeSubmitScreen();
                 this._player.currentTime = 0;
                 this._player.play();

@@ -10,7 +10,7 @@ export interface QuizQuestionUI {
   questionIndex: [number, number];
   onNext?: () => void;
   onPrev?: () => void;
-  onContinue: (data: Selected | null) => void;
+  onContinue: (data: Selected | null) => Promise<void>;
   onSkip?: () => void;
   disabled: boolean;
 }

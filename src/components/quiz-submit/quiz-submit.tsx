@@ -2,6 +2,7 @@ import {h} from 'preact';
 import {useCallback, useState} from 'preact/hooks';
 import {QuizTranslates} from '../../types';
 import {IvqOverlay} from '../ivq-overlay';
+import {Spinner} from '../spinner';
 import * as styles from './quiz-submit.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -47,13 +48,13 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...translat
         <div className={styles.buttonWrapper}>
           {onSubmit && (
             <button onClick={handleSubmitClick} className={styles.primaryButton} aria-label={translates.submitButtonAriaLabel} disabled={isLoading}>
-              {isLoading ? <div className={styles.loader} /> : translates.submitButton}
+              {isLoading ? <Spinner /> : translates.submitButton}
             </button>
           )}
           <button
             onClick={handleReviewClick}
             disabled={isLoading}
-            className={onSubmit ? styles.secondaryButton : styles.primaryButton}
+            className={[onSubmit ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
             aria-label={translates.reviewButtonAriaLabel}>
             {translates.reviewButton}
           </button>
