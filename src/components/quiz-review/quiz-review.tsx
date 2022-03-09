@@ -78,35 +78,36 @@ const renderQuestionIcon = (qq: QuizQuestion) => {
 
 export const QuizReview = withText(translates)(
   ({score, onRetake, onClose, reviewDetails, showAnswers, showScores, ...translates}: QuizReviewProps & QuizTranslates) => {
-    const renderScore = useMemo(() => {
-      return <div className={styles.quizScore}>{`${translates.quizScore} ${(score * 100).toFixed(0)}/100`}</div>;
-    }, [score]);
     const handleQuestionClick = useCallback(
       (qq: QuizQuestion) => () => {
         // TODO: handle review of question
       },
       []
     );
+    const renderScore = useMemo(() => {
+      return <div className={styles.quizScore}>{`${translates.quizScore} ${(score * 100).toFixed(0)}/100`}</div>;
+    }, [score]);
+    const renderAnswers = useMemo(() => {
+      return (
+        <div className={styles.questionsContainer}>
+          {reviewDetails.map(qq => {
+            const [questionIcon, questionIconStyles] = renderQuestionIcon(qq);
+            return (
+              <div key={qq.id} role="button" tabIndex={0} onClick={handleQuestionClick(qq)} className={styles.reviewAnswer}>
+                <div className={styles.questionLabel}>{qq.index + 1}</div>
+                <div className={styles.questionContent}>{qq.q.question}</div>
+                <div className={[styles.questionIcon, questionIconStyles].join(' ')}>{questionIcon}</div>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }, [reviewDetails]);
     return (
       <IvqOverlay>
         <div className={styles.quizReviewWrapper}>
           {showScores ? renderScore : <div className={styles.quizScore}>{translates.quizCompleted}</div>}
-          <div className={styles.questionsWrapper}>
-            {showAnswers && (
-              <div className={styles.questionsContainer}>
-                {reviewDetails.map(qq => {
-                  const [questionIcon, questionIconStyles] = renderQuestionIcon(qq);
-                  return (
-                    <div key={qq.id} role="button" tabIndex={0} onClick={handleQuestionClick(qq)} className={styles.reviewAnswer}>
-                      <div className={styles.questionLabel}>{qq.index + 1}</div>
-                      <div className={styles.questionContent}>{qq.q.question}</div>
-                      <div className={[styles.questionIcon, questionIconStyles].join(' ')}>{questionIcon}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+          <div className={styles.questionsWrapper}>{showAnswers && renderAnswers}</div>
           <div className={styles.buttonWrapper}>
             {onRetake && (
               <button onClick={onRetake} className={styles.primaryButton} aria-label={translates.retakeButtonAreaLabel}>

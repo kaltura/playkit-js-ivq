@@ -2,7 +2,7 @@ import {VNode} from 'preact';
 import {KalturaQuizOptionalAnswer, KalturaQuizQuestion, QuizQuestion} from './quizTypes';
 import {KalturaQuizAnswer} from '../providers/response-types';
 
-export type Selected = string; // TODO: check multi-answer
+export type Selected = string;
 
 export interface QuizQuestionUI {
   q: KalturaQuizQuestion;

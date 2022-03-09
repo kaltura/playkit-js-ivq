@@ -1,7 +1,7 @@
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {h} from 'preact';
-import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap, QuizQuestionUI, Selected, KalturaQuizQuestionTypes, SubmissionDetails} from './types';
+import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap, QuizQuestionUI, Selected, KalturaQuizQuestionTypes, SubmissionDetails, PresetAreas} from './types';
 import {QuizQuestionWrapper} from './components/quiz-question';
 
 const {EventType} = core;
@@ -127,7 +127,7 @@ export class QuestionsManager {
 
     this._removeActives = this._player.ui.addComponent({
       label: 'kaltura-ivq-question-wrapper',
-      presets: ['Playback'],
+      presets: PresetAreas,
       container: 'GuiArea',
       get: () => <QuizQuestionWrapper qui={quizQuestionUi} />
     });

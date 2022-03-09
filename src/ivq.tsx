@@ -1,6 +1,6 @@
 import {h} from 'preact';
 import {QuizLoader, QuizUserEntryIdLoader} from './providers';
-import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps} from './types';
+import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps, PresetAreas} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsManager} from './questions-manager';
 import {KalturaQuiz, KalturaUserEntry} from './providers/response-types';
@@ -140,7 +140,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
   private _showWelcomeScreen = (quizData: KalturaQuiz) => {
     const removeWelcomeScreen = this._player.ui.addComponent({
       label: 'kaltura-ivq-welcome-screen',
-      presets: ['Playback'],
+      presets: PresetAreas,
       container: 'GuiArea',
       get: () => (
         <WelcomeScreen
@@ -161,7 +161,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
       const {showGradeAfterSubmission, showCorrectAfterSubmission, attemptsAllowed} = this._dataManager.quizData!;
       const removeSubmitScreen = this._player.ui.addComponent({
         label: 'kaltura-ivq-review-screen',
-        presets: ['Playback'],
+        presets: PresetAreas,
         container: 'GuiArea',
         replaceComponent: 'PrePlaybackPlayOverlay',
         get: () => {
@@ -195,7 +195,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
     if (submissionDetails) {
       const removeSubmitScreen = this._player.ui.addComponent({
         label: 'kaltura-ivq-submit-screen',
-        presets: ['Playback'],
+        presets: PresetAreas,
         container: 'GuiArea',
         replaceComponent: 'PrePlaybackPlayOverlay',
         get: () => {
@@ -254,13 +254,13 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
         if (data && data.has(QuizLoader.id)) {
           // get general quiz data, userEntryId and answers
           const quizLoader = data.get(QuizLoader.id);
-          const quizUserEntry = quizLoader?.response?.userEntries[0];
+          const lastQuizUserEntry = quizLoader?.response?.userEntries[0];
           const quizData = quizLoader?.response?.quiz;
           const quizAnswers = quizLoader?.response?.quizAnswers;
           if (!quizData) {
             this.logger.warn('quiz data absent');
           } else {
-            if (!quizUserEntry) {
+            if (!lastQuizUserEntry) {
               // in case if quizUserEntryId doesn't exist - create new one
               return this._dataManager.createNewQuizUserEntry().then((quizNewUserEntry: KalturaUserEntry) => {
                 if (!quizNewUserEntry) {
@@ -270,7 +270,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin implements IMiddlewarePro
                 }
               });
             } else {
-              this._dataManager.initDataManager(quizData, quizUserEntry, quizAnswers);
+              this._dataManager.initDataManager(quizData, lastQuizUserEntry, quizAnswers);
             }
             // TODO: discuss with product about auto-play
             // if (this._dataManager.quizData?.showWelcomePage) {

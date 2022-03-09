@@ -1,1 +1,1 @@
-export * from "./ivq-overlay";
+export * from './ivq-overlay';

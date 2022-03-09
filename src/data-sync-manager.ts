@@ -90,14 +90,12 @@ export class DataSyncManager {
 
   public isSubmitAllowed = () => {
     const submittedAttempts = this._getSubmittedAttempts();
-    return submittedAttempts === 0 || submittedAttempts < (this.quizData?.attemptsAllowed || 0);
+    return submittedAttempts < (this.quizData?.attemptsAllowed || 1);
   };
 
   public _getSubmittedAttempts = () => {
     if (typeof this.quizUserEntry?.score !== 'number') {
       return 0; // not submitted
-    } else if (this.quizUserEntry.version === 0) {
-      return 1; // submitted once
     } else {
       return this.quizUserEntry.version + 1;
     }
@@ -177,7 +175,7 @@ export class DataSyncManager {
             throw error;
           });
       };
-      const submitAllowed = this.isSubmitAllowed();
+      const quizDone = !this.isSubmitAllowed();
       quizQuestionsMap.set(cue.id, {
         id: cue.id,
         index,
@@ -186,9 +184,9 @@ export class DataSyncManager {
         a,
         next,
         prev,
-        skipAvailable: this.quizData!.canSkip && submitAllowed,
+        skipAvailable: this.quizData!.canSkip && !quizDone,
         seekAvailable: !this.quizData!.preventSeek,
-        disabled: !this.quizData!.allowAnswerUpdate || !submitAllowed,
+        disabled: !this.quizData!.allowAnswerUpdate || quizDone,
         onContinue
       });
     });
