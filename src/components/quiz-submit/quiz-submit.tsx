@@ -47,7 +47,7 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...translat
         <div className={styles.buttonWrapper}>
           {onSubmit && (
             <button onClick={handleSubmitClick} className={styles.primaryButton} aria-label={translates.submitButtonAriaLabel} disabled={isLoading}>
-              {translates.submitButton}
+              {isLoading ? <div className={styles.loader} /> : translates.submitButton}
             </button>
           )}
           <button
