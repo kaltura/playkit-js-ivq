@@ -9,6 +9,7 @@ import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
 import {TimelinePreview, TimelineMarker} from './components/timeline-preview/timeline-preview';
 import {QuizDownloadLoader} from './providers/quiz-download-loader';
+import {KalturaIvqMiddleware} from './quiz-middleware';
 
 const {EventType} = core;
 
@@ -20,6 +21,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _quizQuestionsPromise: Promise<QuizQuestionMap>;
   private _dataManager: DataSyncManager;
   private _questionsManager?: QuestionsManager;
+  private _maxCurrentTime = 0;
+  private _seekControlEnabled = false;
 
   static defaultConfig: IvqConfig = {};
 
@@ -31,6 +34,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this._dataManager = new DataSyncManager(
       this._resolveQuizQuestionsPromise,
       (qq: KalturaQuizQuestion) => this._questionsManager?.onQuestionCuepointActive(qq),
+      this._seekControl,
       this.eventManager,
       this.player,
       this.logger
@@ -39,6 +43,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
 
   get ready() {
     return this._quizDataPromise;
+  }
+
+  getMiddlewareImpl(): any {
+    return new KalturaIvqMiddleware(this._shouldPreventSeek);
   }
 
   loadMedia(): void {
@@ -149,6 +157,18 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this.eventManager.listenOnce(this._player, EventType.PLAY, () => {
       removeWelcomeScreen && removeWelcomeScreen();
     });
+  };
+
+  private _seekControl = () => {
+    this._seekControlEnabled = true;
+    this.eventManager.listen(this._player, this._player.Event.TIME_UPDATE, () => {
+      if (this._maxCurrentTime < this._player.currentTime) {
+        this._maxCurrentTime = this._player.currentTime; // Keep max current time
+      }
+    });
+  };
+  private _shouldPreventSeek = (to: number) => {
+    return this._seekControlEnabled && !this._questionsManager?.quizQuestionJumping && to > this._maxCurrentTime;
   };
 
   private _getQuiz() {

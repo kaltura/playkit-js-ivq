@@ -21,6 +21,7 @@ export class DataSyncManager {
   constructor(
     private _onQuestionsLoad: (qqm: QuizQuestionMap) => void,
     private _onQuestionBecomeActive: (qq: KalturaQuizQuestion) => void,
+    private _enableSeekControl: () => void,
     private _eventManager: KalturaPlayerTypes.EventManager,
     private _player: KalturaPlayerTypes.Player,
     private _logger: KalturaPlayerTypes.Logger
@@ -44,6 +45,9 @@ export class DataSyncManager {
     };
     this._quizUserEntryId = quizUserEntryId;
     this._quizAnswers = quizAnswers;
+    if (this.quizData.preventSeek) {
+      this._enableSeekControl();
+    }
     this._syncEvents();
   }
 
