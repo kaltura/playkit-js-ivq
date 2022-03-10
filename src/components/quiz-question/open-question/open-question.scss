@@ -20,11 +20,11 @@
       padding: 8px;
       border-width: 1px;
       border-style: solid;
-      border-color: map-get($theme-colors, 'disabled');
+      border-color: map-get($theme-colors, 'secondary');
       border-radius: 4px;
       box-sizing: border-box;
       background: rgba(0, 0, 0, 0.3);
-      color: map-get($theme-colors, 'white');
+      color: map-get($theme-colors, 'primary');
       font-family: inherit;
       min-height: 80px;
       max-height: 120px;

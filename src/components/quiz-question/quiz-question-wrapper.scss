@@ -72,7 +72,7 @@ $bottom-bar-height: 60px;
       line-height: 18px;
       font-size: 14px;
       text-align: center;
-      color: map-get($theme-colors, 'white');
+      color: map-get($theme-colors, 'primary');
     }
   }
 }

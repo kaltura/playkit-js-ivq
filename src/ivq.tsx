@@ -143,11 +143,13 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
 
   private _showWelcomeScreen = () => {
     const handleDownload = () => {
-      this._player.provider.doRequest([{loader: QuizDownloadLoader, params: {entryId: this._player.sources.id}}]).then((data: Map<string, any>) => {
-        if (data && data.has(QuizDownloadLoader.id)) {
-          window.location.assign(data.get(QuizDownloadLoader.id).response);
-        }
-      });
+      return this._player.provider
+        .doRequest([{loader: QuizDownloadLoader, params: {entryId: this._player.sources.id}}])
+        .then((data: Map<string, any>) => {
+          if (data && data.has(QuizDownloadLoader.id)) {
+            window.location.assign(data.get(QuizDownloadLoader.id).response);
+          }
+        });
     };
     const removeWelcomeScreen = this._player.ui.addComponent({
       label: 'kaltura-ivq-welcome-screen',
