@@ -8,7 +8,22 @@
       "question_counter": "Question {{current}} of {{total}}",
       "open_question_placeholder": "Type your answer here...",
       "question": "Question",
-      "reflection_point": "Reflection Point"
+      "reflection_point": "Reflection Point",
+      "welcome_title": "Start your video quiz!",
+      "submit_button": "Submit",
+      "submit_button_area_label": "Click to submit quiz",
+      "review_button": "Review",
+      "review_button_area_label": "Click to review quiz",
+      "review_title": "You Almost Done",
+      "review_description": "It appears that some questions remained unanswered You must answer all questions before you can submit",
+      "submit_title": "Quiz Completed",
+      "submit_description": "Take a moment to review your answers or go ahead and submit",
+      "quiz_score": "Your score is",
+      "retake_button": "Retake",
+      "retake_button_area_label": "Click to retake the quiz",
+      "done_button": "Done",
+      "done_button_area_label": "Click to close the review",
+      "quiz_completed": "You completed the quiz"
     }
   }
 }

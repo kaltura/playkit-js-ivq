@@ -1,8 +1,8 @@
 import {VNode} from 'preact';
-import {KalturaQuizOptionalAnswer, KalturaQuizQuestion} from './quizTypes';
+import {KalturaQuizOptionalAnswer, KalturaQuizQuestion, QuizQuestion} from './quizTypes';
 import {KalturaQuizAnswer} from '../providers/response-types';
 
-export type Selected = string; // TODO: check multi-answer
+export type Selected = string;
 
 export interface QuizQuestionUI {
   q: KalturaQuizQuestion;
@@ -10,7 +10,7 @@ export interface QuizQuestionUI {
   questionIndex: [number, number];
   onNext?: () => void;
   onPrev?: () => void;
-  onContinue: (data: Selected | null) => void;
+  onContinue: (data: Selected | null) => Promise<void>;
   onSkip?: () => void;
   disabled: boolean;
 }
@@ -45,4 +45,9 @@ export interface MarkerProps {
   class: string;
   className: string;
   style: Record<string, any>;
+}
+
+export interface SubmissionDetails {
+  onReview: () => void;
+  showSubmitButton: boolean;
 }

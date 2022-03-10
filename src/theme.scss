@@ -1,6 +1,6 @@
 $theme-colors: (
-  'white': #ffffff,
-  'disabled': #888888,
+  'primary': #ffffff,
+  'secondary': #888888,
   'semi-gray': rgba(255, 255, 255, 0.16),
   'active': rgba(255, 255, 255, 0.2)
 );
@@ -13,7 +13,7 @@ $primary-button-colors: (
 
 $secondary-button-colors: (
   'default': transparent,
-  'hover': map-get($theme-colors, 'disabled'),
+  'hover': map-get($theme-colors, 'secondary'),
   'focus': #444444
 );
 
@@ -21,7 +21,7 @@ $secondary-button-colors: (
   font-style: normal;
   font-size: 18px;
   line-height: 20px;
-  color: map-get($theme-colors, 'white');
+  color: map-get($theme-colors, 'primary');
   overflow: auto;
 }
 
@@ -29,7 +29,7 @@ $secondary-button-colors: (
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 8px;
+  padding: 4px 8px;
   height: 32px;
   border-radius: 4px;
   border-width: 1px;
@@ -39,7 +39,7 @@ $secondary-button-colors: (
   font-size: 14px;
   line-height: 17px;
   text-align: left;
-  color: map-get($theme-colors, 'white');
+  color: map-get($theme-colors, 'primary');
   box-sizing: border-box;
   &:hover:not(.disabled) {
     cursor: pointer;
@@ -58,8 +58,8 @@ $secondary-button-colors: (
   &.disabled {
     border-width: 1px;
     border-style: solid;
-    border-color: map-get($theme-colors, 'disabled');
-    color: map-get($theme-colors, 'disabled');
+    border-color: map-get($theme-colors, 'secondary');
+    color: map-get($theme-colors, 'secondary');
     background: transparent;
   }
 }
@@ -74,7 +74,7 @@ $secondary-button-colors: (
     background: map-get($secondary-button-colors, 'focus');
   }
   &.disabled {
-    color: map-get($theme-colors, 'disabled');
+    color: map-get($theme-colors, 'secondary');
   }
 }
 
@@ -91,14 +91,14 @@ $secondary-button-colors: (
   border-radius: 4px;
   border-color: transparent;
   font-size: 16px;
-  color: map-get($theme-colors, 'white');
+  color: map-get($theme-colors, 'primary');
   cursor: pointer;
   box-sizing: border-box;
   &:hover:not(.disabled) {
     background: map-get($theme-colors, 'active');
   }
   &.active {
-    border-color: map-get($theme-colors, 'white');
+    border-color: map-get($theme-colors, 'primary');
     background: map-get($theme-colors, 'active');
   }
   &.disabled {

@@ -57,7 +57,7 @@
           padding: 5px 8px;
           border-right-style: solid;
           border-right-width: 1px;
-          border-right-color: map-get($theme-colors, 'white');
+          border-right-color: map-get($theme-colors, 'primary');
         }
         .questionContent {
           flex-grow: 1;

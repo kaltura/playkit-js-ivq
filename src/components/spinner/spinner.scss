@@ -1,0 +1,17 @@
+@import '../../theme.scss';
+
+.ivqLoader {
+  margin: auto;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  border-top: 3px solid map-get($theme-colors, 'primary');
+  animation: spinner 1s linear infinite;
+}
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
