@@ -1,9 +1,9 @@
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {getKeyValue, stringToBoolean} from './utils';
-import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
+import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry} from './providers/response-types';
 import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes} from './types';
-import {QuizAnswerSubmitLoader} from './providers/quiz-question-submit-loader';
+import {QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader} from './providers';
 
 const {TimedMetadata} = core;
 
@@ -15,8 +15,8 @@ interface TimedMetadataEvent {
 
 export class DataSyncManager {
   public quizData: QuizData | null = null;
+  public quizUserEntry: KalturaUserEntry | null = null;
   private _quizAnswers: Array<KalturaQuizAnswer> = [];
-  private _quizUserEntryId: number = 0;
 
   constructor(
     private _onQuestionsLoad: (qqm: QuizQuestionMap) => void,
@@ -32,8 +32,8 @@ export class DataSyncManager {
     this._eventManager.listen(this._player, this._player.Event.TIMED_METADATA_ADDED, this._onTimedMetadataAdded);
   };
 
-  public initDataManager(rawQuizData: KalturaQuiz, quizUserEntryId: number, quizAnswers: KalturaQuizAnswer[] = []) {
-    this._logger.debug('initDataManager', rawQuizData, quizUserEntryId, quizAnswers);
+  public initDataManager(rawQuizData: KalturaQuiz, quizUserEntry: KalturaUserEntry, quizAnswers: KalturaQuizAnswer[] = []) {
+    this._logger.debug('initDataManager', rawQuizData, quizUserEntry, quizAnswers);
     this.quizData = {
       ...rawQuizData,
       welcomeMessage: getKeyValue(rawQuizData.uiAttributes, 'welcomeMessage'),
@@ -43,13 +43,63 @@ export class DataSyncManager {
       canSkip: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'canSkip')),
       preventSeek: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'banSeek'))
     };
-    this._quizUserEntryId = quizUserEntryId;
     this._quizAnswers = quizAnswers;
+    this.setQuizUserEntry(quizUserEntry);
     if (this.quizData.preventSeek) {
       this._enableSeekControl();
     }
     this._syncEvents();
   }
+
+  public setQuizUserEntry = (quizUserEntry: KalturaUserEntry) => {
+    this.quizUserEntry = quizUserEntry;
+  };
+
+  public submitQuiz = () => {
+    const params = {
+      entryId: this._player.sources.id,
+      quizUserEntryId: this.quizUserEntry?.id
+    };
+    return this._player.provider.doRequest([{loader: QuizSubmitLoader, params}]).then((data: Map<string, any>) => {
+      if (data && data.has(QuizSubmitLoader.id)) {
+        const loader = data.get(QuizSubmitLoader.id);
+        const userEntry = loader?.response?.userEntry;
+        if (!userEntry) {
+          this._logger.warn('submit quiz failed');
+        } else {
+          this.quizUserEntry = userEntry;
+        }
+      }
+    });
+  };
+
+  public createNewQuizUserEntry = (): Promise<KalturaUserEntry> => {
+    return this._player.provider
+      .doRequest([{loader: QuizUserEntryIdLoader, params: {entryId: this._player.sources.id}}])
+      .then((data: Map<string, any>) => {
+        if (data && data.has(QuizUserEntryIdLoader.id)) {
+          const quizUserEntryIdLoader = data.get(QuizUserEntryIdLoader.id);
+          const quizNewUserEntry = quizUserEntryIdLoader?.response?.userEntry;
+          return quizNewUserEntry;
+        }
+      })
+      .catch((e: any) => {
+        this._logger.warn(e);
+      });
+  };
+
+  public isSubmitAllowed = () => {
+    const submittedAttempts = this._getSubmittedAttempts();
+    return submittedAttempts < (this.quizData?.attemptsAllowed || 1);
+  };
+
+  public _getSubmittedAttempts = () => {
+    if (typeof this.quizUserEntry?.score !== 'number') {
+      return 0; // not submitted
+    } else {
+      return this.quizUserEntry.version + 1;
+    }
+  };
 
   private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, updatedAnswerId?: string, questionId?: string) => {
     let answerKey = '1'; // default answerKey for Reflection and OpenAnswer
@@ -58,7 +108,7 @@ export class DataSyncManager {
     }
     const params: Record<string, any> = {
       entryId: this._player.sources.id,
-      quizUserEntryId: this._quizUserEntryId,
+      quizUserEntryId: this.quizUserEntry?.id,
       parentId: questionId,
       answerKey,
       id: updatedAnswerId
@@ -125,6 +175,7 @@ export class DataSyncManager {
             throw error;
           });
       };
+      const quizDone = !this.isSubmitAllowed();
       quizQuestionsMap.set(cue.id, {
         id: cue.id,
         index,
@@ -133,9 +184,9 @@ export class DataSyncManager {
         a,
         next,
         prev,
-        skipAvailable: this.quizData!.canSkip,
+        skipAvailable: this.quizData!.canSkip && !quizDone,
         seekAvailable: !this.quizData!.preventSeek,
-        disabled: !this.quizData!.allowAnswerUpdate,
+        disabled: !this.quizData!.allowAnswerUpdate || quizDone,
         onContinue
       });
     });

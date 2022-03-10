@@ -1,7 +1,16 @@
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {h} from 'preact';
-import {QuizQuestion, KalturaQuizQuestion, QuizQuestionMap, QuizQuestionUI, Selected, KalturaQuizQuestionTypes} from './types';
+import {
+  QuizQuestion,
+  KalturaQuizQuestion,
+  QuizQuestionMap,
+  QuizQuestionUI,
+  Selected,
+  KalturaQuizQuestionTypes,
+  SubmissionDetails,
+  PresetAreas
+} from './types';
 import {QuizQuestionWrapper} from './components/quiz-question';
 
 const {EventType} = core;
@@ -24,6 +33,33 @@ export class QuestionsManager {
       this._prepareQuestion(quizQuestion);
     }
   }
+
+  public getSubmissionDetails = (): SubmissionDetails => {
+    const unansweredQuestions: Array<QuizQuestion> = [];
+    this._quizQuestionMap.forEach(qq => {
+      if (!qq.a) {
+        unansweredQuestions.push(qq);
+      }
+    });
+    const reviewQuestion = unansweredQuestions[0] || this._quizQuestionMap.values().next().value;
+    const submissionDetails: SubmissionDetails = {
+      onReview: () => this._prepareQuestion(reviewQuestion, true),
+      showSubmitButton: !unansweredQuestions.length
+    };
+    return submissionDetails;
+  };
+
+  public getReviewDetails = (): Array<QuizQuestion> => {
+    return Array.from(this._quizQuestionMap.values());
+  };
+
+  public clearAnswers = () => {
+    this._quizQuestionMap.forEach(qq => this._quizQuestionMap.set(qq.id, {...qq, a: undefined}));
+  };
+
+  public disableQuestions = () => {
+    this._quizQuestionMap.forEach(qq => this._quizQuestionMap.set(qq.id, {...qq, disabled: true}));
+  };
 
   private _prepareQuestion = (qq: QuizQuestion, manualChange = false) => {
     const {startTime} = qq;
@@ -81,6 +117,7 @@ export class QuestionsManager {
           });
       } else {
         onSkip();
+        return Promise.resolve();
       }
     };
 
@@ -100,7 +137,7 @@ export class QuestionsManager {
 
     this._removeActives = this._player.ui.addComponent({
       label: 'kaltura-ivq-question-wrapper',
-      presets: ['Playback'],
+      presets: PresetAreas,
       container: 'GuiArea',
       get: () => <QuizQuestionWrapper qui={quizQuestionUi} />
     });

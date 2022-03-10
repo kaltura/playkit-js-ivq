@@ -1,0 +1,95 @@
+@import '../../theme.scss';
+
+.quizReviewWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  width: 100%;
+  height: 100%;
+  padding: 48px 64px;
+  .quizScore {
+    @include question-text;
+    font-size: 32px;
+    line-height: 40px;
+    margin-bottom: 24px;
+  }
+  .questionsWrapper {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    width: 100%;
+    .questionsContainer {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      .reviewAnswer {
+        @include optional-answer;
+        min-height: 32px;
+        margin: 4px 0;
+        padding: 0;
+        background: transparent;
+        overflow: hidden;
+        &:first-child {
+          margin-top: 0;
+        }
+        &:last-child {
+          margin-bottom: 0;
+        }
+        > div {
+          height: 100%;
+          background: map-get($theme-colors, 'semi-gray');
+        }
+        .questionLabel {
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          flex-shrink: 0;
+          flex-basis: 32px;
+          padding: 5px 8px;
+          border-right-style: solid;
+          border-right-width: 1px;
+          border-right-color: transparent;
+          background-clip: padding-box;
+        }
+        .questionContent {
+          flex-grow: 1;
+          padding: 5px 16px 5px 8px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+        .questionIcon {
+          width: 32px;
+          height: 32px;
+          display: flex;
+          padding: 8px;
+          flex-shrink: 0;
+          justify-content: center;
+          align-items: center;
+          &.defaultIcon {
+            background: rgba(68, 68, 68, 0.5);
+          }
+          &.correctAnswer {
+            background: rgba(0, 135, 101, 0.5);
+          }
+          &.incorrectAnswer {
+            background: rgba(225, 36, 55, 0.5);
+          }
+        }
+      }
+    }
+  }
+  .buttonWrapper {
+    display: flex;
+    margin-top: 24px;
+    .primaryButton {
+      @include ivq-primary-button;
+      min-width: 64px;
+      margin-right: 16px;
+    }
+    .secondaryButton {
+      @include ivq-secondary-button;
+    }
+  }
+}

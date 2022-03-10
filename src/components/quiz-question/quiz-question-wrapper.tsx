@@ -7,6 +7,8 @@ import {ReflectionPoint} from './reflection-point';
 import {OpenQuestion} from './open-question';
 import {KalturaQuizQuestionTypes, Selected, QuestionProps, QuizTranslates} from '../../types';
 import {icons} from '../icons';
+import {IvqOverlay} from '../ivq-overlay';
+import {Spinner} from '../spinner';
 import * as styles from './quiz-question-wrapper.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -48,6 +50,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   const {qui} = props;
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
   const [ivqSeekBar, setIvqSeekBar] = useState<VNode<typeof SeekBarPlaybackContainer> | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // SeekBar for caulculation uses width of parent element,
@@ -72,7 +75,10 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       // for another types - prevent send the same answer
       newAnswer = null;
     }
-    qui.onContinue(newAnswer);
+    setIsLoading(true);
+    qui.onContinue(newAnswer).finally(() => {
+      setIsLoading(false);
+    });
   }, [qui, selected]);
 
   const handleSkip = useCallback(() => {
@@ -94,7 +100,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       hint,
       selected
     };
-    if (!qui.disabled) {
+    if (!(qui.disabled || isLoading)) {
       questionProps.onSelect = onSelect;
     }
     switch (qui.q.questionType) {
@@ -109,27 +115,31 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       case KalturaQuizQuestionTypes.MultiAnswer:
         return <MultiChoice {...questionProps} multiAnswer />;
     }
-  }, [qui, selected]);
+  }, [qui, selected, isLoading]);
 
   const renderIvqButtons = useMemo(() => {
-    const disabled = !selected.length;
+    const continueDisabled = !selected.length;
     return (
       <div className={styles.ivqButtonsWrapper}>
         <button
           onClick={handleContinue}
-          disabled={disabled}
+          disabled={continueDisabled}
           aria-label={props.continueButtonAriaLabel}
-          className={[styles.continueButton, disabled ? styles.disabled : ''].join(' ')}>
-          {props.continueButton}
+          className={[styles.continueButton, continueDisabled ? styles.disabled : ''].join(' ')}>
+          {isLoading ? <Spinner /> : props.continueButton}
         </button>
         {qui.onSkip && (
-          <button onClick={handleSkip} aria-label={props.skipButtonAriaLabel} className={styles.skipButton}>
+          <button
+            onClick={handleSkip}
+            aria-label={props.skipButtonAriaLabel}
+            className={[styles.skipButton, isLoading ? styles.disabled : ''].join(' ')}
+            disabled={isLoading}>
             {props.skipButton}
           </button>
         )}
       </div>
     );
-  }, [qui, selected]);
+  }, [qui, selected, isLoading]);
 
   const renderIvqNavigation = useMemo(() => {
     return (
@@ -146,17 +156,15 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   }, [qui]);
 
   return (
-    <div className={styles.ivqOverlayWrapper}>
-      <Overlay open permanent>
-        <div className={styles.ivqQuestionContainer}>
-          <div className={styles.ivqQuestionWrapper}>{renderIvqQuestion}</div>
-          {renderIvqButtons}
-        </div>
-        <div className={styles.ivqBottomBar}>
-          {ivqSeekBar}
-          {renderIvqNavigation}
-        </div>
-      </Overlay>
-    </div>
+    <IvqOverlay>
+      <div className={styles.ivqQuestionContainer}>
+        <div className={styles.ivqQuestionWrapper}>{renderIvqQuestion}</div>
+        {renderIvqButtons}
+      </div>
+      <div className={styles.ivqBottomBar}>
+        {ivqSeekBar}
+        {renderIvqNavigation}
+      </div>
+    </IvqOverlay>
   );
 });

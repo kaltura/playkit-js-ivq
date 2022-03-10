@@ -1,0 +1,7 @@
+.ivqOverlay {
+  > :global(.playkit-overlay .playkit-overlay-contents) {
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important; // overwrite responsive overlay styles
+  }
+}

@@ -1,12 +1,14 @@
 import {h} from 'preact';
 // @ts-ignore
 import {core} from 'kaltura-player-js';
-import {QuizLoader, QuizUserEntryIdLoader} from './providers';
-import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps} from './types';
+import {QuizLoader} from './providers';
+import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps, PresetAreas} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsManager} from './questions-manager';
-import {KalturaQuiz, KalturaQuizAnswer} from './providers/response-types';
+import {KalturaUserEntry} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
+import {QuizSubmit, QuizSubmitProps} from './components/quiz-submit';
+import {QuizReview, QuizReviewProps} from './components/quiz-review';
 import {TimelinePreview, TimelineMarker} from './components/timeline-preview/timeline-preview';
 import {QuizDownloadLoader} from './providers/quiz-download-loader';
 import {KalturaIvqMiddleware} from './quiz-middleware';
@@ -57,6 +59,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._quizQuestionsPromise.then((qqm: QuizQuestionMap) => {
         this._questionsManager = new QuestionsManager(qqm, this._player, this.eventManager);
         this._handleTimeline(qqm);
+        this.eventManager.listen(this._player, this._player.Event.ENDED, this._handleEndEvent);
       });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered');
@@ -130,6 +133,14 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     kalturaCuePointService?.registerTypes([kalturaCuePointService.CuepointType.QUIZ]);
   }
 
+  private _handleEndEvent = () => {
+    if (this._dataManager.isSubmitAllowed()) {
+      this._displayQuizSubmit();
+    } else {
+      this._displayQuizReview();
+    }
+  };
+
   private _showWelcomeScreen = () => {
     const handleDownload = () => {
       this._player.provider.doRequest([{loader: QuizDownloadLoader, params: {entryId: this._player.sources.id}}]).then((data: Map<string, any>) => {
@@ -140,7 +151,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     };
     const removeWelcomeScreen = this._player.ui.addComponent({
       label: 'kaltura-ivq-welcome-screen',
-      presets: ['Playback'],
+      presets: PresetAreas,
       container: 'GuiArea',
       get: () => (
         <WelcomeScreen
@@ -159,6 +170,75 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     });
   };
 
+  private _displayQuizReview = () => {
+    const reviewDetails = this._questionsManager?.getReviewDetails();
+    if (reviewDetails) {
+      const {showGradeAfterSubmission, showCorrectAfterSubmission, attemptsAllowed} = this._dataManager.quizData!;
+      const removeSubmitScreen = this._player.ui.addComponent({
+        label: 'kaltura-ivq-review-screen',
+        presets: PresetAreas,
+        container: 'GuiArea',
+        replaceComponent: 'PrePlaybackPlayOverlay',
+        get: () => {
+          const params: QuizReviewProps = {
+            score: this._dataManager.quizUserEntry?.score || 0,
+            onClose: () => {
+              removeSubmitScreen();
+              this._questionsManager?.disableQuestions();
+            },
+            reviewDetails,
+            showAnswers: showCorrectAfterSubmission,
+            showScores: showGradeAfterSubmission
+          };
+          if (this._dataManager.isSubmitAllowed()) {
+            params.onRetake = () => {
+              return this._onQuizRetake().then(() => {
+                removeSubmitScreen();
+                this._player.currentTime = 0;
+                this._player.play();
+              });
+            };
+          }
+          return <QuizReview {...params} onClose={removeSubmitScreen} />;
+        }
+      });
+    }
+  };
+
+  private _displayQuizSubmit = () => {
+    const submissionDetails = this._questionsManager?.getSubmissionDetails();
+    if (submissionDetails) {
+      const removeSubmitScreen = this._player.ui.addComponent({
+        label: 'kaltura-ivq-submit-screen',
+        presets: PresetAreas,
+        container: 'GuiArea',
+        replaceComponent: 'PrePlaybackPlayOverlay',
+        get: () => {
+          const params: QuizSubmitProps = {
+            onReview: () => {
+              removeSubmitScreen();
+              submissionDetails.onReview();
+            }
+          };
+          if (submissionDetails.showSubmitButton) {
+            params.onSubmit = () => {
+              return this._dataManager.submitQuiz().then(() => {
+                removeSubmitScreen();
+                if (!this._dataManager.isSubmitAllowed()) {
+                  this._questionsManager?.disableQuestions();
+                }
+                if (this._dataManager.quizData?.showCorrectAfterSubmission) {
+                  this._displayQuizReview();
+                }
+              });
+            };
+          }
+          return <QuizSubmit {...params} />;
+        }
+      });
+    }
+  };
+
   private _seekControl = () => {
     this._seekControlEnabled = true;
     this.eventManager.listen(this._player, this._player.Event.TIME_UPDATE, () => {
@@ -171,6 +251,17 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     return this._seekControlEnabled && !this._questionsManager?.quizQuestionJumping && to > this._maxCurrentTime;
   };
 
+  private _onQuizRetake = (): Promise<void> => {
+    return this._dataManager.createNewQuizUserEntry().then((quizNewUserEntry: KalturaUserEntry) => {
+      if (!quizNewUserEntry) {
+        this.logger.warn('quizUserEntryId absent');
+      } else {
+        this._dataManager.setQuizUserEntry(quizNewUserEntry);
+        this._questionsManager?.clearAnswers();
+      }
+    });
+  };
+
   private _getQuiz() {
     this._player.provider
       .doRequest([{loader: QuizLoader, params: {entryId: this._player.sources.id}}])
@@ -178,32 +269,23 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         if (data && data.has(QuizLoader.id)) {
           // get general quiz data, userEntryId and answers
           const quizLoader = data.get(QuizLoader.id);
-          const quizUserEntryId = quizLoader?.response?.userEntries[0]?.id;
+          const lastQuizUserEntry = quizLoader?.response?.userEntries[0];
           const quizData = quizLoader?.response?.quiz;
           const quizAnswers = quizLoader?.response?.quizAnswers;
           if (!quizData) {
             this.logger.warn('quiz data absent');
           } else {
-            if (!quizUserEntryId) {
+            if (!lastQuizUserEntry) {
               // in case if quizUserEntryId doesn't exist - create new one
-              return this._player.provider
-                .doRequest([{loader: QuizUserEntryIdLoader, params: {entryId: this._player.sources.id}}])
-                .then((data: Map<string, any>) => {
-                  if (data && data.has(QuizUserEntryIdLoader.id)) {
-                    const quizUserEntryIdLoader = data.get(QuizUserEntryIdLoader.id);
-                    const quizNewUserEntryId = quizUserEntryIdLoader?.response?.userEntry?.id;
-                    if (!quizNewUserEntryId) {
-                      this.logger.warn('quizUserEntryId absent');
-                    } else {
-                      this._dataManager.initDataManager(quizData, quizNewUserEntryId, quizAnswers);
-                    }
-                  }
-                })
-                .catch((e: any) => {
-                  this.logger.warn(e);
-                });
+              return this._dataManager.createNewQuizUserEntry().then((quizNewUserEntry: KalturaUserEntry) => {
+                if (!quizNewUserEntry) {
+                  this.logger.warn('quizUserEntryId absent');
+                } else {
+                  this._dataManager.initDataManager(quizData, quizNewUserEntry, quizAnswers);
+                }
+              });
             } else {
-              this._dataManager.initDataManager(quizData, quizUserEntryId, quizAnswers);
+              this._dataManager.initDataManager(quizData, lastQuizUserEntry, quizAnswers);
             }
             if (this._dataManager.quizData?.showWelcomePage) {
               this._player.pause();
