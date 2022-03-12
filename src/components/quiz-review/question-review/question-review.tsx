@@ -1,8 +1,10 @@
-import {h, VNode} from 'preact';
-// import {useCallback} from 'preact/hooks';
-import {QuizTranslates, QuizQuestion} from '../../../types';
+import {h, Fragment} from 'preact';
+import {useMemo} from 'preact/hooks';
+import {QuizTranslates, QuizQuestion, KalturaQuizQuestionTypes} from '../../../types';
+import {makeQuestionLabels} from '../../../utils';
 import {icons} from '../../icons';
 import {IvqBottomBar} from '../../ivq-bottom-bar';
+import {QuestionIcon} from '../question-icon';
 import * as styles from './question-review.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -31,24 +33,69 @@ const translates = ({questionsAmount, reviewQuestion}: QuestionReviewProps): Qui
           current: reviewQuestion.index + 1,
           total: questionsAmount
         }}>{`Question ${reviewQuestion.index + 1} of ${questionsAmount}`}</Text>
-    )
+    ),
+    correctAnswerIs: <Text id="ivq.correct_answer_is">The correct answer is:</Text>,
+    yourAnswer: <Text id="ivq.your_answer">Your answer</Text>,
+    correctAnswer: <Text id="ivq.correct_answer">The correct answer</Text>
   };
 };
 
 export const QuestionReview = withText(translates)(
-  ({onBack, onNext, onPrev, questionCounter, quizQuestion, ...translates}: QuestionReviewProps & QuizTranslates) => {
-    return (
-      <div className={styles.questionReviewWrapper}>
-        <div className={styles.backButtonContainer}>
-          <button onClick={onBack} className={styles.backButton}>
-            <div className={styles.iconContainer}>
-              <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
+  ({onBack, onNext, onPrev, questionCounter, reviewQuestion, ...translates}: QuestionReviewProps & QuizTranslates) => {
+    const {q, a} = reviewQuestion.qq;
+    const renderCorrectAnswers = useMemo(() => {
+      if (q.questionType === KalturaQuizQuestionTypes.TrueFalse) {
+        const correctAnswer = q.optionalAnswers.find(val => val.isCorrect);
+        return (
+          <Fragment>
+            <div className={styles.correctAnswerIs}>{`${translates.correctAnswerIs} ${correctAnswer?.text}`}</div>
+            <div className={styles.correctAnswer}>{translates.correctAnswer}</div>
+            <div className={styles.trueFalseAnswerWrapper}>
+              {q.optionalAnswers.map(({key, text}) => {
+                return (
+                  <div key={key} className={[styles.trueFalseAnswer, styles.disabled].join(' ')}>
+                    {text}
+                    {a?.answerKey === key && <QuestionIcon questionType={q.questionType} isCorrect={key === correctAnswer?.key} />}
+                  </div>
+                );
+              })}
             </div>
-            {translates.backButton}
-          </button>
+          </Fragment>
+        );
+      }
+      if ([KalturaQuizQuestionTypes.MultiAnswer, KalturaQuizQuestionTypes.MultiChoice].includes(q.questionType)) {
+        const questionLabels = makeQuestionLabels();
+        const correctAnswers: Array<string> = [];
+        q.optionalAnswers.forEach((val, index) => {
+          if (val.isCorrect) {
+            correctAnswers.push(questionLabels[index]);
+          }
+        });
+        return <div className={styles.correctAnswerIs}>{`${translates.correctAnswerIs} ${correctAnswers.join(',')}`}</div>;
+      }
+      if (q.questionType === KalturaQuizQuestionTypes.OpenQuestion) {
+        return <div className={styles.openQuestionAnswer}>{a?.openAnswer}</div>;
+      }
+      return null;
+    }, [reviewQuestion]);
+    return (
+      <Fragment>
+        <div className={styles.questionReviewWrapper}>
+          <div className={styles.backButtonContainer}>
+            <button onClick={onBack} className={styles.backButton}>
+              <div className={styles.iconContainer}>
+                <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
+              </div>
+              {translates.backButton}
+            </button>
+          </div>
+          <div className={styles.quizQuestionContainer}>
+            <div className={styles.questionText}>{q.question}</div>
+            {renderCorrectAnswers}
+          </div>
         </div>
         <IvqBottomBar questionCounter={questionCounter} onPrev={onPrev} onNext={onNext} />
-      </div>
+      </Fragment>
     );
   }
 );

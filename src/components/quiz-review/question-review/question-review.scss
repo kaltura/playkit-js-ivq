@@ -28,4 +28,51 @@
       }
     }
   }
+  .quizQuestionContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    text-align: left;
+    .questionText {
+      font-weight: bold;
+      @include ivq-text;
+    }
+    .correctAnswerIs {
+      @include ivq-text;
+      font-size: 16px;
+      line-height: 21px;
+      margin-bottom: 4px;
+    }
+    .openQuestionAnswer {
+      @include ivq-text;
+      font-size: 14px;
+      line-height: 18px;
+      margin-top: 16px;
+    }
+    .correctAnswer {
+      @include ivq-text;
+      font-size: 14px;
+      line-height: 18px;
+      margin-top: 24px;
+    }
+
+    .trueFalseAnswerWrapper {
+      display: flex;
+      margin-top: 4px;
+      .trueFalseAnswer {
+        @include optional-answer;
+        justify-content: space-between;
+        padding-right: 0;
+        flex-shrink: 1;
+        width: 100%;
+        max-width: 300px;
+        &:first-child {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
 }
