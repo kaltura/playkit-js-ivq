@@ -2,7 +2,7 @@
 import {core} from 'kaltura-player-js';
 import {getKeyValue, stringToBoolean} from './utils';
 import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry} from './providers/response-types';
-import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes} from './types';
+import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes, QuizQuestion} from './types';
 import {QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader} from './providers';
 
 const {TimedMetadata} = core;
@@ -16,6 +16,8 @@ interface TimedMetadataEvent {
 export class DataSyncManager {
   public quizData: QuizData | null = null;
   public quizUserEntry: KalturaUserEntry | null = null;
+  public quizQuestionsMap: QuizQuestionMap = new Map();
+  private _quizCuePoints: Array<any> = [];
   private _quizAnswers: Array<KalturaQuizAnswer> = [];
 
   constructor(
@@ -44,16 +46,12 @@ export class DataSyncManager {
       preventSeek: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'banSeek'))
     };
     this._quizAnswers = quizAnswers;
-    this.setQuizUserEntry(quizUserEntry);
+    this.quizUserEntry = quizUserEntry;
     if (this.quizData.preventSeek) {
       this._enableSeekControl();
     }
     this._syncEvents();
   }
-
-  public setQuizUserEntry = (quizUserEntry: KalturaUserEntry) => {
-    this.quizUserEntry = quizUserEntry;
-  };
 
   public submitQuiz = () => {
     const params = {
@@ -68,6 +66,10 @@ export class DataSyncManager {
           this._logger.warn('submit quiz failed');
         } else {
           this.quizUserEntry = userEntry;
+          // disable questions after quiz submitted
+          this.quizQuestionsMap.forEach(qq => {
+            this.quizQuestionsMap.set(qq.id, {...qq, disabled: true, skipAvailable: false});
+          });
         }
       }
     });
@@ -89,16 +91,72 @@ export class DataSyncManager {
   };
 
   public isSubmitAllowed = () => {
+    return !(typeof this.quizUserEntry?.score === 'number');
+  };
+
+  public isRetakeAllowed = () => {
     const submittedAttempts = this._getSubmittedAttempts();
     return submittedAttempts < (this.quizData?.attemptsAllowed || 1);
   };
 
   public _getSubmittedAttempts = () => {
-    if (typeof this.quizUserEntry?.score !== 'number') {
-      return 0; // not submitted
-    } else {
-      return this.quizUserEntry.version + 1;
-    }
+    return this.isSubmitAllowed() ? 0 : this.quizUserEntry!.version + 1;
+  };
+
+  public prepareQuizData = () => {
+    const quizCues = this._getQuizQuePoints(this._quizCuePoints);
+    quizCues.forEach((cue, index) => {
+      const a = this._quizAnswers.find((answer: KalturaQuizAnswer) => {
+        return cue.id === answer.parentId;
+      });
+      let prev = quizCues[index - 1];
+      let next = quizCues[index + 1];
+      if (prev) {
+        prev = {
+          id: prev.id,
+          startTime: prev.startTime
+        };
+      }
+      if (next) {
+        next = {
+          id: next.id,
+          startTime: next.startTime
+        };
+      }
+      const onContinue = (data: Selected) => {
+        const answer = this.quizQuestionsMap.get(cue.id)!.a;
+        return this._sendQuizAnswer(data, cue.metadata.questionType, answer?.id, cue.id)
+          .then((newAnswer: KalturaQuizAnswer) => {
+            // update answer
+            this.quizQuestionsMap.set(cue.id, {...this.quizQuestionsMap.get(cue.id)!, a: newAnswer});
+          })
+          .catch((error: Error) => {
+            this._logger.warn(error);
+            throw error;
+          });
+      };
+      const quizDone = !this.isSubmitAllowed();
+      const quizQuestion: QuizQuestion = {
+        id: cue.id,
+        index,
+        startTime: cue.startTime,
+        q: cue.metadata,
+        a,
+        next,
+        prev,
+        skipAvailable: this.quizData!.canSkip && !quizDone,
+        seekAvailable: !this.quizData!.preventSeek,
+        disabled: !this.quizData!.allowAnswerUpdate || quizDone,
+        onContinue
+      };
+      this.quizQuestionsMap.set(cue.id, quizQuestion);
+    });
+  };
+
+  public retakeQuiz = (quizNewUserEntry: KalturaUserEntry) => {
+    this.quizUserEntry = quizNewUserEntry;
+    this._quizAnswers = [];
+    this.prepareQuizData();
   };
 
   private _sendQuizAnswer = (newAnswer: Selected, questionType: KalturaQuizQuestionTypes, updatedAnswerId?: string, questionId?: string) => {
@@ -143,53 +201,8 @@ export class DataSyncManager {
     }
   };
   private _onTimedMetadataAdded = ({payload}: TimedMetadataEvent) => {
-    const quizCues = this._getQuizQuePoints(payload.cues);
-    const quizQuestionsMap: QuizQuestionMap = new Map();
-    quizCues.forEach((cue, index) => {
-      const a = this._quizAnswers.find((answer: KalturaQuizAnswer) => {
-        return cue.id === answer.parentId;
-      });
-      let prev = quizCues[index - 1];
-      let next = quizCues[index + 1];
-      if (prev) {
-        prev = {
-          id: prev.id,
-          startTime: prev.startTime
-        };
-      }
-      if (next) {
-        next = {
-          id: next.id,
-          startTime: next.startTime
-        };
-      }
-      const onContinue = (data: Selected) => {
-        const answer = quizQuestionsMap.get(cue.id)!.a;
-        return this._sendQuizAnswer(data, cue.metadata.questionType, answer?.id, cue.id)
-          .then((newAnswer: KalturaQuizAnswer) => {
-            // update answer
-            quizQuestionsMap.set(cue.id, {...quizQuestionsMap.get(cue.id)!, a: newAnswer});
-          })
-          .catch((error: Error) => {
-            this._logger.warn(error);
-            throw error;
-          });
-      };
-      const quizDone = !this.isSubmitAllowed();
-      quizQuestionsMap.set(cue.id, {
-        id: cue.id,
-        index,
-        startTime: cue.startTime,
-        q: cue.metadata,
-        a,
-        next,
-        prev,
-        skipAvailable: this.quizData!.canSkip && !quizDone,
-        seekAvailable: !this.quizData!.preventSeek,
-        disabled: !this.quizData!.allowAnswerUpdate || quizDone,
-        onContinue
-      });
-    });
-    this._onQuestionsLoad(quizQuestionsMap);
+    this._quizCuePoints = payload.cues;
+    this.prepareQuizData();
+    this._onQuestionsLoad(this.quizQuestionsMap);
   };
 }

@@ -22,7 +22,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _quizDataPromise: Promise<void>;
   private _quizQuestionsPromise: Promise<QuizQuestionMap>;
   private _dataManager: DataSyncManager;
-  private _questionsManager?: QuestionsManager;
+  private _questionsManager: QuestionsManager;
   private _maxCurrentTime = 0;
   private _seekControlEnabled = false;
 
@@ -35,19 +35,20 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this._quizQuestionsPromise = this._makeQuizQuestionsPromise();
     this._dataManager = new DataSyncManager(
       this._resolveQuizQuestionsPromise,
-      (qq: KalturaQuizQuestion) => this._questionsManager?.onQuestionCuepointActive(qq),
+      (qq: KalturaQuizQuestion) => this._questionsManager.onQuestionCuepointActive(qq),
       this._seekControl,
       this.eventManager,
       this.player,
       this.logger
     );
+    this._questionsManager = new QuestionsManager(() => this._dataManager.quizQuestionsMap, this._player, this.eventManager);
   }
 
   get ready() {
     return this._quizDataPromise;
   }
 
-  getMiddlewareImpl(): any {
+  getMiddlewareImpl(): KalturaIvqMiddleware {
     return new KalturaIvqMiddleware(this._shouldPreventSeek);
   }
 
@@ -57,7 +58,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._getQuestions(kalturaCuePointService);
       this._getQuiz();
       this._quizQuestionsPromise.then((qqm: QuizQuestionMap) => {
-        this._questionsManager = new QuestionsManager(qqm, this._player, this.eventManager);
         this._handleTimeline(qqm);
         this.eventManager.listen(this._player, this._player.Event.ENDED, this._handleEndEvent);
       });
@@ -173,7 +173,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   };
 
   private _displayQuizReview = () => {
-    const reviewDetails = this._questionsManager?.getReviewDetails();
+    const reviewDetails = this._questionsManager.getReviewDetails();
     if (reviewDetails) {
       const {showGradeAfterSubmission, showCorrectAfterSubmission, attemptsAllowed} = this._dataManager.quizData!;
       const removeSubmitScreen = this._player.ui.addComponent({
@@ -186,29 +186,26 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             score: this._dataManager.quizUserEntry?.score || 0,
             onClose: () => {
               removeSubmitScreen();
-              this._questionsManager?.disableQuestions();
             },
             reviewDetails,
             showAnswers: showCorrectAfterSubmission,
             showScores: showGradeAfterSubmission
           };
-          if (this._dataManager.isSubmitAllowed()) {
+          if (this._dataManager.isRetakeAllowed()) {
             params.onRetake = () => {
               return this._onQuizRetake().then(() => {
                 removeSubmitScreen();
-                this._player.currentTime = 0;
-                this._player.play();
               });
             };
           }
-          return <QuizReview {...params} onClose={removeSubmitScreen} />;
+          return <QuizReview {...params} />;
         }
       });
     }
   };
 
   private _displayQuizSubmit = () => {
-    const submissionDetails = this._questionsManager?.getSubmissionDetails();
+    const submissionDetails = this._questionsManager.getSubmissionDetails();
     if (submissionDetails) {
       const removeSubmitScreen = this._player.ui.addComponent({
         label: 'kaltura-ivq-submit-screen',
@@ -226,9 +223,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             params.onSubmit = () => {
               return this._dataManager.submitQuiz().then(() => {
                 removeSubmitScreen();
-                if (!this._dataManager.isSubmitAllowed()) {
-                  this._questionsManager?.disableQuestions();
-                }
                 if (this._dataManager.quizData?.showCorrectAfterSubmission) {
                   this._displayQuizReview();
                 }
@@ -250,7 +244,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     });
   };
   private _shouldPreventSeek = (to: number) => {
-    return this._seekControlEnabled && !this._questionsManager?.quizQuestionJumping && to > this._maxCurrentTime;
+    return this._seekControlEnabled && !this._questionsManager.quizQuestionJumping && to > this._maxCurrentTime;
   };
 
   private _onQuizRetake = (): Promise<void> => {
@@ -258,8 +252,9 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       if (!quizNewUserEntry) {
         this.logger.warn('quizUserEntryId absent');
       } else {
-        this._dataManager.setQuizUserEntry(quizNewUserEntry);
-        this._questionsManager?.clearAnswers();
+        this._dataManager.retakeQuiz(quizNewUserEntry);
+        this._player.currentTime = 0;
+        this._player.play();
       }
     });
   };
