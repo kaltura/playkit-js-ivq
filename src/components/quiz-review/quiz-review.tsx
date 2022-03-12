@@ -4,6 +4,7 @@ import {KalturaQuizQuestionTypes, QuizQuestion, QuizTranslates} from '../../type
 import {icons} from '../icons';
 import {IvqOverlay} from '../ivq-overlay';
 import {Spinner} from '../spinner';
+import {QuestionReview, ReviewQuestion} from './question-review';
 import * as styles from './quiz-review.scss';
 
 const {Icon} = KalturaPlayer.ui.components;
@@ -80,12 +81,33 @@ const renderQuestionIcon = (qq: QuizQuestion) => {
 export const QuizReview = withText(translates)(
   ({score, onRetake, onClose, reviewDetails, showAnswers, showScores, ...translates}: QuizReviewProps & QuizTranslates) => {
     const [isLoading, setIsLoading] = useState(false);
+    const [reviewQuestion, setReviewQuestion] = useState<ReviewQuestion | null>(null);
+
     const handleQuestionClick = useCallback(
-      (qq: QuizQuestion) => () => {
-        // TODO: handle review of question
+      (qq: QuizQuestion, index: number) => () => {
+        setReviewQuestion({
+          qq,
+          index
+        });
       },
       []
     );
+    const handleBackClick = useCallback(() => {
+      setReviewQuestion(null);
+    }, []);
+    const handleNavigationClick = useCallback(
+      (shift: number) => {
+        if (reviewQuestion && reviewDetails[reviewQuestion.index + shift]) {
+          return () =>
+            setReviewQuestion({
+              qq: reviewDetails[reviewQuestion.index + shift],
+              index: reviewQuestion.index + shift
+            });
+        }
+      },
+      [reviewQuestion, reviewDetails]
+    );
+
     const handleRetake = useCallback(() => {
       setIsLoading(true);
       onRetake &&
@@ -93,16 +115,17 @@ export const QuizReview = withText(translates)(
           setIsLoading(false);
         });
     }, [onRetake]);
+
     const renderScore = useMemo(() => {
       return <div className={styles.quizScore}>{`${translates.quizScore} ${(score * 100).toFixed(0)}/100`}</div>;
     }, [score]);
     const renderAnswers = useMemo(() => {
       return (
         <div className={styles.questionsContainer}>
-          {reviewDetails.map(qq => {
+          {reviewDetails.map((qq, index) => {
             const [questionIcon, questionIconStyles] = renderQuestionIcon(qq);
             return (
-              <div key={qq.id} role="button" tabIndex={0} onClick={handleQuestionClick(qq)} className={styles.reviewAnswer}>
+              <div key={qq.id} role="button" tabIndex={0} onClick={handleQuestionClick(qq, index)} className={styles.reviewAnswer}>
                 <div className={styles.questionLabel}>{qq.index + 1}</div>
                 <div className={styles.questionContent}>{qq.q.question}</div>
                 <div className={[styles.questionIcon, questionIconStyles].join(' ')}>{questionIcon}</div>
@@ -112,8 +135,8 @@ export const QuizReview = withText(translates)(
         </div>
       );
     }, [reviewDetails]);
-    return (
-      <IvqOverlay>
+    const renderQuizReview = useMemo(() => {
+      return (
         <div className={styles.quizReviewWrapper}>
           {showScores ? renderScore : <div className={styles.quizScore}>{translates.quizCompleted}</div>}
           <div className={styles.questionsWrapper}>{showAnswers && renderAnswers}</div>
@@ -131,7 +154,19 @@ export const QuizReview = withText(translates)(
             </button>
           </div>
         </div>
-      </IvqOverlay>
-    );
+      );
+    }, [reviewQuestion, onRetake, onClose, showScores, isLoading]);
+    const renderReviewQuestion = useMemo(() => {
+      return (
+        <QuestionReview
+          onBack={handleBackClick}
+          onNext={handleNavigationClick(1)}
+          onPrev={handleNavigationClick(-1)}
+          reviewQuestion={reviewQuestion}
+          questionsAmount={reviewDetails.length}
+        />
+      );
+    }, [reviewQuestion, reviewDetails]);
+    return <IvqOverlay>{reviewQuestion ? renderReviewQuestion : renderQuizReview}</IvqOverlay>;
   }
 );

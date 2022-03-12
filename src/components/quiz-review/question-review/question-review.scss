@@ -1,0 +1,31 @@
+@import '../../../theme.scss';
+
+.questionReviewWrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  max-height: calc(100% - #{$bottom-bar-height});
+  padding: 32px 32px 12px 32px;
+  .backButtonContainer {
+    display: flex;
+    justify-content: flex-start;
+    .backButton {
+      display: flex;
+      align-items: center;
+      background: transparent;
+      padding: 0 12px;
+      border: none;
+      width: fit-content;
+      height: 32px;
+      cursor: pointer;
+      @include ivq-text;
+      font-size: 14px;
+      font-weight: 700;
+      .iconContainer {
+        width: 24px;
+        height: 24px;
+        padding: 3px;
+      }
+    }
+  }
+}
