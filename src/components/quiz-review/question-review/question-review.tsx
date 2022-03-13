@@ -49,7 +49,7 @@ export const QuestionReview = withText(translates)(
         return (
           <Fragment>
             <div className={styles.correctAnswerIs}>{`${translates.correctAnswerIs} ${correctAnswer?.text}`}</div>
-            <div className={styles.correctAnswer}>{translates.correctAnswer}</div>
+            <div className={styles.correctAnswer}>{a?.answerKey === correctAnswer?.key ? translates.correctAnswer : translates.yourAnswer}</div>
             <div className={styles.trueFalseAnswerWrapper}>
               {q.optionalAnswers.map(({key, text}) => {
                 return (
@@ -66,12 +66,42 @@ export const QuestionReview = withText(translates)(
       if ([KalturaQuizQuestionTypes.MultiAnswer, KalturaQuizQuestionTypes.MultiChoice].includes(q.questionType)) {
         const questionLabels = makeQuestionLabels();
         const correctAnswers: Array<string> = [];
-        q.optionalAnswers.forEach((val, index) => {
-          if (val.isCorrect) {
+        const userCorrectAnswerKeys: Array<string> = [];
+        const userIncorrectAnswerKeys: Array<string> = [];
+        const userAnswerKeys = a?.answerKey.split(',') || [];
+        q.optionalAnswers.forEach((optionalAnswer, index) => {
+          if (optionalAnswer.isCorrect) {
             correctAnswers.push(questionLabels[index]);
           }
+          if (userAnswerKeys.includes(optionalAnswer.key)) {
+            if (optionalAnswer.isCorrect) {
+              userCorrectAnswerKeys.push(optionalAnswer.key);
+            } else {
+              userIncorrectAnswerKeys.push(optionalAnswer.key);
+            }
+          }
         });
-        return <div className={styles.correctAnswerIs}>{`${translates.correctAnswerIs} ${correctAnswers.join(',')}`}</div>;
+        return (
+          <Fragment>
+            <div className={styles.correctAnswerIs}>{`${translates.correctAnswerIs} ${correctAnswers.join(',')}`}</div>
+            <div className={styles.openQuestionAnswer}>{translates.yourAnswer}</div>
+            <div className={styles.multiAnswersWrapper}>
+              <div className={styles.multiAnswersContainer}>
+                {q.optionalAnswers.map(({key, text}, index) => {
+                  return (
+                    <div key={key} className={[styles.multiSelectAnswer, styles.disabled].join(' ')}>
+                      <div className={styles.questionLabel}>{questionLabels[index]}</div>
+                      <div className={styles.questionContent}>{text}</div>
+                      {userCorrectAnswerKeys.includes(key) && <QuestionIcon questionType={q.questionType} isCorrect={true} />}
+                      {userIncorrectAnswerKeys.includes(key) && <QuestionIcon questionType={q.questionType} isCorrect={false} />}
+                    </div>
+                  );
+                })}
+              </div>
+              <div />
+            </div>
+          </Fragment>
+        );
       }
       if (q.questionType === KalturaQuizQuestionTypes.OpenQuestion) {
         return <div className={styles.openQuestionAnswer}>{a?.openAnswer}</div>;

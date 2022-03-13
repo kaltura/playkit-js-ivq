@@ -74,5 +74,56 @@
         }
       }
     }
+
+    .multiAnswersWrapper {
+      display: flex;
+      flex-direction: row;
+      overflow: auto;
+      margin-top: 4px;
+
+      .multiAnswersContainer {
+        display: flex;
+        flex-direction: column;
+        max-width: 100%;
+        .multiSelectAnswer {
+          @include optional-answer;
+          height: auto;
+          min-height: 32px;
+          margin: 4px 0;
+          padding: 0;
+          background: transparent;
+          &:first-child {
+            margin-top: 0;
+          }
+          &:last-child {
+            margin-bottom: 0;
+          }
+          .questionLabel {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100%;
+            flex-shrink: 0;
+            flex-basis: 32px;
+            padding: 5px 8px;
+            border-right-style: solid;
+            border-right-width: 1px;
+            border-right-color: transparent;
+            background: map-get($theme-colors, 'semi-gray');
+            background-clip: padding-box;
+          }
+          .questionContent {
+            height: 100%;
+            flex-grow: 1;
+            flex-shrink: 0;
+            padding: 5px 16px 5px 8px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            background: map-get($theme-colors, 'semi-gray');
+          }
+        }
+      }
+    }
   }
 }

@@ -6,10 +6,11 @@ import * as styles from './multi-choice.scss';
 
 interface MultiChoiceProps {
   multiAnswer?: boolean;
-  questionLabels: Array<string>;
 }
 
-export const MultiChoice = ({question, optionalAnswers, selected, onSelect, multiAnswer, questionLabels}: QuestionProps & MultiChoiceProps) => {
+const questionLabels = makeQuestionLabels();
+
+export const MultiChoice = ({question, optionalAnswers, selected, onSelect, multiAnswer}: QuestionProps & MultiChoiceProps) => {
   const selectedArray = selected ? selected.split(',') : [];
 
   const handleSelect = useCallback(
@@ -51,8 +52,4 @@ export const MultiChoice = ({question, optionalAnswers, selected, onSelect, mult
       </div>
     </div>
   );
-};
-
-MultiChoice.defaultProps = {
-  questionLabels: makeQuestionLabels()
 };

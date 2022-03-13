@@ -66,23 +66,4 @@
       }
     }
   }
-
-  .quizOptionalAnswer {
-    display: flex;
-    height: 32px;
-    align-items: center;
-    padding: 5px 16px;
-
-    background: rgba(255, 255, 255, 0.16);
-    border-radius: 4px;
-    font-size: 16px;
-    color: #ffffff;
-    cursor: pointer;
-
-    &.active {
-      border: 1px solid #ffffff;
-      box-sizing: border-box;
-      background: rgba(255, 255, 255, 0.2);
-    }
-  }
 }
