@@ -16,6 +16,7 @@ export interface QuizReviewProps {
   reviewDetails: Array<QuizQuestion>;
   showAnswers: boolean;
   showScores: boolean;
+  preparePlayer: (qq: QuizQuestion, manualChange: boolean, showQuestion: false) => void;
 }
 
 const translates = (): QuizTranslates => {
@@ -30,12 +31,13 @@ const translates = (): QuizTranslates => {
 };
 
 export const QuizReview = withText(translates)(
-  ({score, onRetake, onClose, reviewDetails, showAnswers, showScores, ...translates}: QuizReviewProps & QuizTranslates) => {
+  ({score, onRetake, onClose, reviewDetails, showAnswers, showScores, preparePlayer, ...translates}: QuizReviewProps & QuizTranslates) => {
     const [isLoading, setIsLoading] = useState(false);
     const [reviewQuestion, setReviewQuestion] = useState<ReviewQuestion | null>(null);
 
     const handleQuestionClick = useCallback(
       (qq: QuizQuestion, index: number) => () => {
+        preparePlayer(qq, true, false);
         setReviewQuestion({
           qq,
           index
@@ -48,12 +50,15 @@ export const QuizReview = withText(translates)(
     }, []);
     const handleNavigationClick = useCallback(
       (shift: number) => {
-        if (reviewQuestion && reviewDetails[reviewQuestion.index + shift]) {
-          return () =>
+        const nextQuizQuestion = reviewQuestion && reviewDetails[reviewQuestion.index + shift];
+        if (nextQuizQuestion) {
+          return () => {
+            preparePlayer(nextQuizQuestion, true, false);
             setReviewQuestion({
-              qq: reviewDetails[reviewQuestion.index + shift],
+              qq: nextQuizQuestion,
               index: reviewQuestion.index + shift
             });
+          };
         }
       },
       [reviewQuestion, reviewDetails]

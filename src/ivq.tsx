@@ -189,7 +189,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             },
             reviewDetails,
             showAnswers: showCorrectAfterSubmission,
-            showScores: showGradeAfterSubmission
+            showScores: showGradeAfterSubmission,
+            preparePlayer: this._questionsManager.preparePlayer
           };
           if (this._dataManager.isRetakeAllowed()) {
             params.onRetake = () => {

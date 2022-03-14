@@ -30,7 +30,7 @@ export class QuestionsManager {
     }
     const quizQuestion = this._getQuizQuestionMap().get(id);
     if (quizQuestion) {
-      this._prepareQuestion(quizQuestion);
+      this.preparePlayer(quizQuestion);
     }
   }
 
@@ -43,7 +43,7 @@ export class QuestionsManager {
     });
     const reviewQuestion = unansweredQuestions[0] || this._getQuizQuestionMap().values().next().value;
     const submissionDetails: SubmissionDetails = {
-      onReview: () => this._prepareQuestion(reviewQuestion, true),
+      onReview: () => this.preparePlayer(reviewQuestion, true),
       showSubmitButton: !unansweredQuestions.length
     };
     return submissionDetails;
@@ -53,9 +53,8 @@ export class QuestionsManager {
     return Array.from(this._getQuizQuestionMap().values());
   };
 
-  private _prepareQuestion = (qq: QuizQuestion, manualChange = false) => {
+  public preparePlayer = (qq: QuizQuestion, manualChange = false, showQuestion = true) => {
     const {startTime} = qq;
-    this._removeActives();
     this._player.pause();
     if (manualChange && this._player.currentTime !== startTime) {
       this.quizQuestionJumping = true;
@@ -64,10 +63,13 @@ export class QuestionsManager {
         this.quizQuestionJumping = false;
       });
     }
-    this._showQuestion(qq);
+    if (showQuestion) {
+      this._showQuestion(qq);
+    }
   };
 
   private _showQuestion = (qq: QuizQuestion) => {
+    this._removeActives();
     const {next, prev, q, a, disabled} = qq;
     let onNext;
     let onPrev;
@@ -76,7 +78,7 @@ export class QuestionsManager {
       const nextQuestion = this._getQuizQuestionMap().get(next.id)!;
       if (qq.skipAvailable || (a && nextQuestion.a)) {
         onNext = () => {
-          this._prepareQuestion(nextQuestion, true);
+          this.preparePlayer(nextQuestion, true);
         };
       }
     }
@@ -85,7 +87,7 @@ export class QuestionsManager {
       const prevQuestion = this._getQuizQuestionMap().get(prev.id)!;
       if (qq.skipAvailable || (a && prevQuestion.a)) {
         onPrev = () => {
-          this._prepareQuestion(this._getQuizQuestionMap().get(prev.id)!, true);
+          this.preparePlayer(this._getQuizQuestionMap().get(prev.id)!, true);
         };
       }
     }
@@ -93,7 +95,7 @@ export class QuestionsManager {
     const onSkip = () => {
       this._removeActives();
       if (qq.startTime === next?.startTime) {
-        this._prepareQuestion(this._getQuizQuestionMap().get(next.id)!);
+        this.preparePlayer(this._getQuizQuestionMap().get(next.id)!);
       } else {
         this._player.play();
       }
