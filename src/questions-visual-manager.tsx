@@ -15,7 +15,7 @@ import {QuizQuestionWrapper} from './components/quiz-question';
 
 const {EventType} = core;
 
-export class QuestionsManager {
+export class QuestionsVisualManager {
   private _removeActives = () => {};
   public quizQuestionJumping = false;
   constructor(
