@@ -15,11 +15,11 @@ import {QuizQuestionWrapper} from './components/quiz-question';
 
 const {EventType} = core;
 
-export class QuestionsManager {
+export class QuestionsVisualManager {
   private _removeActives = () => {};
   public quizQuestionJumping = false;
   constructor(
-    private _quizQuestionMap: QuizQuestionMap,
+    private _getQuizQuestionMap: () => QuizQuestionMap,
     private _player: KalturaPlayerTypes.Player,
     private _eventManager: KalturaPlayerTypes.EventManager
   ) {}
@@ -28,42 +28,33 @@ export class QuestionsManager {
     if (this.quizQuestionJumping) {
       return;
     }
-    const quizQuestion = this._quizQuestionMap.get(id);
+    const quizQuestion = this._getQuizQuestionMap().get(id);
     if (quizQuestion) {
-      this._prepareQuestion(quizQuestion);
+      this.preparePlayer(quizQuestion);
     }
   }
 
   public getSubmissionDetails = (): SubmissionDetails => {
     const unansweredQuestions: Array<QuizQuestion> = [];
-    this._quizQuestionMap.forEach(qq => {
+    this._getQuizQuestionMap().forEach(qq => {
       if (!qq.a) {
         unansweredQuestions.push(qq);
       }
     });
-    const reviewQuestion = unansweredQuestions[0] || this._quizQuestionMap.values().next().value;
+    const reviewQuestion = unansweredQuestions[0] || this._getQuizQuestionMap().values().next().value;
     const submissionDetails: SubmissionDetails = {
-      onReview: () => this._prepareQuestion(reviewQuestion, true),
+      onReview: () => this.preparePlayer(reviewQuestion, true),
       showSubmitButton: !unansweredQuestions.length
     };
     return submissionDetails;
   };
 
   public getReviewDetails = (): Array<QuizQuestion> => {
-    return Array.from(this._quizQuestionMap.values());
+    return Array.from(this._getQuizQuestionMap().values());
   };
 
-  public clearAnswers = () => {
-    this._quizQuestionMap.forEach(qq => this._quizQuestionMap.set(qq.id, {...qq, a: undefined}));
-  };
-
-  public disableQuestions = () => {
-    this._quizQuestionMap.forEach(qq => this._quizQuestionMap.set(qq.id, {...qq, disabled: true}));
-  };
-
-  private _prepareQuestion = (qq: QuizQuestion, manualChange = false) => {
+  public preparePlayer = (qq: QuizQuestion, manualChange = false, showQuestion = true) => {
     const {startTime} = qq;
-    this._removeActives();
     this._player.pause();
     if (manualChange && this._player.currentTime !== startTime) {
       this.quizQuestionJumping = true;
@@ -72,28 +63,31 @@ export class QuestionsManager {
         this.quizQuestionJumping = false;
       });
     }
-    this._showQuestion(qq);
+    if (showQuestion) {
+      this._showQuestion(qq);
+    }
   };
 
   private _showQuestion = (qq: QuizQuestion) => {
+    this._removeActives();
     const {next, prev, q, a, disabled} = qq;
     let onNext;
     let onPrev;
     if (next) {
       // allow go to next CP: 1 - if canSkip is true; 2 - if canSkip is false but current CP and next CP is already answered
-      const nextQuestion = this._quizQuestionMap.get(next.id)!;
+      const nextQuestion = this._getQuizQuestionMap().get(next.id)!;
       if (qq.skipAvailable || (a && nextQuestion.a)) {
         onNext = () => {
-          this._prepareQuestion(nextQuestion, true);
+          this.preparePlayer(nextQuestion, true);
         };
       }
     }
     if (prev) {
       // allow go to prev CP: 1 - if canSkip is true; 2 - if canSkip is false but current CP and prev CP is already answered
-      const prevQuestion = this._quizQuestionMap.get(prev.id)!;
+      const prevQuestion = this._getQuizQuestionMap().get(prev.id)!;
       if (qq.skipAvailable || (a && prevQuestion.a)) {
         onPrev = () => {
-          this._prepareQuestion(this._quizQuestionMap.get(prev.id)!, true);
+          this.preparePlayer(this._getQuizQuestionMap().get(prev.id)!, true);
         };
       }
     }
@@ -101,7 +95,7 @@ export class QuestionsManager {
     const onSkip = () => {
       this._removeActives();
       if (qq.startTime === next?.startTime) {
-        this._prepareQuestion(this._quizQuestionMap.get(next.id)!);
+        this.preparePlayer(this._getQuizQuestionMap().get(next.id)!);
       } else {
         this._player.play();
       }
@@ -124,7 +118,7 @@ export class QuestionsManager {
     const quizQuestionUi: QuizQuestionUI = {
       q,
       a,
-      questionIndex: [qq.index + 1, this._quizQuestionMap.size],
+      questionIndex: [qq.index + 1, this._getQuizQuestionMap().size],
       onNext,
       onPrev,
       onContinue,

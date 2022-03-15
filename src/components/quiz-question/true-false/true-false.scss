@@ -9,7 +9,7 @@
   .questionText {
     margin-bottom: 16px;
     font-weight: bold;
-    @include question-text;
+    @include ivq-text;
   }
   .optionalAnswersWrapper {
     display: flex;

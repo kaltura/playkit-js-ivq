@@ -1,14 +1,16 @@
 import {h} from 'preact';
 import {useCallback} from 'preact/hooks';
+import {makeQuestionLabels} from '../../../utils';
 import {QuestionProps} from '../../../types';
 import * as styles from './multi-choice.scss';
 
 interface MultiChoiceProps {
   multiAnswer?: boolean;
-  questionLabels: Array<string>;
 }
 
-export const MultiChoice = ({question, optionalAnswers, selected, onSelect, multiAnswer, questionLabels}: QuestionProps & MultiChoiceProps) => {
+const questionLabels = makeQuestionLabels();
+
+export const MultiChoice = ({question, optionalAnswers, selected, onSelect, multiAnswer}: QuestionProps & MultiChoiceProps) => {
   const selectedArray = selected ? selected.split(',') : [];
 
   const handleSelect = useCallback(
@@ -50,10 +52,4 @@ export const MultiChoice = ({question, optionalAnswers, selected, onSelect, mult
       </div>
     </div>
   );
-};
-
-MultiChoice.defaultProps = {
-  questionLabels: Array.from(Array(26))
-    .map((e, i) => i + 'A'.charCodeAt(0))
-    .map(x => String.fromCharCode(x)) // ["A", "B", "C", ... , "Z"]
 };

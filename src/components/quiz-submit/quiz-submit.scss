@@ -10,7 +10,7 @@
   padding: 48px 58px;
   .title,
   .description {
-    @include question-text;
+    @include ivq-text;
   }
   .title {
     font-size: 32px;

@@ -10,3 +10,8 @@ export const getKeyValue = (kalturaKeyValueArray: KalturaKeyValue[], key: string
 export const stringToBoolean = (value: string) => {
   return value === 'true';
 };
+
+export const makeQuestionLabels = () =>
+  Array.from(Array(26))
+    .map((e, i) => i + 'A'.charCodeAt(0))
+    .map(x => String.fromCharCode(x)); // ["A", "B", "C", ... , "Z"]

@@ -1,18 +1,17 @@
-import {h, VNode} from 'preact';
-import {useMemo, useCallback, useEffect, useState} from 'preact/hooks';
+import {h} from 'preact';
+import {useMemo, useCallback, useState} from 'preact/hooks';
 import {QuizQuestionUI} from '../../types';
 import {TrueFalse} from './true-false';
 import {MultiChoice} from './multi-choice';
 import {ReflectionPoint} from './reflection-point';
 import {OpenQuestion} from './open-question';
 import {KalturaQuizQuestionTypes, Selected, QuestionProps, QuizTranslates} from '../../types';
-import {icons} from '../icons';
 import {IvqOverlay} from '../ivq-overlay';
 import {Spinner} from '../spinner';
+import {IvqBottomBar} from '../ivq-bottom-bar';
 import * as styles from './quiz-question-wrapper.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
-const {Overlay, SeekBarPlaybackContainer, Icon} = KalturaPlayer.ui.components;
 
 interface QuizQuestionWrapperProps {
   qui: QuizQuestionUI;
@@ -49,14 +48,7 @@ const getSelected = (qui: QuizQuestionUI): string => {
 export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrapperProps & QuizTranslates) => {
   const {qui} = props;
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
-  const [ivqSeekBar, setIvqSeekBar] = useState<VNode<typeof SeekBarPlaybackContainer> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    // SeekBar for caulculation uses width of parent element,
-    // so proper calculation happens only if parent element already mount
-    setIvqSeekBar(<SeekBarPlaybackContainer />);
-  }, []);
 
   const handleContinue = useCallback(() => {
     if (!selected) {
@@ -141,30 +133,13 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
     );
   }, [qui, selected, isLoading]);
 
-  const renderIvqNavigation = useMemo(() => {
-    return (
-      <div className={styles.ivqNavigationWrapper}>
-        <button disabled={!qui.onPrev} onClick={qui.onPrev} className={[styles.navigationButton, !qui.onPrev ? styles.disabled : ''].join(' ')}>
-          <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
-        </button>
-        <div className={styles.questionIndex}>{props.questionCounter}</div>
-        <button disabled={!qui.onNext} onClick={qui.onNext} className={[styles.navigationButton, !qui.onNext ? styles.disabled : ''].join(' ')}>
-          <Icon id="ivq-chevron-right" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_RIGHT} />
-        </button>
-      </div>
-    );
-  }, [qui]);
-
   return (
     <IvqOverlay>
       <div className={styles.ivqQuestionContainer}>
         <div className={styles.ivqQuestionWrapper}>{renderIvqQuestion}</div>
         {renderIvqButtons}
       </div>
-      <div className={styles.ivqBottomBar}>
-        {ivqSeekBar}
-        {renderIvqNavigation}
-      </div>
+      <IvqBottomBar questionCounter={props.questionCounter} onPrev={qui.onPrev} onNext={qui.onNext} />
     </IvqOverlay>
   );
 });

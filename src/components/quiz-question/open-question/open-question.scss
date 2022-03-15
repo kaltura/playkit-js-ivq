@@ -9,7 +9,7 @@
   .questionText {
     margin-bottom: 16px;
     font-weight: bold;
-    @include question-text;
+    @include ivq-text;
   }
   .textAreaWrapper {
     position: relative;
@@ -35,7 +35,7 @@
       position: absolute;
       right: 0;
       bottom: -24px;
-      @include question-text;
+      @include ivq-text;
       font-size: 14px;
     }
     ::selection {

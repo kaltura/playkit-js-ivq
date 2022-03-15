@@ -17,7 +17,7 @@ $secondary-button-colors: (
   'focus': #444444
 );
 
-@mixin question-text {
+@mixin ivq-text {
   font-style: normal;
   font-size: 18px;
   line-height: 20px;
@@ -105,3 +105,5 @@ $secondary-button-colors: (
     cursor: default;
   }
 }
+
+$bottom-bar-height: 60px;
