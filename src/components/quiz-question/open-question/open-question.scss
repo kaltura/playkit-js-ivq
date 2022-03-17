@@ -7,13 +7,13 @@
   width: 100%;
   max-height: 100%;
   .questionText {
-    margin-bottom: 16px;
-    font-weight: bold;
     @include ivq-text;
+    font-weight: bold;
   }
   .textAreaWrapper {
     position: relative;
     width: 100%;
+    margin-top: 16px;
     .questionAnswer {
       width: 100%;
       resize: vertical;

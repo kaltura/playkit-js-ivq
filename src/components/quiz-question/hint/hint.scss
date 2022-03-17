@@ -1,0 +1,30 @@
+@import '../../../theme.scss';
+
+.hintWrapper {
+  margin-top: 6px;
+  .hintButton {
+    display: flex;
+    width: fit-content;
+    @include ivq-text;
+    font-style: italic;
+    font-size: 14px;
+    line-height: 18px;
+    cursor: pointer;
+    .iconWrapper {
+      width: 16px;
+      height: 16px;
+      margin-left: 4px;
+      display: none;
+      &.active {
+        display: inline-block;
+      }
+    }
+  }
+  .hintContent {
+    @include ivq-text;
+    margin-top: 6px;
+    font-style: italic;
+    font-size: 14px;
+    line-height: 18px;
+  }
+}
