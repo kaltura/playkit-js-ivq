@@ -175,7 +175,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _displayQuizReview = () => {
     const reviewDetails = this._questionsVisualManager.getReviewDetails();
     if (reviewDetails) {
-      const {showGradeAfterSubmission, showCorrectAfterSubmission, attemptsAllowed} = this._dataManager.quizData!;
+      const {showGradeAfterSubmission, showCorrectAfterSubmission} = this._dataManager.quizData!;
       const removeSubmitScreen = this._player.ui.addComponent({
         label: 'kaltura-ivq-review-screen',
         presets: PresetAreas,
