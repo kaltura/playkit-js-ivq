@@ -14,11 +14,10 @@
     @include ivq-text;
   }
   .title {
-    min-height: 32px;
+    flex-shrink: 0;
     font-size: 32px;
     line-height: 32px;
     font-weight: 700;
-    overflow: hidden;
   }
   .description {
     margin-top: 16px;
