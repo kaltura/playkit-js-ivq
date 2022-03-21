@@ -37,26 +37,32 @@
     overflow: hidden;
     text-align: left;
     .questionText {
-      font-weight: bold;
       @include ivq-text;
+      font-weight: bold;
+      margin-bottom: 4px;
     }
     .correctAnswerIs {
       @include ivq-text;
       font-size: 16px;
       line-height: 21px;
-      margin-bottom: 4px;
+      margin-bottom: 10px;
     }
+
+    .yourAnswer,
     .openQuestionAnswer {
       @include ivq-text;
       font-size: 14px;
       line-height: 18px;
-      margin-top: 16px;
     }
-    .correctAnswer {
-      @include ivq-text;
-      font-size: 14px;
-      line-height: 18px;
-      margin-top: 24px;
+
+    .yourAnswer {
+      margin-top: 16px;
+      margin-bottom: 4px;
+    }
+
+    .openQuestionAnswer {
+      margin-top: 12px;
+      margin-bottom: 10px;
     }
 
     .trueFalseAnswerWrapper {

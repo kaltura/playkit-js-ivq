@@ -12,7 +12,7 @@ export class KalturaQuizAnswer {
   quizUserEntryId: string;
   userId: string;
   id: string;
-  explanation?: string;
+  feedback?: string;
   openAnswer?: string;
   partnerId: number;
   createdAt: string;
@@ -27,7 +27,7 @@ export class KalturaQuizAnswer {
     this.quizUserEntryId = codeCuePoint.quizUserEntryId;
     this.userId = codeCuePoint.userId;
     this.id = codeCuePoint.id;
-    this.explanation = codeCuePoint.explanation;
+    this.feedback = codeCuePoint.feedback;
     this.openAnswer = codeCuePoint.openAnswer;
     this.partnerId = codeCuePoint.partnerId;
     this.createdAt = codeCuePoint.createdAt;

@@ -27,7 +27,13 @@
       "back_button": "Back",
       "correct_answer_is": "The correct answer is:",
       "your_answer": "Your answer",
-      "correct_answer": "The correct answer"
+      "correct_answer": "The correct answer",
+      "show_hint": "Show hint",
+      "hide_hint": "Hide hint",
+      "show_why": "Show why",
+      "hide_why": "Hide why",
+      "show_feedback": "Show feedback",
+      "hide_feedback": "Hide feedback"
     }
   }
 }

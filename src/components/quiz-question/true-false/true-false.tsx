@@ -1,9 +1,10 @@
 import {h} from 'preact';
 import {useCallback} from 'preact/hooks';
 import {QuestionProps} from '../../../types';
+import {QuestionAddons} from '../question-addons';
 import * as styles from './true-false.scss';
 
-export const TrueFalse = ({question, optionalAnswers, selected, onSelect}: QuestionProps) => {
+export const TrueFalse = ({question, optionalAnswers, selected, onSelect, hint}: QuestionProps) => {
   const handleSelect = useCallback(
     (key: string) => () => {
       onSelect && onSelect(key);
@@ -13,6 +14,7 @@ export const TrueFalse = ({question, optionalAnswers, selected, onSelect}: Quest
   return (
     <div className={styles.trueFalseWrapper}>
       <div className={styles.questionText}>{question}</div>
+      {hint && <QuestionAddons hint={hint} />}
       <div className={styles.optionalAnswersWrapper}>
         {optionalAnswers.map(({key, text}) => {
           const isActive = selected.includes(key);
