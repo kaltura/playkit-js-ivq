@@ -5,7 +5,7 @@ import {makeQuestionLabels} from '../../../utils';
 import {icons} from '../../icons';
 import {IvqBottomBar} from '../../ivq-bottom-bar';
 import {QuestionIcon} from '../question-icon';
-import {Hint} from '../../quiz-question/hint';
+import {QuestionAddons} from '../../quiz-question/question-addons';
 import * as styles from './question-review.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -50,7 +50,7 @@ export const QuestionReview = withText(translates)(
         return (
           <Fragment>
             <div className={styles.correctAnswerIs}>{`${translates.correctAnswerIs} ${correctAnswer?.text}`}</div>
-            {q.explanation && <Hint explanation={q.explanation} />}
+            {q.explanation && <QuestionAddons explanation={q.explanation} />}
             <div className={styles.yourAnswer}>{a?.answerKey === correctAnswer?.key ? translates.correctAnswer : translates.yourAnswer}</div>
             <div className={styles.trueFalseAnswerWrapper}>
               {q.optionalAnswers.map(({key, text}) => {
@@ -86,7 +86,7 @@ export const QuestionReview = withText(translates)(
         return (
           <Fragment>
             <div className={styles.correctAnswerIs}>{`${translates.correctAnswerIs} ${correctAnswers.join(',')}`}</div>
-            {q.explanation && <Hint explanation={q.explanation} />}
+            {q.explanation && <QuestionAddons explanation={q.explanation} />}
             <div className={styles.yourAnswer}>{translates.yourAnswer}</div>
             <div className={styles.multiAnswersWrapper}>
               <div className={styles.multiAnswersContainer}>
@@ -110,7 +110,7 @@ export const QuestionReview = withText(translates)(
         return (
           <Fragment>
             <div className={styles.openQuestionAnswer}>{a?.openAnswer}</div>
-            {a?.feedback && <Hint feedback={a?.feedback} />}
+            {a?.feedback && <QuestionAddons feedback={a?.feedback} />}
           </Fragment>
         );
       }

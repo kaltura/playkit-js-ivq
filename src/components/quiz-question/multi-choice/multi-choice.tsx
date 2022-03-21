@@ -3,7 +3,7 @@ import {useCallback} from 'preact/hooks';
 import {makeQuestionLabels} from '../../../utils';
 import {QuestionProps} from '../../../types';
 import * as styles from './multi-choice.scss';
-import {Hint} from '../hint';
+import {QuestionAddons} from '../question-addons';
 
 interface MultiChoiceProps {
   multiAnswer?: boolean;
@@ -32,7 +32,7 @@ export const MultiChoice = ({question, optionalAnswers, selected, onSelect, hint
   return (
     <div className={styles.multiChoiceWrapper}>
       <div className={styles.questionText}>{question}</div>
-      {hint && <Hint hint={hint} />}
+      {hint && <QuestionAddons hint={hint} />}
       <div className={styles.optionalAnswersWrapper}>
         <div className={styles.optionalAnswersContainer}>
           {optionalAnswers.map(({key, text}, index) => {

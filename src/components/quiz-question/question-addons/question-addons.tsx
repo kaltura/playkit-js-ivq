@@ -31,7 +31,7 @@ const translates = ({hint, explanation}: HintProps): QuizTranslates => {
   };
 };
 
-export const Hint = withText(translates)(({hint, explanation, feedback, ...translates}: HintProps & QuizTranslates) => {
+export const QuestionAddons = withText(translates)(({hint, explanation, feedback, ...translates}: HintProps & QuizTranslates) => {
   const [isOpen, setIsOpen] = useState(false);
   const getContent = useMemo(() => {
     if (hint) {
@@ -47,8 +47,8 @@ export const Hint = withText(translates)(({hint, explanation, feedback, ...trans
     setIsOpen(!isOpen);
   }, [isOpen]);
   return (
-    <div className={styles.hintWrapper}>
-      <div role="button" tabIndex={0} className={styles.hintButton} onClick={handleClick}>
+    <div className={styles.questionAddonsWrapper}>
+      <div role="button" tabIndex={0} className={styles.questionAddonsButton} onClick={handleClick}>
         {isOpen ? translates.hide : translates.show}
         <div className={[styles.iconWrapper, isOpen ? styles.active : ''].join(' ')}>
           <Icon
@@ -69,7 +69,7 @@ export const Hint = withText(translates)(({hint, explanation, feedback, ...trans
           />
         </div>
       </div>
-      {isOpen && <div className={styles.hintContent}>{getContent}</div>}
+      {isOpen && <div className={styles.questionAddonsContent}>{getContent}</div>}
     </div>
   );
 });

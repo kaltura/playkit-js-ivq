@@ -1,8 +1,8 @@
 @import '../../../theme.scss';
 
-.hintWrapper {
+.questionAddonsWrapper {
   margin-top: 6px;
-  .hintButton {
+  .questionAddonsButton {
     display: flex;
     width: fit-content;
     @include ivq-text;
@@ -20,7 +20,7 @@
       }
     }
   }
-  .hintContent {
+  .questionAddonsContent {
     @include ivq-text;
     margin-top: 6px;
     font-style: italic;

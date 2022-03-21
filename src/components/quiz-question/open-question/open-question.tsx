@@ -1,7 +1,7 @@
 import {h} from 'preact';
 import {useCallback} from 'preact/hooks';
 import {QuestionProps, QuizTranslates} from '../../../types';
-import {Hint} from '../hint';
+import {QuestionAddons} from '../question-addons';
 import * as styles from './open-question.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -21,7 +21,7 @@ export const OpenQuestion = withText(translates)(({question, selected, onSelect,
   return (
     <div className={styles.openQuestionWrapper}>
       <div className={styles.questionText}>{question}</div>
-      {hint && <Hint hint={hint} />}
+      {hint && <QuestionAddons hint={hint} />}
       <div className={styles.textAreaWrapper}>
         <textarea
           className={styles.questionAnswer}
