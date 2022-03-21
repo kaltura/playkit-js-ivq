@@ -91,6 +91,7 @@ $secondary-button-colors: (
   border-radius: 4px;
   border-color: transparent;
   font-size: 16px;
+  line-height: 20px;
   color: map-get($theme-colors, 'primary');
   cursor: pointer;
   box-sizing: border-box;
@@ -104,6 +105,16 @@ $secondary-button-colors: (
   &.disabled {
     cursor: default;
   }
+}
+
+@mixin without-scrollbar {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 $bottom-bar-height: 60px;
