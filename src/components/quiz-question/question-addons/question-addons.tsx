@@ -2,7 +2,7 @@ import {h} from 'preact';
 import {useMemo, useCallback, useState} from 'preact/hooks';
 import {QuizTranslates} from '../../../types';
 import {icons} from '../../icons';
-import * as styles from './hint.scss';
+import * as styles from './question-addons.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 const {Icon} = KalturaPlayer.ui.components;
