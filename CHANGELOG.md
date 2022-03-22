@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/kaltura/playkit-js-ivq/compare/v0.1.0...v0.2.0) (2022-03-22)
+
+
+### Features
+
+* **FEV-1035:** multiple choice and multiple answer question types ([#9](https://github.com/kaltura/playkit-js-ivq/issues/9)) ([5496bc2](https://github.com/kaltura/playkit-js-ivq/commit/5496bc2))
+* **FEV-1040:** I as a quiz creator can add a "Hint" text to all question types ([#15](https://github.com/kaltura/playkit-js-ivq/issues/15)) ([22eb6c5](https://github.com/kaltura/playkit-js-ivq/commit/22eb6c5))
+* **FEV-1090:** I as a user want to see the welcome page before video starts ([#14](https://github.com/kaltura/playkit-js-ivq/issues/14)) ([7015bcc](https://github.com/kaltura/playkit-js-ivq/commit/7015bcc))
+* **FEV-1091:** Submission & review ([#13](https://github.com/kaltura/playkit-js-ivq/issues/13)) ([9338d80](https://github.com/kaltura/playkit-js-ivq/commit/9338d80))
+* **FEV-1095:** Seeking feature ([#12](https://github.com/kaltura/playkit-js-ivq/issues/12)) ([59bf50a](https://github.com/kaltura/playkit-js-ivq/commit/59bf50a))
+* **FEV-1095:** skip question feature ([#10](https://github.com/kaltura/playkit-js-ivq/issues/10)) ([c316151](https://github.com/kaltura/playkit-js-ivq/commit/c316151))
+* **FEV-1097:** allow\disallow change answers ([#11](https://github.com/kaltura/playkit-js-ivq/issues/11)) ([11e609d](https://github.com/kaltura/playkit-js-ivq/commit/11e609d))
+* **FEV-1196:** IVQ responsiveness ([#16](https://github.com/kaltura/playkit-js-ivq/issues/16)) ([b4322f2](https://github.com/kaltura/playkit-js-ivq/commit/b4322f2))
+
+
+
 ## 0.1.0 (2022-02-14)
 
 
