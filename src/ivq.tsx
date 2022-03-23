@@ -285,10 +285,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             } else {
               this._dataManager.initDataManager(quizData, lastQuizUserEntry, quizAnswers);
             }
-            if (this._dataManager.quizData?.showWelcomePage) {
-              this._player.pause();
-              this._showWelcomeScreen();
-            }
           }
         }
       })
@@ -297,6 +293,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       })
       .finally(() => {
         this._resolveQuizDataPromise();
+        if (this._dataManager.quizData?.showWelcomePage) {
+          this._player.pause();
+          this._showWelcomeScreen();
+        }
       });
   }
 
