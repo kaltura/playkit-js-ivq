@@ -19,7 +19,7 @@ const {EventType} = core;
 const SEEK_DELTA = 0.3;
 
 export class QuestionsVisualManager {
-  private _removeActives = () => {};
+  private _removeActives: Function | null = null;
   private _updateQuestionComponent = (qui: QuizQuestionUI) => {};
   public quizQuestionJumping = false;
   constructor(
@@ -73,7 +73,7 @@ export class QuestionsVisualManager {
   };
 
   private _renderUiComponent = (quizQuestionUi: QuizQuestionUI, updateComponent: boolean) => {
-    if (updateComponent) {
+    if (updateComponent && this._removeActives) {
       this._updateQuestionComponent(quizQuestionUi);
     } else {
       this._removeActives = this._player.ui.addComponent({
@@ -88,6 +88,13 @@ export class QuestionsVisualManager {
           return <QuizQuestionWrapper qui={qui || quizQuestionUi} />;
         }
       });
+    }
+  };
+
+  private _removeUiComponent = () => {
+    if (this._removeActives) {
+      this._removeActives();
+      this._removeActives = null;
     }
   };
 
@@ -118,7 +125,7 @@ export class QuestionsVisualManager {
       if (qq.startTime === next?.startTime) {
         this.preparePlayer(this._getQuizQuestionMap().get(next.id)!, true);
       } else {
-        this._removeActives();
+        this._removeUiComponent();
         this._player.play();
       }
     };
