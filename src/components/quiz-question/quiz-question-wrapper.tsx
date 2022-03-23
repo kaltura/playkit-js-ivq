@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {useMemo, useCallback, useState} from 'preact/hooks';
+import {useMemo, useCallback, useState, useEffect} from 'preact/hooks';
 import {QuizQuestionUI} from '../../types';
 import {TrueFalse} from './true-false';
 import {MultiChoice} from './multi-choice';
@@ -49,6 +49,10 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   const {qui} = props;
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setSelected(getSelected(qui));
+  }, [qui]);
 
   const handleContinue = useCallback(() => {
     if (!selected) {

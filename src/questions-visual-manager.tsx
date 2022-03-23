@@ -1,6 +1,7 @@
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {h} from 'preact';
+import {useState} from 'preact/hooks';
 import {
   QuizQuestion,
   KalturaQuizQuestion,
@@ -15,8 +16,11 @@ import {QuizQuestionWrapper} from './components/quiz-question';
 
 const {EventType} = core;
 
+const SEEK_DELTA = 0.3;
+
 export class QuestionsVisualManager {
   private _removeActives = () => {};
+  private _updateQuestionComponent = (qui: QuizQuestionUI) => {};
   public quizQuestionJumping = false;
   constructor(
     private _getQuizQuestionMap: () => QuizQuestionMap,
@@ -56,7 +60,7 @@ export class QuestionsVisualManager {
   public preparePlayer = (qq: QuizQuestion, manualChange = false, showQuestion = true) => {
     const {startTime} = qq;
     this._player.pause();
-    if (manualChange && this._player.currentTime !== startTime) {
+    if (manualChange && (this._player.currentTime < startTime - SEEK_DELTA || this._player.currentTime > startTime + SEEK_DELTA)) {
       this.quizQuestionJumping = true;
       this._player.currentTime = startTime;
       this._eventManager.listenOnce(this._player, EventType.SEEKED, () => {
@@ -64,12 +68,30 @@ export class QuestionsVisualManager {
       });
     }
     if (showQuestion) {
-      this._showQuestion(qq);
+      this._showQuestion(qq, manualChange);
     }
   };
 
-  private _showQuestion = (qq: QuizQuestion) => {
-    this._removeActives();
+  private _renderUiComponent = (quizQuestionUi: QuizQuestionUI, updateComponent: boolean) => {
+    if (updateComponent) {
+      this._updateQuestionComponent(quizQuestionUi);
+    } else {
+      this._removeActives = this._player.ui.addComponent({
+        label: 'kaltura-ivq-question-wrapper',
+        presets: PresetAreas,
+        container: 'GuiArea',
+        get: () => {
+          const [qui, setQui] = useState<QuizQuestionUI | null>(null);
+          this._updateQuestionComponent = (qui: QuizQuestionUI) => {
+            setQui(qui);
+          };
+          return <QuizQuestionWrapper qui={qui || quizQuestionUi} />;
+        }
+      });
+    }
+  };
+
+  private _showQuestion = (qq: QuizQuestion, manualChange: boolean) => {
     const {next, prev, q, a, disabled} = qq;
     let onNext;
     let onPrev;
@@ -93,10 +115,10 @@ export class QuestionsVisualManager {
     }
 
     const onSkip = () => {
-      this._removeActives();
       if (qq.startTime === next?.startTime) {
-        this.preparePlayer(this._getQuizQuestionMap().get(next.id)!);
+        this.preparePlayer(this._getQuizQuestionMap().get(next.id)!, true);
       } else {
+        this._removeActives();
         this._player.play();
       }
     };
@@ -129,11 +151,6 @@ export class QuestionsVisualManager {
       quizQuestionUi.onSkip = onSkip;
     }
 
-    this._removeActives = this._player.ui.addComponent({
-      label: 'kaltura-ivq-question-wrapper',
-      presets: PresetAreas,
-      container: 'GuiArea',
-      get: () => <QuizQuestionWrapper qui={quizQuestionUi} />
-    });
+    this._renderUiComponent(quizQuestionUi, manualChange);
   };
 }
