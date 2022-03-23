@@ -7,9 +7,10 @@
   width: 100%;
   max-height: 100%;
   .questionText {
+    @include ivq-text;
     flex-shrink: 0;
     font-weight: bold;
-    @include ivq-text;
+    overflow-wrap: break-word;
   }
   .optionalAnswersWrapper {
     display: flex;
