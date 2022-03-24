@@ -18,9 +18,13 @@
   .questionsWrapper {
     display: flex;
     flex-direction: row;
-    overflow: auto;
+    overflow: hidden;
     width: 100%;
-    @include without-scrollbar;
+    @include ivq-scrollbar;
+    &:hover {
+      overflow: auto;
+    }
+    
     .questionsContainer {
       display: flex;
       flex-direction: column;
