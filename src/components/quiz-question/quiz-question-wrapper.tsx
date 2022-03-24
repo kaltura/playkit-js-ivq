@@ -52,6 +52,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
 
   useEffect(() => {
     setSelected(getSelected(qui));
+    setIsLoading(false);
   }, [qui]);
 
   const handleContinue = useCallback(() => {
@@ -71,7 +72,9 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       // for another types - prevent send the same answer
       newAnswer = null;
     }
-    setIsLoading(true);
+    if (newAnswer) {
+      setIsLoading(true);
+    }
     qui.onContinue(newAnswer).finally(() => {
       setIsLoading(false);
     });

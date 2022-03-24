@@ -17,7 +17,7 @@ const translates = (): QuizTranslates => {
 export const OpenQuestion = withText(translates)(({question, selected, onSelect, openQuestionPlaceHolder, hint}: QuestionProps & QuizTranslates) => {
   const handleChange = useCallback((e: any) => {
     onSelect && onSelect(e.target.value);
-  }, []);
+  }, [onSelect]);
   return (
     <div className={styles.openQuestionWrapper}>
       <div className={styles.questionText}>{question}</div>
