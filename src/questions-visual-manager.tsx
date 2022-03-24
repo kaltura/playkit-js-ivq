@@ -19,7 +19,7 @@ const {EventType} = core;
 const SEEK_DELTA = 0.3;
 
 export class QuestionsVisualManager {
-  private _removeActives: Function | null = null;
+  private _removeActiveQuestion: Function | null = null;
   private _updateQuestionComponent = (qui: QuizQuestionUI) => {};
   public quizQuestionJumping = false;
   constructor(
@@ -60,7 +60,8 @@ export class QuestionsVisualManager {
   public preparePlayer = (qq: QuizQuestion, manualChange = false, showQuestion = true) => {
     const {startTime} = qq;
     this._player.pause();
-    if (manualChange && (this._player.currentTime < startTime - SEEK_DELTA || this._player.currentTime > startTime + SEEK_DELTA)) {
+    const isNotCurrentTime = this._player.currentTime < startTime - SEEK_DELTA || this._player.currentTime > startTime + SEEK_DELTA;
+    if (manualChange && isNotCurrentTime) {
       this.quizQuestionJumping = true;
       this._player.currentTime = startTime;
       this._eventManager.listenOnce(this._player, EventType.SEEKED, () => {
@@ -73,10 +74,10 @@ export class QuestionsVisualManager {
   };
 
   private _renderUiComponent = (quizQuestionUi: QuizQuestionUI, updateComponent: boolean) => {
-    if (updateComponent && this._removeActives) {
+    if (updateComponent && this._removeActiveQuestion) {
       this._updateQuestionComponent(quizQuestionUi);
     } else {
-      this._removeActives = this._player.ui.addComponent({
+      this._removeActiveQuestion = this._player.ui.addComponent({
         label: 'kaltura-ivq-question-wrapper',
         presets: PresetAreas,
         container: 'GuiArea',
@@ -92,9 +93,9 @@ export class QuestionsVisualManager {
   };
 
   private _removeUiComponent = () => {
-    if (this._removeActives) {
-      this._removeActives();
-      this._removeActives = null;
+    if (this._removeActiveQuestion) {
+      this._removeActiveQuestion();
+      this._removeActiveQuestion = null;
     }
   };
 
