@@ -117,4 +117,17 @@ $secondary-button-colors: (
   scrollbar-width: none; /* Firefox */
 }
 
+@mixin ivq-scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(33, 33, 33, 0.9);
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
 $bottom-bar-height: 60px;

@@ -36,6 +36,11 @@
     height: 100%;
     overflow: hidden;
     text-align: left;
+    @include ivq-scrollbar;
+    &:hover {
+      overflow: auto;
+    }
+
     .questionText {
       @include ivq-text;
       flex-shrink: 0;
@@ -89,9 +94,12 @@
     .multiAnswersWrapper {
       display: flex;
       flex-direction: row;
-      overflow: auto;
+      overflow: hidden;
       margin-top: 4px;
-      @include without-scrollbar;
+      @include ivq-scrollbar;
+      &:hover {
+        overflow: auto;
+      }
 
       .multiAnswersContainer {
         display: flex;

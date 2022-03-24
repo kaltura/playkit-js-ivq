@@ -17,9 +17,12 @@
   .optionalAnswersWrapper {
     display: flex;
     flex-direction: row;
-    overflow: auto;
+    overflow: hidden;
     margin-top: 16px;
-    @include without-scrollbar;
+    @include ivq-scrollbar;
+    &:hover {
+      overflow: auto;
+    }
 
     .optionalAnswersContainer {
       display: flex;
