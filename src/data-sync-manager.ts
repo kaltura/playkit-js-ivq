@@ -146,7 +146,8 @@ export class DataSyncManager {
         prev,
         skipAvailable: this.quizData!.canSkip && !quizDone,
         seekAvailable: !this.quizData!.preventSeek,
-        disabled: !this.quizData!.allowAnswerUpdate || quizDone,
+        allowAnswerUpdate: this.quizData!.allowAnswerUpdate,
+        disabled: quizDone,
         onContinue
       };
       this.quizQuestionsMap.set(cue.id, quizQuestion);

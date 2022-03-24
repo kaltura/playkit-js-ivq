@@ -122,7 +122,7 @@ export class QuestionsVisualManager {
       onNext,
       onPrev,
       onContinue,
-      disabled
+      disabled: disabled || Boolean(!qq.allowAnswerUpdate && a)
     };
 
     if (qq.skipAvailable && qq.q.questionType !== KalturaQuizQuestionTypes.Reflection) {
