@@ -1,7 +1,8 @@
 import {h} from 'preact';
-import {useMemo, useCallback, useState} from 'preact/hooks';
+import {useMemo, useCallback, useState, useRef} from 'preact/hooks';
 import {QuizTranslates} from '../../../types';
 import {icons} from '../../icons';
+import {A11yWrapper} from '../../a11y-wrapper';
 import * as styles from './question-addons.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -33,6 +34,7 @@ const translates = ({hint, explanation}: HintProps): QuizTranslates => {
 
 export const QuestionAddons = withText(translates)(({hint, explanation, feedback, ...translates}: HintProps & QuizTranslates) => {
   const [isOpen, setIsOpen] = useState(false);
+  const toggleButtonRef = useRef<HTMLDivElement>(null);
   const getContent = useMemo(() => {
     if (hint) {
       return hint;
@@ -43,32 +45,40 @@ export const QuestionAddons = withText(translates)(({hint, explanation, feedback
       return feedbackArr[feedbackArr.length - 1];
     }
   }, [hint, explanation, feedback]);
-  const handleClick = useCallback(() => {
-    setIsOpen(!isOpen);
-  }, [isOpen]);
+  const handleClick = useCallback(
+    (e: Event, byKeyboard?: boolean) => {
+      setIsOpen(!isOpen);
+      if (byKeyboard) {
+        toggleButtonRef.current?.focus();
+      }
+    },
+    [isOpen]
+  );
   return (
     <div className={styles.questionAddonsWrapper}>
-      <div role="button" tabIndex={0} className={styles.questionAddonsButton} onClick={handleClick}>
-        {isOpen ? translates.hide : translates.show}
-        <div className={[styles.iconWrapper, isOpen ? styles.active : ''].join(' ')}>
-          <Icon
-            id="ivq-down-icon"
-            height={icons.SmallSize}
-            width={icons.SmallSize}
-            viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`}
-            path={icons.DOWN}
-          />
+      <A11yWrapper onClick={handleClick}>
+        <div role="button" tabIndex={0} className={styles.questionAddonsButton} ref={toggleButtonRef}>
+          {isOpen ? translates.hide : translates.show}
+          <div className={[styles.iconWrapper, isOpen ? styles.active : ''].join(' ')}>
+            <Icon
+              id="ivq-down-icon"
+              height={icons.SmallSize}
+              width={icons.SmallSize}
+              viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`}
+              path={icons.DOWN}
+            />
+          </div>
+          <div className={[styles.iconWrapper, !isOpen ? styles.active : ''].join(' ')}>
+            <Icon
+              id="ivq-right-icon"
+              height={icons.SmallSize}
+              width={icons.SmallSize}
+              viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`}
+              path={icons.RIGHT}
+            />
+          </div>
         </div>
-        <div className={[styles.iconWrapper, !isOpen ? styles.active : ''].join(' ')}>
-          <Icon
-            id="ivq-right-icon"
-            height={icons.SmallSize}
-            width={icons.SmallSize}
-            viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`}
-            path={icons.RIGHT}
-          />
-        </div>
-      </div>
+      </A11yWrapper>
       {isOpen && <div className={styles.questionAddonsContent}>{getContent}</div>}
     </div>
   );

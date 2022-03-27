@@ -3,7 +3,7 @@ import {useCallback, useState, useMemo} from 'preact/hooks';
 import {QuizQuestion} from '../../types';
 import {IvqOverlay} from '../ivq-overlay';
 import {QuestionReview, ReviewQuestion} from './question-review';
-import {QuestionListReview, QuestionListReviewProps} from './question-list-review';
+import {QuestionListReview} from './question-list-review';
 
 export interface QuizReviewProps {
   preparePlayer: (qq: QuizQuestion, manualChange: boolean, showQuestion: false) => void;
@@ -19,11 +19,12 @@ export const QuizReview = ({reviewDetails, preparePlayer, ...questionListReviewP
   const [reviewQuestion, setReviewQuestion] = useState<ReviewQuestion | null>(null);
 
   const handleQuestionClick = useCallback(
-    (qq: QuizQuestion, index: number) => () => {
+    (qq: QuizQuestion, index: number) => (e: Event, byKeyboard?: boolean) => {
       preparePlayer(qq, true, false);
       setReviewQuestion({
         qq,
-        index
+        index,
+        byKeyboard
       });
     },
     []

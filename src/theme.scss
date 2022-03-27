@@ -95,6 +95,7 @@ $secondary-button-colors: (
   color: map-get($theme-colors, 'primary');
   cursor: pointer;
   box-sizing: border-box;
+  outline-offset: -1px;
   &:hover:not(.disabled) {
     background: map-get($theme-colors, 'active');
   }

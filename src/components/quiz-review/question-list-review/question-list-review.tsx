@@ -4,6 +4,7 @@ import {Spinner} from '../../spinner';
 import {QuizQuestion} from '../../../types';
 import {QuizTranslates} from '../../../types';
 import {QuestionIcon} from '../question-icon';
+import {A11yWrapper} from '../../a11y-wrapper';
 import * as styles from './question-list-review.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -49,11 +50,13 @@ export const QuestionListReview = withText(translates)(
         <div className={styles.questionsContainer}>
           {reviewDetails.map((qq, index) => {
             return (
-              <div key={qq.id} role="button" tabIndex={0} onClick={onQuestionClick(qq, index)} className={styles.reviewAnswer}>
-                <div className={styles.questionLabel}>{qq.index + 1}</div>
-                <div className={styles.questionContent}>{qq.q.question}</div>
-                <QuestionIcon questionType={qq.q.questionType} isCorrect={qq.a?.isCorrect} />
-              </div>
+              <A11yWrapper onClick={onQuestionClick(qq, index)}>
+                <div key={qq.id} role="button" tabIndex={0} className={styles.reviewAnswer}>
+                  <div className={styles.questionLabel}>{qq.index + 1}</div>
+                  <div className={styles.questionContent}>{qq.q.question}</div>
+                  <QuestionIcon questionType={qq.q.questionType} isCorrect={qq.a?.isCorrect} />
+                </div>
+              </A11yWrapper>
             );
           })}
         </div>

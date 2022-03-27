@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {useMemo, useCallback, useState, useEffect} from 'preact/hooks';
+import {useMemo, useCallback, useState, useEffect, useRef} from 'preact/hooks';
 import {QuizQuestionUI} from '../../types';
 import {TrueFalse} from './true-false';
 import {MultiChoice} from './multi-choice';
@@ -9,6 +9,7 @@ import {KalturaQuizQuestionTypes, Selected, QuestionProps, QuizTranslates} from 
 import {IvqOverlay} from '../ivq-overlay';
 import {Spinner} from '../spinner';
 import {IvqBottomBar} from '../ivq-bottom-bar';
+import {A11yWrapper} from '../a11y-wrapper';
 import * as styles from './quiz-question-wrapper.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -49,6 +50,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   const {qui} = props;
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
   const [isLoading, setIsLoading] = useState(false);
+  const continueButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setSelected(getSelected(qui));
@@ -85,10 +87,13 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   }, [qui]);
 
   const onSelect = useCallback(
-    (data: Selected) => {
+    (data: Selected, byKeyboard?: boolean) => {
       setSelected(data);
+      if (byKeyboard) {
+        continueButtonRef.current?.focus();
+      }
     },
-    [setSelected]
+    [setSelected, continueButtonRef]
   );
 
   const renderIvqQuestion = useMemo(() => {
@@ -120,13 +125,16 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
     const continueDisabled = !selected.length;
     return (
       <div className={styles.ivqButtonsWrapper}>
-        <button
-          onClick={handleContinue}
-          disabled={continueDisabled}
-          aria-label={props.continueButtonAriaLabel}
-          className={[styles.continueButton, continueDisabled ? styles.disabled : ''].join(' ')}>
-          {isLoading ? <Spinner /> : props.continueButton}
-        </button>
+        <A11yWrapper onClick={handleContinue}>
+          <button
+            ref={continueButtonRef}
+            disabled={continueDisabled}
+            aria-label={props.continueButtonAriaLabel}
+            className={[styles.continueButton, continueDisabled ? styles.disabled : ''].join(' ')}>
+            {isLoading ? <Spinner /> : props.continueButton}
+          </button>
+        </A11yWrapper>
+
         {qui.onSkip && (
           <button
             onClick={handleSkip}
@@ -138,11 +146,11 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
         )}
       </div>
     );
-  }, [qui, selected, isLoading]);
+  }, [qui, selected, isLoading, continueButtonRef]);
 
   return (
     <IvqOverlay>
-      <div className={styles.ivqQuestionContainer}>
+      <div className={styles.ivqQuestionContainer} role="dialog" aria-labelledby="dialogTitle" aria-live="polite">
         <div className={styles.ivqQuestionWrapper}>{renderIvqQuestion}</div>
         {renderIvqButtons}
       </div>
