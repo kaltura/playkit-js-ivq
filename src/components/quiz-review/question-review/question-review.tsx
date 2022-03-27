@@ -110,6 +110,7 @@ export const QuestionReview = withText(translates)(
         return (
           <Fragment>
             <div className={styles.openQuestionAnswer}>{a?.openAnswer}</div>
+            {q.explanation && <QuestionAddons explanation={q.explanation} />}
             {a?.feedback && <QuestionAddons feedback={a?.feedback} />}
           </Fragment>
         );
