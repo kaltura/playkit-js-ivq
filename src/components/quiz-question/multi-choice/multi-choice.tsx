@@ -14,6 +14,7 @@ const questionLabels = makeQuestionLabels();
 
 export const MultiChoice = ({question, optionalAnswers, selected, onSelect, hint, multiAnswer}: QuestionProps & MultiChoiceProps) => {
   const selectedArray = selected ? selected.split(',') : [];
+  const disabled = !onSelect;
 
   const handleSelect = useCallback(
     (key: string, isActive: boolean) => (e: Event, byKeyboard?: boolean) => {
@@ -43,8 +44,8 @@ export const MultiChoice = ({question, optionalAnswers, selected, onSelect, hint
                 <div
                   key={key}
                   role="button"
-                  tabIndex={onSelect ? 0 : -1}
-                  className={[styles.multiSelectAnswer, isActive ? styles.active : '', onSelect ? '' : styles.disabled].join(' ')}>
+                  tabIndex={disabled ? -1 : 0}
+                  className={[styles.multiSelectAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ')}>
                   <div className={styles.questionLabel}>{questionLabels[index]}</div>
                   <div className={styles.questionContent}>{text}</div>
                 </div>

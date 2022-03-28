@@ -12,6 +12,7 @@ export const A11yWrapper = ({children, onClick}: A11yWrapperProps) => {
   return cloneElement(children, {
     onKeyDown: (e: KeyboardEvent) => {
       if ([SPACE, ENTER].includes(e.keyCode)) {
+        e.preventDefault();
         onClick(e, true);
       }
     },
