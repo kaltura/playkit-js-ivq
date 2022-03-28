@@ -33,6 +33,8 @@
       max-height: 120px;
       font-size: 14px;
       line-height: 18px;
+      outline-offset: -1px;
+      @include ivq-scrollbar;
     }
     .charCounter {
       @include ivq-text;

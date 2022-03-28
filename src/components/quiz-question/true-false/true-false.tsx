@@ -2,12 +2,14 @@ import {h} from 'preact';
 import {useCallback} from 'preact/hooks';
 import {QuestionProps} from '../../../types';
 import {QuestionAddons} from '../question-addons';
+import {A11yWrapper} from '../../a11y-wrapper';
 import * as styles from './true-false.scss';
 
 export const TrueFalse = ({question, optionalAnswers, selected, onSelect, hint}: QuestionProps) => {
+  const disabled = !onSelect;
   const handleSelect = useCallback(
-    (key: string) => () => {
-      onSelect && onSelect(key);
+    (key: string) => (e: Event, byKeyboard?: boolean) => {
+      onSelect && onSelect(key, byKeyboard);
     },
     [onSelect]
   );
@@ -18,11 +20,13 @@ export const TrueFalse = ({question, optionalAnswers, selected, onSelect, hint}:
       <div className={styles.optionalAnswersWrapper}>
         {optionalAnswers.map(({key, text}) => {
           const isActive = selected.includes(key);
-          const classes = [styles.trueFalseAnswer, isActive ? styles.active : '', onSelect ? '' : styles.disabled].join(' ');
+          const classes = [styles.trueFalseAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ');
           return (
-            <div key={key} role="button" tabIndex={0} onClick={handleSelect(key)} className={classes}>
-              {text}
-            </div>
+            <A11yWrapper onClick={handleSelect(key)}>
+              <div key={key} role="button" tabIndex={disabled ? -1 : 0} className={classes}>
+                {text}
+              </div>
+            </A11yWrapper>
           );
         })}
       </div>

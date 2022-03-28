@@ -1,5 +1,5 @@
 import {h, Fragment} from 'preact';
-import {useMemo} from 'preact/hooks';
+import {useMemo, useRef, useEffect} from 'preact/hooks';
 import {QuizTranslates, QuizQuestion, KalturaQuizQuestionTypes} from '../../../types';
 import {makeQuestionLabels} from '../../../utils';
 import {icons} from '../../icons';
@@ -14,6 +14,7 @@ const {Icon} = KalturaPlayer.ui.components;
 export interface ReviewQuestion {
   qq: QuizQuestion;
   index: number;
+  byKeyboard?: boolean;
 }
 
 interface QuestionReviewProps {
@@ -43,7 +44,15 @@ const translates = ({questionsAmount, reviewQuestion}: QuestionReviewProps): Qui
 
 export const QuestionReview = withText(translates)(
   ({onBack, onNext, onPrev, questionCounter, reviewQuestion, ...translates}: QuestionReviewProps & QuizTranslates) => {
+    const backButtonRef = useRef<HTMLButtonElement>(null);
     const {q, a} = reviewQuestion.qq;
+
+    useEffect(() => {
+      if (reviewQuestion.byKeyboard) {
+        backButtonRef.current?.focus();
+      }
+    }, [reviewQuestion]);
+
     const renderCorrectAnswers = useMemo(() => {
       if (q.questionType === KalturaQuizQuestionTypes.TrueFalse) {
         const correctAnswer = q.optionalAnswers.find(val => val.isCorrect);
@@ -121,7 +130,7 @@ export const QuestionReview = withText(translates)(
       <Fragment>
         <div className={styles.questionReviewWrapper}>
           <div className={styles.backButtonContainer}>
-            <button onClick={onBack} className={styles.backButton}>
+            <button onClick={onBack} className={styles.backButton} ref={backButtonRef}>
               <div className={styles.iconContainer}>
                 <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
               </div>
