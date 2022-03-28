@@ -22,7 +22,7 @@ export const TrueFalse = ({question, optionalAnswers, selected, onSelect, hint}:
           const classes = [styles.trueFalseAnswer, isActive ? styles.active : '', onSelect ? '' : styles.disabled].join(' ');
           return (
             <A11yWrapper onClick={handleSelect(key)}>
-              <div key={key} role="button" tabIndex={0} className={classes}>
+              <div key={key} role="button" tabIndex={onSelect ? 0 : -1} className={classes}>
                 {text}
               </div>
             </A11yWrapper>

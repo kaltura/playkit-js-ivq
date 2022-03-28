@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {useMemo, useCallback, useState, useRef} from 'preact/hooks';
+import {useMemo, useCallback, useState} from 'preact/hooks';
 import {QuizTranslates} from '../../../types';
 import {icons} from '../../icons';
 import {A11yWrapper} from '../../a11y-wrapper';

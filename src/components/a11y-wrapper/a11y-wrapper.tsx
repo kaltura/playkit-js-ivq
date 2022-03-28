@@ -1,7 +1,7 @@
 import {cloneElement, VNode} from 'preact';
 import {OnClick} from '../../types';
 
-const {ENTER} = KalturaPlayer.ui.utils.KeyMap;
+const {ENTER, SPACE} = KalturaPlayer.ui.utils.KeyMap;
 
 interface A11yWrapperProps {
   children: VNode;
@@ -11,7 +11,7 @@ interface A11yWrapperProps {
 export const A11yWrapper = ({children, onClick}: A11yWrapperProps) => {
   return cloneElement(children, {
     onKeyDown: (e: KeyboardEvent) => {
-      if (e.keyCode === ENTER) {
+      if ([SPACE, ENTER].includes(e.keyCode)) {
         onClick(e, true);
       }
     },

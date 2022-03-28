@@ -43,7 +43,7 @@ export const MultiChoice = ({question, optionalAnswers, selected, onSelect, hint
                 <div
                   key={key}
                   role="button"
-                  tabIndex={0}
+                  tabIndex={onSelect ? 0 : -1}
                   className={[styles.multiSelectAnswer, isActive ? styles.active : '', onSelect ? '' : styles.disabled].join(' ')}>
                   <div className={styles.questionLabel}>{questionLabels[index]}</div>
                   <div className={styles.questionContent}>{text}</div>
