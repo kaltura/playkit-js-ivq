@@ -293,7 +293,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       })
       .finally(() => {
         this._resolveQuizDataPromise();
-        if (this._dataManager.quizData?.showWelcomePage) {
+        if (this._dataManager.quizData?.showWelcomePage && !this._player.config.playback.autoplay) {
           this._player.pause();
           this._showWelcomeScreen();
         }
