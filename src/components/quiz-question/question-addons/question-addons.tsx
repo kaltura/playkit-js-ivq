@@ -34,7 +34,6 @@ const translates = ({hint, explanation}: HintProps): QuizTranslates => {
 
 export const QuestionAddons = withText(translates)(({hint, explanation, feedback, ...translates}: HintProps & QuizTranslates) => {
   const [isOpen, setIsOpen] = useState(false);
-  const toggleButtonRef = useRef<HTMLDivElement>(null);
   const getContent = useMemo(() => {
     if (hint) {
       return hint;
@@ -46,18 +45,15 @@ export const QuestionAddons = withText(translates)(({hint, explanation, feedback
     }
   }, [hint, explanation, feedback]);
   const handleClick = useCallback(
-    (e: Event, byKeyboard?: boolean) => {
+    () => {
       setIsOpen(!isOpen);
-      if (byKeyboard) {
-        toggleButtonRef.current?.focus();
-      }
     },
     [isOpen]
   );
   return (
     <div className={styles.questionAddonsWrapper}>
       <A11yWrapper onClick={handleClick}>
-        <div role="button" tabIndex={0} className={styles.questionAddonsButton} ref={toggleButtonRef}>
+        <div role="button" tabIndex={0} className={styles.questionAddonsButton}>
           {isOpen ? translates.hide : translates.show}
           <div className={[styles.iconWrapper, isOpen ? styles.active : ''].join(' ')}>
             <Icon
