@@ -100,17 +100,20 @@ export const QuestionReview = withText(translates)(
             <div className={styles.multiAnswersWrapper}>
               <div className={styles.multiAnswersContainer}>
                 {q.optionalAnswers.map(({key, text}, index) => {
+                  const renderIncorrectIcon = userIncorrectAnswerKeys.includes(key);
+                  const renderCorrectIcon = userCorrectAnswerKeys.includes(key);
                   return (
                     <div key={key} className={[styles.multiSelectAnswer, styles.disabled].join(' ')}>
                       <div className={styles.questionLabel}>{questionLabels[index]}</div>
                       <div className={styles.questionContent}>{text}</div>
-                      {userCorrectAnswerKeys.includes(key) && <QuestionIcon questionType={q.questionType} isCorrect={true} />}
-                      {userIncorrectAnswerKeys.includes(key) && <QuestionIcon questionType={q.questionType} isCorrect={false} />}
+                      {renderCorrectIcon && <QuestionIcon questionType={q.questionType} isCorrect={true} />}
+                      {renderIncorrectIcon && <QuestionIcon questionType={q.questionType} isCorrect={false} />}
+                      {!(renderCorrectIcon || renderIncorrectIcon) && <div className={styles.iconPlaceholder}/>}
                     </div>
                   );
                 })}
               </div>
-              <div />
+              <div className={styles.rightDivider}/>
             </div>
           </Fragment>
         );

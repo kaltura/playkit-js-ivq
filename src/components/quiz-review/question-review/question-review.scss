@@ -104,7 +104,10 @@
       .multiAnswersContainer {
         display: flex;
         flex-direction: column;
+        flex-grow: 1;
+        flex-shrink: 0;
         max-width: 100%;
+        overflow: hidden;
         .multiSelectAnswer {
           @include optional-answer;
           height: auto;
@@ -118,6 +121,11 @@
           &:last-child {
             margin-bottom: 0;
           }
+          .questionLabel,
+          .questionContent,
+          .iconPlaceholder {
+            background: map-get($theme-colors, 'semi-gray');
+          }
           .questionLabel {
             display: flex;
             justify-content: center;
@@ -129,21 +137,29 @@
             border-right-style: solid;
             border-right-width: 1px;
             border-right-color: transparent;
-            background: map-get($theme-colors, 'semi-gray');
             background-clip: padding-box;
           }
           .questionContent {
-            min-width: 36px;
+            min-width: 0;
+            max-width: calc(100% - 64px); // question label + icon or placeholder
             height: 100%;
+            width: max-content;
             flex-grow: 1;
-            flex-shrink: 1;
+            flex-shrink: 0;
             padding: 5px 16px 5px 8px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            background: map-get($theme-colors, 'semi-gray');
+          }
+          .iconPlaceholder {
+            height: 100%;
+            flex-basis: 32px;
+            flex-shrink: 0;
           }
         }
+      }
+      .rightDivider {
+        flex-grow: 50;
       }
     }
   }
