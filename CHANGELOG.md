@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/kaltura/playkit-js-ivq/compare/v0.2.2...v0.3.0) (2022-03-29)
+
+
+### Bug Fixes
+
+* **FEV-1198:** A redundant scrollbar is displayed on the submission page ([#18](https://github.com/kaltura/playkit-js-ivq/issues/18)) ([fbb474b](https://github.com/kaltura/playkit-js-ivq/commit/fbb474b))
+* **FEV-1198:** scroll bar and text truncate fix ([#24](https://github.com/kaltura/playkit-js-ivq/issues/24)) ([77790d8](https://github.com/kaltura/playkit-js-ivq/commit/77790d8))
+* **FEV-1199:** welcome page fix (when auto-play enabled) ([#23](https://github.com/kaltura/playkit-js-ivq/issues/23)) ([03985cb](https://github.com/kaltura/playkit-js-ivq/commit/03985cb))
+* **FEV-1200:** Moving between questions at the same timepoint is not smooth- the video frame should NOT be seen while moving ([#19](https://github.com/kaltura/playkit-js-ivq/issues/19)) ([7dc02a4](https://github.com/kaltura/playkit-js-ivq/commit/7dc02a4))
+* **FEV-1203:** display welcome slate once quiz data ready ([#17](https://github.com/kaltura/playkit-js-ivq/issues/17)) ([c0ebe9f](https://github.com/kaltura/playkit-js-ivq/commit/c0ebe9f))
+* **FEV-1206:** Disable answers if allowAnswerUpdate not allowed ([#20](https://github.com/kaltura/playkit-js-ivq/issues/20)) ([37170eb](https://github.com/kaltura/playkit-js-ivq/commit/37170eb))
+* **FEV-1208:** add 'why' to open question ([#21](https://github.com/kaltura/playkit-js-ivq/issues/21)) ([29cdbc8](https://github.com/kaltura/playkit-js-ivq/commit/29cdbc8))
+
+
+### Features
+
+* **FEV-1032:** I as a user want the V7 quiz to be accessible ([#22](https://github.com/kaltura/playkit-js-ivq/issues/22)) ([8929b37](https://github.com/kaltura/playkit-js-ivq/commit/8929b37))
+
+
+
 ### [0.2.2](https://github.com/kaltura/playkit-js-ivq/compare/v0.2.1...v0.2.2) (2022-03-22)
 
 
