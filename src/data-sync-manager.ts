@@ -3,7 +3,7 @@ import {core} from 'kaltura-player-js';
 import {getKeyValue, stringToBoolean} from './utils';
 import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry} from './providers/response-types';
 import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes, QuizQuestion} from './types';
-import {QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader} from './providers';
+import {QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader, QuizAnswerLoader} from './providers';
 
 const {TimedMetadata} = core;
 
@@ -67,12 +67,31 @@ export class DataSyncManager {
         } else {
           this.quizUserEntry = userEntry;
           // disable questions after quiz submitted
-          this.quizQuestionsMap.forEach(qq => {
-            this.quizQuestionsMap.set(qq.id, {...qq, disabled: true, skipAvailable: false});
+          return this.getQuizAnswers().then(quizAnswers => {
+            this._quizAnswers = quizAnswers;
+            this.prepareQuizData();
+            this.quizQuestionsMap.forEach(qq => {
+              this.quizQuestionsMap.set(qq.id, {...qq, disabled: true, skipAvailable: false});
+            });
           });
         }
       }
     });
+  };
+
+  public getQuizAnswers = (): Promise<KalturaQuizAnswer[]> => {
+    return this._player.provider
+      .doRequest([{loader: QuizAnswerLoader, params: {entryId: this._player.sources.id, quizUserEntryId: this.quizUserEntry?.id}}])
+      .then((data: Map<string, any>) => {
+        if (data && data.has(QuizAnswerLoader.id)) {
+          const quizAnswersLoader = data.get(QuizAnswerLoader.id);
+          const quizAnswers = quizAnswersLoader?.response?.quizAnswers;
+          return quizAnswers;
+        }
+      })
+      .catch((e: any) => {
+        this._logger.warn(e);
+      });
   };
 
   public createNewQuizUserEntry = (): Promise<KalturaUserEntry> => {
