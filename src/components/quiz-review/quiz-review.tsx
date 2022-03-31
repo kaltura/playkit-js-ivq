@@ -62,7 +62,7 @@ export const QuizReview = ({reviewDetails, preparePlayer, ...questionListReviewP
 
   const renderReviewQuestionsList = useMemo(() => {
     return <QuestionListReview onQuestionClick={handleQuestionClick} reviewDetails={reviewDetails} {...questionListReviewProps} />;
-  }, [questionListReviewProps]);
+  }, [questionListReviewProps, reviewDetails]);
 
   return <IvqOverlay>{reviewQuestion ? renderReviewQuestion : renderReviewQuestionsList}</IvqOverlay>;
 };

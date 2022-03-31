@@ -55,7 +55,8 @@ export const QuestionReview = withText(translates)(
 
     const renderCorrectAnswers = useMemo(() => {
       if (q.questionType === KalturaQuizQuestionTypes.TrueFalse) {
-        const correctAnswer = q.optionalAnswers.find(val => val.isCorrect);
+        const correctAnswerKey = a?.correctAnswerKeys[0]?.value;
+        const correctAnswer = q?.optionalAnswers.find(val => val.key === correctAnswerKey);
         return (
           <Fragment>
             <div className={styles.correctAnswerIs}>{`${translates.correctAnswerIs} ${correctAnswer?.text}`}</div>
@@ -76,16 +77,18 @@ export const QuestionReview = withText(translates)(
       }
       if ([KalturaQuizQuestionTypes.MultiAnswer, KalturaQuizQuestionTypes.MultiChoice].includes(q.questionType)) {
         const questionLabels = makeQuestionLabels();
+        const correctAnswersKeys = a?.correctAnswerKeys.map(val => val.value);
         const correctAnswers: Array<string> = [];
         const userCorrectAnswerKeys: Array<string> = [];
         const userIncorrectAnswerKeys: Array<string> = [];
         const userAnswerKeys = a?.answerKey.split(',') || [];
         q.optionalAnswers.forEach((optionalAnswer, index) => {
-          if (optionalAnswer.isCorrect) {
+          const isCorrect = correctAnswersKeys?.includes(optionalAnswer.key);
+          if (isCorrect) {
             correctAnswers.push(questionLabels[index]);
           }
           if (userAnswerKeys.includes(optionalAnswer.key)) {
-            if (optionalAnswer.isCorrect) {
+            if (isCorrect) {
               userCorrectAnswerKeys.push(optionalAnswer.key);
             } else {
               userIncorrectAnswerKeys.push(optionalAnswer.key);
@@ -108,12 +111,12 @@ export const QuestionReview = withText(translates)(
                       <div className={styles.questionContent}>{text}</div>
                       {renderCorrectIcon && <QuestionIcon questionType={q.questionType} isCorrect={true} />}
                       {renderIncorrectIcon && <QuestionIcon questionType={q.questionType} isCorrect={false} />}
-                      {!(renderCorrectIcon || renderIncorrectIcon) && <div className={styles.iconPlaceholder}/>}
+                      {!(renderCorrectIcon || renderIncorrectIcon) && <div className={styles.iconPlaceholder} />}
                     </div>
                   );
                 })}
               </div>
-              <div className={styles.rightDivider}/>
+              <div className={styles.rightDivider} />
             </div>
           </Fragment>
         );
