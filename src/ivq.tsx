@@ -224,7 +224,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             params.onSubmit = () => {
               return this._dataManager.submitQuiz().then(() => {
                 removeSubmitScreen();
-                if (this._dataManager.quizData?.showCorrectAfterSubmission) {
+                if (this._dataManager.quizData?.showGradeAfterSubmission) {
                   this._displayQuizReview();
                 }
               });
