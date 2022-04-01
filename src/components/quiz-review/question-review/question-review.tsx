@@ -60,7 +60,7 @@ export const QuestionReview = withText(translates)(
         return (
           <Fragment>
             <div className={styles.correctAnswerIs}>{`${translates.correctAnswerIs} ${correctAnswer?.text}`}</div>
-            {q.explanation && <QuestionAddons explanation={q.explanation} />}
+            {a?.explanation && <QuestionAddons explanation={a.explanation} />}
             <div className={styles.yourAnswer}>{a?.answerKey === correctAnswer?.key ? translates.correctAnswer : translates.yourAnswer}</div>
             <div className={styles.trueFalseAnswerWrapper}>
               {q.optionalAnswers.map(({key, text}) => {
@@ -98,7 +98,7 @@ export const QuestionReview = withText(translates)(
         return (
           <Fragment>
             <div className={styles.correctAnswerIs}>{`${translates.correctAnswerIs} ${correctAnswers.join(',')}`}</div>
-            {q.explanation && <QuestionAddons explanation={q.explanation} />}
+            {a?.explanation && <QuestionAddons explanation={a.explanation} />}
             <div className={styles.yourAnswer}>{translates.yourAnswer}</div>
             <div className={styles.multiAnswersWrapper}>
               <div className={styles.multiAnswersContainer}>
@@ -125,7 +125,7 @@ export const QuestionReview = withText(translates)(
         return (
           <Fragment>
             <div className={styles.openQuestionAnswer}>{a?.openAnswer}</div>
-            {q.explanation && <QuestionAddons explanation={q.explanation} />}
+            {a?.explanation && <QuestionAddons explanation={a.explanation} />}
             {a?.feedback && <QuestionAddons feedback={a?.feedback} />}
           </Fragment>
         );
