@@ -51,7 +51,7 @@ export class DataSyncManager {
       this._enableSeekControl();
     }
     this._syncEvents();
-    this.sendIVQMesageToListener(IvqEventTypes.QUIZSTARTED, {
+    this.sendIVQMesageToListener(IvqEventTypes.QUIZ_STARTED, {
       allowedAttempts: this.quizData.attemptsAllowed,
       allowSeekForward: !this.quizData.preventSeek,
       scoreType: this.quizData.scoreType,
@@ -72,7 +72,7 @@ export class DataSyncManager {
           this._logger.warn('submit quiz failed');
         } else {
           this.quizUserEntry = userEntry;
-          this.sendIVQMesageToListener(IvqEventTypes.QUIZSUBMITTED, userEntry.id);
+          this.sendIVQMesageToListener(IvqEventTypes.QUIZ_SUBMITTED, userEntry.id);
           return this.getQuizAnswers().then(quizAnswers => {
             this._quizAnswers = quizAnswers;
             this.prepareQuizData();
@@ -158,7 +158,7 @@ export class DataSyncManager {
         const answer = this.quizQuestionsMap.get(cue.id)!.a;
         return this._sendQuizAnswer(data, cue.metadata.questionType, answer?.id, cue.id)
           .then((newAnswer: KalturaQuizAnswer) => {
-            this.sendIVQMesageToListener(IvqEventTypes.QUESTIONANSWERED, {
+            this.sendIVQMesageToListener(IvqEventTypes.QUESTION_ANSWERED, {
               questionIndex: index,
               questionType: cue.metadata.questionType,
               questionText: cue.metadata.question,

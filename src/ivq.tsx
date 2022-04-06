@@ -253,7 +253,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       if (!quizNewUserEntry) {
         this.logger.warn('quizUserEntryId absent');
       } else {
-        this._dataManager.sendIVQMesageToListener(IvqEventTypes.QUIZRETAKE);
+        this._dataManager.sendIVQMesageToListener(IvqEventTypes.QUIZ_RETAKE);
         this._dataManager.retakeQuiz(quizNewUserEntry);
         this._player.currentTime = 0;
         this._player.play();

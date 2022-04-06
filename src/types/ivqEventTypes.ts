@@ -1,6 +1,6 @@
 export enum IvqEventTypes {
-  QUIZSTARTED = 'QuizStarted',
-  QUESTIONANSWERED = 'QuestionAnswered',
-  QUIZSUBMITTED = 'QuizSubmitted',
-  QUIZRETAKE = 'QuizRetake'
+  QUIZ_STARTED = 'QuizStarted',
+  QUESTION_ANSWERED = 'QuestionAnswered',
+  QUIZ_SUBMITTED = 'QuizSubmitted',
+  QUIZ_RETAKE = 'QuizRetake'
 }
