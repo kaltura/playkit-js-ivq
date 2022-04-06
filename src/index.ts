@@ -10,6 +10,7 @@ const NAME = __NAME__;
 
 export {Ivq as Plugin};
 export {VERSION, NAME};
+export {IvqEventTypes as EventType} from './types';
 
 const pluginName: string = 'ivq';
 KalturaPlayer.core.registerPlugin(pluginName, Ivq);

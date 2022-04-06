@@ -2,7 +2,7 @@
 import {core} from 'kaltura-player-js';
 import {getKeyValue, stringToBoolean} from './utils';
 import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry} from './providers/response-types';
-import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes, QuizQuestion} from './types';
+import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes, QuizQuestion, IvqEventTypes} from './types';
 import {QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader, QuizAnswerLoader} from './providers';
 
 const {TimedMetadata} = core;
@@ -51,6 +51,12 @@ export class DataSyncManager {
       this._enableSeekControl();
     }
     this._syncEvents();
+    this.sendIVQMesageToListener(IvqEventTypes.QUIZSTARTED, {
+      allowedAttempts: this.quizData.attemptsAllowed,
+      allowSeekForward: !this.quizData.preventSeek,
+      scoreType: this.quizData.scoreType,
+      allowAnswerUpdate: this.quizData?.allowAnswerUpdate
+    });
   }
 
   public submitQuiz = () => {
@@ -66,10 +72,11 @@ export class DataSyncManager {
           this._logger.warn('submit quiz failed');
         } else {
           this.quizUserEntry = userEntry;
-          // disable questions after quiz submitted
+          this.sendIVQMesageToListener(IvqEventTypes.QUIZSUBMITTED, userEntry.id);
           return this.getQuizAnswers().then(quizAnswers => {
             this._quizAnswers = quizAnswers;
             this.prepareQuizData();
+            // disable questions after quiz submitted
             this.quizQuestionsMap.forEach(qq => {
               this.quizQuestionsMap.set(qq.id, {...qq, disabled: true, skipAvailable: false});
             });
@@ -93,6 +100,8 @@ export class DataSyncManager {
         this._logger.warn(e);
       });
   };
+
+  public sendIVQMesageToListener = (eventType: IvqEventTypes, ivqNotificationData?: unknown) => {};
 
   public createNewQuizUserEntry = (): Promise<KalturaUserEntry> => {
     return this._player.provider
@@ -146,6 +155,13 @@ export class DataSyncManager {
         const answer = this.quizQuestionsMap.get(cue.id)!.a;
         return this._sendQuizAnswer(data, cue.metadata.questionType, answer?.id, cue.id)
           .then((newAnswer: KalturaQuizAnswer) => {
+            this.sendIVQMesageToListener(IvqEventTypes.QUESTIONANSWERED, {
+              questionIndex: index,
+              questionType: cue.metadata.questionType,
+              questionText: cue.metadata.question,
+              answer: data,
+              attemptNumber: this.quizData?.version
+            });
             // update answer
             this.quizQuestionsMap.set(cue.id, {...this.quizQuestionsMap.get(cue.id)!, a: newAnswer});
           })

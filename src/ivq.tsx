@@ -2,7 +2,7 @@ import {h} from 'preact';
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {QuizLoader} from './providers';
-import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps, PresetAreas} from './types';
+import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps, PresetAreas, IvqEventTypes} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsVisualManager} from './questions-visual-manager';
 import {KalturaUserEntry} from './providers/response-types';
@@ -253,6 +253,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       if (!quizNewUserEntry) {
         this.logger.warn('quizUserEntryId absent');
       } else {
+        this._dataManager.sendIVQMesageToListener(IvqEventTypes.QUIZRETAKE);
         this._dataManager.retakeQuiz(quizNewUserEntry);
         this._player.currentTime = 0;
         this._player.play();
