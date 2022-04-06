@@ -5,7 +5,7 @@ import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry} from './providers/resp
 import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes, QuizQuestion, IvqEventTypes} from './types';
 import {QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader, QuizAnswerLoader} from './providers';
 
-const {TimedMetadata} = core;
+const {TimedMetadata, FakeEvent} = core;
 
 interface TimedMetadataEvent {
   payload: {
@@ -101,7 +101,10 @@ export class DataSyncManager {
       });
   };
 
-  public sendIVQMesageToListener = (eventType: IvqEventTypes, ivqNotificationData?: unknown) => {};
+  public sendIVQMesageToListener = (eventType: IvqEventTypes, ivqNotificationData?: unknown) => {
+    this._logger.debug(`Fire event: ${eventType}`, ivqNotificationData);
+    this._player.dispatchEvent(new FakeEvent(eventType, ivqNotificationData));
+  };
 
   public createNewQuizUserEntry = (): Promise<KalturaUserEntry> => {
     return this._player.provider
