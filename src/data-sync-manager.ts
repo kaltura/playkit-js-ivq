@@ -26,7 +26,8 @@ export class DataSyncManager {
     private _enableSeekControl: () => void,
     private _eventManager: KalturaPlayerTypes.EventManager,
     private _player: KalturaPlayerTypes.Player,
-    private _logger: KalturaPlayerTypes.Logger
+    private _logger: KalturaPlayerTypes.Logger,
+    private _dispatchIvqEvent: (event: string, payload: unknown) => void
   ) {}
 
   private _syncEvents = () => {
@@ -51,7 +52,7 @@ export class DataSyncManager {
       this._enableSeekControl();
     }
     this._syncEvents();
-    this.sendIVQMesageToListener(IvqEventTypes.QUIZ_STARTED, {
+    this._dispatchIvqEvent(IvqEventTypes.QUIZ_STARTED, {
       allowedAttempts: this.quizData.attemptsAllowed,
       allowSeekForward: !this.quizData.preventSeek,
       scoreType: this.quizData.scoreType,
@@ -72,7 +73,7 @@ export class DataSyncManager {
           this._logger.warn('submit quiz failed');
         } else {
           this.quizUserEntry = userEntry;
-          this.sendIVQMesageToListener(IvqEventTypes.QUIZ_SUBMITTED, userEntry.id);
+          this._dispatchIvqEvent(IvqEventTypes.QUIZ_SUBMITTED, userEntry.id);
           return this.getQuizAnswers().then(quizAnswers => {
             this._quizAnswers = quizAnswers;
             this.prepareQuizData();
@@ -99,11 +100,6 @@ export class DataSyncManager {
       .catch((e: any) => {
         this._logger.warn(e);
       });
-  };
-
-  public sendIVQMesageToListener = (eventType: IvqEventTypes, ivqNotificationData?: unknown) => {
-    this._logger.debug(`Fire event: ${eventType}`, ivqNotificationData);
-    this._player.dispatchEvent(new FakeEvent(eventType, ivqNotificationData));
   };
 
   public createNewQuizUserEntry = (): Promise<KalturaUserEntry> => {
@@ -158,7 +154,7 @@ export class DataSyncManager {
         const answer = this.quizQuestionsMap.get(cue.id)!.a;
         return this._sendQuizAnswer(data, cue.metadata.questionType, answer?.id, cue.id)
           .then((newAnswer: KalturaQuizAnswer) => {
-            this.sendIVQMesageToListener(IvqEventTypes.QUESTION_ANSWERED, {
+            this._dispatchIvqEvent(IvqEventTypes.QUESTION_ANSWERED, {
               questionIndex: index,
               questionType: cue.metadata.questionType,
               questionText: cue.metadata.question,

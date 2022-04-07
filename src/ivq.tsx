@@ -39,7 +39,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._seekControl,
       this.eventManager,
       this.player,
-      this.logger
+      this.logger,
+      (event: string, payload: unknown) => this.dispatchEvent(event, payload)
     );
     this._questionsVisualManager = new QuestionsVisualManager(() => this._dataManager.quizQuestionsMap, this._player, this.eventManager);
   }
@@ -253,7 +254,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       if (!quizNewUserEntry) {
         this.logger.warn('quizUserEntryId absent');
       } else {
-        this._dataManager.sendIVQMesageToListener(IvqEventTypes.QUIZ_RETAKE);
+        this.dispatchEvent(IvqEventTypes.QUIZ_RETAKE);
         this._dataManager.retakeQuiz(quizNewUserEntry);
         this._player.currentTime = 0;
         this._player.play();
