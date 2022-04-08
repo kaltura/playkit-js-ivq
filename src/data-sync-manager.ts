@@ -5,7 +5,7 @@ import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry} from './providers/resp
 import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes, QuizQuestion, IvqEventTypes} from './types';
 import {QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader, QuizAnswerLoader} from './providers';
 
-const {TimedMetadata, FakeEvent} = core;
+const {TimedMetadata} = core;
 
 interface TimedMetadataEvent {
   payload: {
