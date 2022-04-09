@@ -28,6 +28,8 @@ export class QuestionsVisualManager {
     private _eventManager: KalturaPlayerTypes.EventManager
   ) {}
 
+  public isQuestionDisplayed = () => Boolean(this._removeActiveQuestion);
+
   public onQuestionCuepointActive({id}: KalturaQuizQuestion) {
     if (this.quizQuestionJumping) {
       return;
@@ -77,6 +79,9 @@ export class QuestionsVisualManager {
     if (updateComponent && this._removeActiveQuestion) {
       this._updateQuestionComponent(quizQuestionUi);
     } else {
+      if (this._removeActiveQuestion) {
+        this._removeActiveQuestion();
+      }
       this._removeActiveQuestion = this._player.ui.addComponent({
         label: 'kaltura-ivq-question-wrapper',
         presets: PresetAreas,

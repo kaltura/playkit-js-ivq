@@ -33,7 +33,10 @@
       "show_why": "Show why",
       "hide_why": "Hide why",
       "show_feedback": "Show feedback",
-      "hide_feedback": "Hide feedback"
+      "hide_feedback": "Hide feedback",
+      "marker_area_label": "Jump to Question {{questionIndex}}",
+      "next_question_button_area_label": "Next Question button",
+      "prev_question_button_area_label": "Previous Question button"
     }
   }
 }

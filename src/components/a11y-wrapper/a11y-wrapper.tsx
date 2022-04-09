@@ -16,6 +16,9 @@ export const A11yWrapper = ({children, onClick}: A11yWrapperProps) => {
         onClick(e, true);
       }
     },
-    onMouseUp: onClick
+    onClick: (e: MouseEvent) => {
+      e.stopPropagation();
+      onClick(e);
+    }
   });
 };

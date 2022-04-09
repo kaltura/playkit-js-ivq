@@ -2,14 +2,14 @@ import {h} from 'preact';
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {QuizLoader} from './providers';
-import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps, PresetAreas, IvqEventTypes} from './types';
+import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, PresetAreas, IvqEventTypes} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsVisualManager} from './questions-visual-manager';
 import {KalturaUserEntry} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
 import {QuizSubmit, QuizSubmitProps} from './components/quiz-submit';
 import {QuizReview, QuizReviewProps} from './components/quiz-review';
-import {TimelinePreview, TimelineMarker} from './components/timeline-preview/timeline-preview';
+import {TimelinePreview, TimelineMarker, TimelineMarkerProps} from './components/timeline';
 import {QuizDownloadLoader} from './providers/quiz-download-loader';
 import {KalturaIvqMiddleware} from './quiz-middleware';
 
@@ -105,8 +105,17 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             sticky: true
           },
           marker: {
-            get: (props: MarkerProps) => {
-              return <TimelineMarker {...props} />;
+            get: (props: TimelineMarkerProps) => {
+              return (
+                <TimelineMarker
+                  {...props}
+                  onClick={() => {
+                    this._player.currentTime = qq.startTime;
+                  }}
+                  questionIndex={qq.index}
+                  isDisabled={this._questionsVisualManager.isQuestionDisplayed}
+                />
+              );
             }
           }
         });
