@@ -19,19 +19,17 @@ const {EventType} = core;
 const SEEK_DELTA = 0.3;
 
 export class QuestionsVisualManager {
-  private _removeActiveQuestion: Function | null = null;
   private _updateQuestionComponent = (qui: QuizQuestionUI) => {};
   public quizQuestionJumping = false;
+  public removeQuestionOverlay: Function | null = null;
   constructor(
     private _getQuizQuestionMap: () => QuizQuestionMap,
     private _player: KalturaPlayerTypes.Player,
     private _eventManager: KalturaPlayerTypes.EventManager
   ) {}
 
-  public isQuestionDisplayed = () => Boolean(this._removeActiveQuestion);
-
   public onQuestionCuepointActive({id}: KalturaQuizQuestion) {
-    if (this.quizQuestionJumping) {
+    if (this.quizQuestionJumping || this._player.paused) {
       return;
     }
     const quizQuestion = this._getQuizQuestionMap().get(id);
@@ -76,13 +74,11 @@ export class QuestionsVisualManager {
   };
 
   private _renderUiComponent = (quizQuestionUi: QuizQuestionUI, updateComponent: boolean) => {
-    if (updateComponent && this._removeActiveQuestion) {
+    if (updateComponent && this.removeQuestionOverlay) {
       this._updateQuestionComponent(quizQuestionUi);
     } else {
-      if (this._removeActiveQuestion) {
-        this._removeActiveQuestion();
-      }
-      this._removeActiveQuestion = this._player.ui.addComponent({
+      this._removeUiComponent();
+      this.removeQuestionOverlay = this._player.ui.addComponent({
         label: 'kaltura-ivq-question-wrapper',
         presets: PresetAreas,
         container: 'GuiArea',
@@ -98,9 +94,9 @@ export class QuestionsVisualManager {
   };
 
   private _removeUiComponent = () => {
-    if (this._removeActiveQuestion) {
-      this._removeActiveQuestion();
-      this._removeActiveQuestion = null;
+    if (this.removeQuestionOverlay) {
+      this.removeQuestionOverlay();
+      this.removeQuestionOverlay = null;
     }
   };
 

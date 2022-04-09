@@ -6,6 +6,8 @@
       "skip_button": "Skip",
       "skip_button_area_label": "Click to skip",
       "question_counter": "Question {{current}} of {{total}}",
+      "next_question_button_area_label": "Next Question button",
+      "prev_question_button_area_label": "Previous Question button",
       "open_question_placeholder": "Type your answer here...",
       "question": "Question",
       "reflection_point": "Reflection Point",
@@ -34,9 +36,7 @@
       "hide_why": "Hide why",
       "show_feedback": "Show feedback",
       "hide_feedback": "Hide feedback",
-      "marker_area_label": "Jump to Question {{questionIndex}}",
-      "next_question_button_area_label": "Next Question button",
-      "prev_question_button_area_label": "Previous Question button"
+      "marker_area_label": "Jump to Question {{questionIndex}}"
     }
   }
 }
