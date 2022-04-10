@@ -154,7 +154,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     }
   };
 
-  private _serOverlay = (fn: Function) => {
+  private _setOverlay = (fn: Function) => {
     this._removeOverlay();
     this._removeActiveOverlay = fn;
   };
@@ -176,7 +176,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           }
         });
     };
-    this._serOverlay(
+    this._setOverlay(
       this._player.ui.addComponent({
         label: 'kaltura-ivq-welcome-screen',
         presets: PresetAreas,
@@ -203,7 +203,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     const reviewDetails = this._questionsVisualManager.getReviewDetails();
     if (reviewDetails) {
       const {showGradeAfterSubmission, showCorrectAfterSubmission} = this._dataManager.quizData!;
-      this._serOverlay(
+      this._setOverlay(
         this._player.ui.addComponent({
           label: 'kaltura-ivq-review-screen',
           presets: PresetAreas,

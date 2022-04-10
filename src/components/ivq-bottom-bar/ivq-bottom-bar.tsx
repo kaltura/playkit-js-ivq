@@ -14,8 +14,8 @@ interface IvqBottomBarProps {
 }
 
 const translates: QuizTranslates = {
-  nextQuestionButtonAriaLabel: <Text id="ivq.next_question_button_area_label">Next Question button</Text>,
-  prevQuestionButtonAriaLabel: <Text id="ivq.prev_question_button_area_label">Previous Question button</Text>
+  nextQuestionButtonAriaLabel: <Text id="ivq.next_question_area_label">Next Question</Text>,
+  prevQuestionButtonAriaLabel: <Text id="ivq.prev_question_area_label">Previous Question</Text>
 };
 
 export const IvqBottomBar = withText(translates)(({onPrev, onNext, questionCounter, ...translates}: IvqBottomBarProps & QuizTranslates) => {
