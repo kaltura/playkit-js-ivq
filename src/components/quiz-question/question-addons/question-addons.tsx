@@ -44,12 +44,9 @@ export const QuestionAddons = withText(translates)(({hint, explanation, feedback
       return feedbackArr[feedbackArr.length - 1];
     }
   }, [hint, explanation, feedback]);
-  const handleClick = useCallback(
-    () => {
-      setIsOpen(!isOpen);
-    },
-    [isOpen]
-  );
+  const handleClick = useCallback(() => {
+    setIsOpen(!isOpen);
+  }, [isOpen]);
   return (
     <div className={styles.questionAddonsWrapper}>
       <A11yWrapper onClick={handleClick}>

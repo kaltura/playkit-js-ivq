@@ -1,3 +1,5 @@
+@import '../../theme.scss';
+
 .container {
   background: rgba(0, 0, 0, 0.7);
   background-clip: content-box;
@@ -37,18 +39,5 @@
         height: 18px;
       }
     }
-  }
-}
-
-.marker {
-  border-radius: 4px;
-  width: 4px;
-  height: 8px;
-  transform: translateY(-2px);
-  background-color: white;
-
-  &.hover {
-    height: 12px;
-    transition: height 200ms ease, transform 200ms ease;
   }
 }
