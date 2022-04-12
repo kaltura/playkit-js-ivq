@@ -9,6 +9,7 @@
   .questionText {
     @include ivq-text;
     flex-shrink: 0;
+    line-height: 21px;
     overflow-wrap: break-word;
     font-weight: bold;
     overflow: initial;
