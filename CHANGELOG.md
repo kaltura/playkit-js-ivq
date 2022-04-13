@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/kaltura/playkit-js-ivq/compare/v0.3.1...v0.4.0) (2022-04-13)
+
+
+### Bug Fixes
+
+* **FEV-1198:** decrease line-height for 'why/hint/feedback' icon ([#32](https://github.com/kaltura/playkit-js-ivq/issues/32)) ([357c1ff](https://github.com/kaltura/playkit-js-ivq/commit/357c1ff))
+* **FEV-1198:** increased line-height to avoid scrollbars ([#30](https://github.com/kaltura/playkit-js-ivq/issues/30)) ([0285d9e](https://github.com/kaltura/playkit-js-ivq/commit/0285d9e))
+* **FEV-1222:** The clickable area around the markers should be expended to easily reach a specific question ([#29](https://github.com/kaltura/playkit-js-ivq/issues/29)) ([bf76f3e](https://github.com/kaltura/playkit-js-ivq/commit/bf76f3e))
+
+
+### Features
+
+* **FEV 1232:** IVQ gradebook Integration ([#28](https://github.com/kaltura/playkit-js-ivq/issues/28)) ([c3cbf33](https://github.com/kaltura/playkit-js-ivq/commit/c3cbf33))
+
+
+
 ### [0.3.1](https://github.com/kaltura/playkit-js-ivq/compare/v0.3.0...v0.3.1) (2022-04-03)
 
 
