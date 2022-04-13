@@ -41,12 +41,6 @@ export interface ThumbnailInfo {
   y: number;
 }
 
-export interface MarkerProps {
-  class: string;
-  className: string;
-  style: Record<string, any>;
-}
-
 export interface SubmissionDetails {
   onReview: () => void;
   showSubmitButton: boolean;

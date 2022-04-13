@@ -1,11 +1,9 @@
 import {h} from 'preact';
 import {useMemo} from 'preact/hooks';
-import * as style from './timeline-preview.scss';
+import * as styles from './timeline-preview.scss';
 import {icons} from '../icons';
-import {MarkerProps, ThumbnailInfo, KalturaQuizQuestionTypes, QuizTranslates} from '../../types';
-const {
-  redux: {useSelector}
-} = KalturaPlayer.ui;
+import {ThumbnailInfo, KalturaQuizQuestionTypes, QuizTranslates} from '../../types';
+
 const {Icon} = KalturaPlayer.ui.components;
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
@@ -59,8 +57,8 @@ export const TimelinePreview = withText(translates)(
       }
     }, [questionBunch]);
     return (
-      <div className={style.container}>
-        <div className={style.header}>
+      <div className={styles.container}>
+        <div className={styles.header}>
           <Icon
             id="ivq-quiz-question"
             height={icons.SmallSize}
@@ -68,8 +66,8 @@ export const TimelinePreview = withText(translates)(
             viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`}
             path={icons.QUIZ_ICON}
           />
-          <span className={style.title}>{`${title.type} ${title.firstIndex}${title.lastIndex}`}</span>
-          <button className={style.questionLink} onClick={onQuestionLinkClick}>
+          <span className={styles.title}>{`${title.type} ${title.firstIndex}${title.lastIndex}`}</span>
+          <button className={styles.questionLink} onClick={onQuestionLinkClick}>
             <Icon id="ivq-question-link" height={18} width={18} viewBox={`0 0 ${18} ${18}`} path={icons.QUESTION_LINK} />
           </button>
         </div>
@@ -80,8 +78,3 @@ export const TimelinePreview = withText(translates)(
     );
   }
 );
-
-export const TimelineMarker = (props: MarkerProps) => {
-  const hoverActive = useSelector((state: any) => state.seekbar.hoverActive);
-  return <div className={`${style.marker} ${hoverActive ? style.hover : ''}`}></div>;
-};

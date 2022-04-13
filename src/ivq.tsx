@@ -2,14 +2,14 @@ import {h} from 'preact';
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {QuizLoader} from './providers';
-import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, MarkerProps, PresetAreas, IvqEventTypes} from './types';
+import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, PresetAreas, IvqEventTypes} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsVisualManager} from './questions-visual-manager';
 import {KalturaUserEntry} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
 import {QuizSubmit, QuizSubmitProps} from './components/quiz-submit';
 import {QuizReview, QuizReviewProps} from './components/quiz-review';
-import {TimelinePreview, TimelineMarker} from './components/timeline-preview/timeline-preview';
+import {TimelinePreview, TimelineMarker, TimelineMarkerProps} from './components/timeline';
 import {QuizDownloadLoader} from './providers/quiz-download-loader';
 import {KalturaIvqMiddleware} from './quiz-middleware';
 
@@ -25,6 +25,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _questionsVisualManager: QuestionsVisualManager;
   private _maxCurrentTime = 0;
   private _seekControlEnabled = false;
+  private _removeActiveOverlay: null | Function = null;
 
   static defaultConfig: IvqConfig = {};
 
@@ -76,10 +77,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       const questionBunchMap = new Map<string, Array<number>>();
       let questionBunch: Array<number> = [];
       qqm.forEach((qq: QuizQuestion) => {
-        questionBunch.push(qq.index);
-        if (qq.startTime === qq.next?.startTime) {
+        if (qq.startTime === qq.prev?.startTime) {
           return;
         }
+        questionBunch.push(qq.index);
         questionBunchMap.set(qq.id, questionBunch);
         timelineService.addCuePoint({
           time: qq.startTime,
@@ -105,8 +106,19 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             sticky: true
           },
           marker: {
-            get: (props: MarkerProps) => {
-              return <TimelineMarker {...props} />;
+            get: (props: TimelineMarkerProps) => {
+              return (
+                <TimelineMarker
+                  {...props}
+                  onClick={() => {
+                    this._questionsVisualManager.preparePlayer(qq, true);
+                  }}
+                  questionIndex={qq.index}
+                  isDisabled={() => {
+                    return Boolean(this._questionsVisualManager.removeQuestionOverlay || this._removeActiveOverlay);
+                  }}
+                />
+              );
             }
           }
         });
@@ -142,6 +154,18 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     }
   };
 
+  private _setOverlay = (fn: Function) => {
+    this._removeOverlay();
+    this._removeActiveOverlay = fn;
+  };
+
+  private _removeOverlay = () => {
+    if (this._removeActiveOverlay) {
+      this._removeActiveOverlay();
+      this._removeActiveOverlay = null;
+    }
+  };
+
   private _showWelcomeScreen = () => {
     const handleDownload = () => {
       return this._player.provider
@@ -152,24 +176,26 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           }
         });
     };
-    const removeWelcomeScreen = this._player.ui.addComponent({
-      label: 'kaltura-ivq-welcome-screen',
-      presets: PresetAreas,
-      container: 'GuiArea',
-      get: () => (
-        <WelcomeScreen
-          onClose={() => {
-            this._player.play();
-            removeWelcomeScreen();
-          }}
-          welcomeMessage={this._dataManager.quizData?.welcomeMessage}
-          allowDownload={this._dataManager.quizData?.allowDownload}
-          onDownload={handleDownload}
-        />
-      )
-    });
+    this._setOverlay(
+      this._player.ui.addComponent({
+        label: 'kaltura-ivq-welcome-screen',
+        presets: PresetAreas,
+        container: 'GuiArea',
+        get: () => (
+          <WelcomeScreen
+            onClose={() => {
+              this._player.play();
+              this._removeOverlay();
+            }}
+            welcomeMessage={this._dataManager.quizData?.welcomeMessage}
+            allowDownload={this._dataManager.quizData?.allowDownload}
+            onDownload={handleDownload}
+          />
+        )
+      })
+    );
     this.eventManager.listenOnce(this._player, EventType.PLAY, () => {
-      removeWelcomeScreen && removeWelcomeScreen();
+      this._removeOverlay();
     });
   };
 
@@ -177,32 +203,34 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     const reviewDetails = this._questionsVisualManager.getReviewDetails();
     if (reviewDetails) {
       const {showGradeAfterSubmission, showCorrectAfterSubmission} = this._dataManager.quizData!;
-      const removeSubmitScreen = this._player.ui.addComponent({
-        label: 'kaltura-ivq-review-screen',
-        presets: PresetAreas,
-        container: 'GuiArea',
-        replaceComponent: 'PrePlaybackPlayOverlay',
-        get: () => {
-          const params: QuizReviewProps = {
-            score: this._dataManager.quizUserEntry?.score || 0,
-            onClose: () => {
-              removeSubmitScreen();
-            },
-            reviewDetails,
-            showAnswers: showCorrectAfterSubmission,
-            showScores: showGradeAfterSubmission,
-            preparePlayer: this._questionsVisualManager.preparePlayer
-          };
-          if (this._dataManager.isRetakeAllowed()) {
-            params.onRetake = () => {
-              return this._onQuizRetake().then(() => {
-                removeSubmitScreen();
-              });
+      this._setOverlay(
+        this._player.ui.addComponent({
+          label: 'kaltura-ivq-review-screen',
+          presets: PresetAreas,
+          container: 'GuiArea',
+          replaceComponent: 'PrePlaybackPlayOverlay',
+          get: () => {
+            const params: QuizReviewProps = {
+              score: this._dataManager.quizUserEntry?.score || 0,
+              onClose: () => {
+                this._removeOverlay();
+              },
+              reviewDetails,
+              showAnswers: showCorrectAfterSubmission,
+              showScores: showGradeAfterSubmission,
+              preparePlayer: this._questionsVisualManager.preparePlayer
             };
+            if (this._dataManager.isRetakeAllowed()) {
+              params.onRetake = () => {
+                return this._onQuizRetake().then(() => {
+                  this._removeOverlay();
+                });
+              };
+            }
+            return <QuizReview {...params} />;
           }
-          return <QuizReview {...params} />;
-        }
-      });
+        })
+      );
     }
   };
 
