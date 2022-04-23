@@ -43,7 +43,7 @@ export const QuestionListReview = withText(translates)(
     }, [onRetake]);
 
     const renderScore = useMemo(() => {
-      return <div className={styles.quizScore}>{`${translates.quizScore} ${(score * 100).toFixed(0)}/100`}</div>;
+      return <div className={styles.quizScore} tabIndex={0}>{`${translates.quizScore} ${(score * 100).toFixed(0)}/100`}</div>;
     }, [score]);
     const renderAnswers = useMemo(() => {
       return (

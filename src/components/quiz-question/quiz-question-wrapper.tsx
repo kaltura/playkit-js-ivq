@@ -150,7 +150,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
 
   return (
     <IvqOverlay>
-      <div className={styles.ivqQuestionContainer} role="dialog" aria-labelledby="dialogTitle" aria-live="polite">
+      <div className={styles.ivqQuestionContainer}>
         <div className={styles.ivqQuestionWrapper}>{renderIvqQuestion}</div>
         {renderIvqButtons}
       </div>

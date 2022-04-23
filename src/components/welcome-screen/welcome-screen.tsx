@@ -6,6 +6,7 @@ import * as styles from './welcome-screen.scss';
 import {QuizTranslates} from '../../types';
 import {icons} from '../icons';
 import {Spinner} from '../spinner';
+import {A11yWrapper} from '../a11y-wrapper';
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 const {Icon} = KalturaPlayer.ui.components;
 
@@ -36,33 +37,36 @@ export const WelcomeScreen = withText(translates)(
       <div className={styles.welcomeScreenWrapper}>
         <div className={styles.background} />
         <div className={styles.content}>
-          <div className={styles.title}>{translates.welcomeTitle}</div>
-          <div className={styles.desc}>{welcomeMessage}</div>
+          <div tabIndex={0}>
+            <div className={styles.title}>{translates.welcomeTitle}</div>
+            <div className={styles.desc}>{welcomeMessage}</div>
+          </div>
           {allowDownload && (
-            <div
-              tabIndex={0}
-              role="button"
-              aria-label={translates.welcomeDownload}
-              onClick={handleDownload}
-              className={[styles.download, isLoading ? styles.disabled : ''].join(' ')}>
-              {isLoading && (
-                <div className={styles.spinnerContainer}>
-                  <Spinner height="20px" width="20px" />
-                </div>
-              )}
-              {!isLoading && (
-                <div className={styles.icon}>
-                  <Icon
-                    id="ivq-download"
-                    height={icons.MediumSize}
-                    width={icons.MediumSize}
-                    viewBox={`0 0 ${icons.MediumSize} ${icons.MediumSize}`}
-                    path={icons.DOWNLOAD}
-                  />
-                </div>
-              )}
-              <span> {translates.welcomeDownload}</span>
-            </div>
+            <A11yWrapper onClick={handleDownload}>
+              <div
+                tabIndex={0}
+                role="button"
+                aria-label={translates.welcomeDownload}
+                className={[styles.download, isLoading ? styles.disabled : ''].join(' ')}>
+                {isLoading && (
+                  <div className={styles.spinnerContainer}>
+                    <Spinner height="20px" width="20px" />
+                  </div>
+                )}
+                {!isLoading && (
+                  <div className={styles.icon}>
+                    <Icon
+                      id="ivq-download"
+                      height={icons.MediumSize}
+                      width={icons.MediumSize}
+                      viewBox={`0 0 ${icons.MediumSize} ${icons.MediumSize}`}
+                      path={icons.DOWNLOAD}
+                    />
+                  </div>
+                )}
+                <span> {translates.welcomeDownload}</span>
+              </div>
+            </A11yWrapper>
           )}
         </div>
       </div>

@@ -25,6 +25,14 @@ $secondary-button-colors: (
   overflow: auto;
 }
 
+@mixin ivq-question-content {
+  flex-shrink: 0;
+  font-weight: bold;
+  line-height: 21px;
+  overflow-wrap: break-word;
+  outline-offset: -1px;
+}
+
 @mixin ivq-button {
   display: flex;
   justify-content: center;

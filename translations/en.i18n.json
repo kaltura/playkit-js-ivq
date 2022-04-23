@@ -36,7 +36,8 @@
       "hide_why": "Hide why",
       "show_feedback": "Show feedback",
       "hide_feedback": "Hide feedback",
-      "marker_area_label": "Jump to Question {{questionIndex}}"
+      "marker_area_label": "Jump to Question {{questionIndex}}",
+      "answer_number": "answer number"
     }
   }
 }

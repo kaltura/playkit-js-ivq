@@ -20,7 +20,7 @@ export const OpenQuestion = withText(translates)(({question, selected, onSelect,
   }, [onSelect]);
   return (
     <div className={styles.openQuestionWrapper}>
-      <div className={styles.questionText}>{question}</div>
+      <div className={styles.questionText} tabIndex={0}>{question}</div>
       {hint && <QuestionAddons hint={hint} />}
       <div className={styles.textAreaWrapper}>
         <textarea

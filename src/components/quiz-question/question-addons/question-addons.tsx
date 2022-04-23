@@ -72,7 +72,11 @@ export const QuestionAddons = withText(translates)(({hint, explanation, feedback
           </div>
         </div>
       </A11yWrapper>
-      {isOpen && <div className={styles.questionAddonsContent}>{getContent}</div>}
+      {isOpen && (
+        <div className={styles.questionAddonsContent} tabIndex={0}>
+          {getContent}
+        </div>
+      )}
     </div>
   );
 });

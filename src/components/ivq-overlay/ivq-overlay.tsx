@@ -9,7 +9,7 @@ interface IvqOverlayProps {
 
 export const IvqOverlay = ({children}: IvqOverlayProps) => {
   return (
-    <div className={styles.ivqOverlay}>
+    <div className={styles.ivqOverlay} role="dialog" aria-labelledby="dialogTitle" aria-live="polite">
       <Overlay open permanent>
         {children}
       </Overlay>

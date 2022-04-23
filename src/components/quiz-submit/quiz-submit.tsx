@@ -43,8 +43,10 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...translat
   return (
     <IvqOverlay>
       <div className={styles.quizSubmitWrapper}>
-        <div className={styles.title}>{translates.title}</div>
-        <div className={styles.description}>{translates.description}</div>
+        <div tabIndex={0}>
+          <div className={styles.title}>{translates.title}</div>
+          <div className={styles.description}>{translates.description}</div>
+        </div>
         <div className={styles.buttonWrapper}>
           {onSubmit && (
             <button onClick={handleSubmitClick} className={styles.primaryButton} aria-label={translates.submitButtonAriaLabel} disabled={isLoading}>

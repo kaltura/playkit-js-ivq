@@ -8,10 +8,7 @@
   max-height: 100%;
   .questionText {
     @include ivq-text;
-    font-weight: bold;
-    line-height: 21px;
-    flex-shrink: 0;
-    overflow-wrap: break-word;
+    @include ivq-question-content;
   }
   .textAreaWrapper {
     position: relative;
