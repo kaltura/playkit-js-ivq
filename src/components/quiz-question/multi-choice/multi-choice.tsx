@@ -10,7 +10,8 @@ const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
 const translates = (): QuizTranslates => {
   return {
-    answerNumber: <Text id="ivq.answer_number">answer number</Text>
+    answerNumber: <Text id="ivq.answer_number">answer number</Text>,
+    yourAnswer: <Text id="ivq.your_answer">Your answer</Text>
   };
 };
 
@@ -21,7 +22,7 @@ interface MultiChoiceProps {
 const questionLabels = makeQuestionLabels();
 
 export const MultiChoice = withText(translates)(
-  ({question, optionalAnswers, selected, onSelect, hint, multiAnswer, ...translates}: QuestionProps & MultiChoiceProps & QuizTranslates) => {
+  ({question, optionalAnswers, selected, onSelect, hint, multiAnswer, ...otherProps}: QuestionProps & MultiChoiceProps & QuizTranslates) => {
     const selectedArray = selected ? selected.split(',') : [];
     const disabled = !onSelect;
 
@@ -41,25 +42,27 @@ export const MultiChoice = withText(translates)(
     );
 
     return (
-      <div className={styles.multiChoiceWrapper}>
-        <div className={styles.questionText} tabIndex={0}>
-          {question}
-        </div>
+      <div className={styles.multiChoiceWrapper} role="alert">
+        <legend className={styles.questionText}>{question}</legend>
         {hint && <QuestionAddons hint={hint} />}
         <div className={styles.optionalAnswersWrapper}>
-          <div className={styles.optionalAnswersContainer}>
+          <div className={styles.optionalAnswersContainer} role="list">
             {optionalAnswers.map(({key, text}, index) => {
               const isActive = selectedArray.includes(key);
               return (
                 <A11yWrapper onClick={handleSelect(key, isActive)}>
                   <div
                     key={key}
-                    role="button"
+                    role="listitem"
                     tabIndex={disabled ? -1 : 0}
-                    title={`${translates.answerNumber} ${index + 1}`}
+                    title={`${otherProps.answerNumber} ${index + 1}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
                     className={[styles.multiSelectAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ')}>
-                    <div className={styles.questionLabel}>{questionLabels[index]}</div>
-                    <div className={styles.questionContent}>{text}</div>
+                    <div className={styles.questionLabel} role="text">
+                      {questionLabels[index]}
+                    </div>
+                    <div className={styles.questionContent} role="text">
+                      {text}
+                    </div>
                   </div>
                 </A11yWrapper>
               );

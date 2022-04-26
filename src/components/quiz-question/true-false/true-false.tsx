@@ -9,12 +9,13 @@ const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
 const translates = (): QuizTranslates => {
   return {
-    answerNumber: <Text id="ivq.answer_number">answer number</Text>
+    answerNumber: <Text id="ivq.answer_number">Answer number</Text>,
+    yourAnswer: <Text id="ivq.your_answer">Your answer</Text>
   };
 };
 
 export const TrueFalse = withText(translates)(
-  ({question, optionalAnswers, selected, onSelect, hint, ...translates}: QuestionProps & QuizTranslates) => {
+  ({question, optionalAnswers, selected, onSelect, hint, ...otherProps}: QuestionProps & QuizTranslates) => {
     const disabled = !onSelect;
     const handleSelect = useCallback(
       (key: string) => (e: Event, byKeyboard?: boolean) => {
@@ -23,18 +24,21 @@ export const TrueFalse = withText(translates)(
       [onSelect]
     );
     return (
-      <div className={styles.trueFalseWrapper}>
-        <div className={styles.questionText} tabIndex={0}>
-          {question}
-        </div>
+      <div className={styles.trueFalseWrapper} role="alert">
+        <legend className={styles.questionText}>{question}</legend>
         {hint && <QuestionAddons hint={hint} />}
-        <div className={styles.optionalAnswersWrapper}>
+        <div className={styles.optionalAnswersWrapper} role="list">
           {optionalAnswers.map(({key, text}, index) => {
             const isActive = selected.includes(key);
             const classes = [styles.trueFalseAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ');
             return (
               <A11yWrapper onClick={handleSelect(key)}>
-                <div key={key} role="button" tabIndex={disabled ? -1 : 0} className={classes} title={`${translates.answerNumber} ${index + 1}`}>
+                <div
+                  key={key}
+                  tabIndex={disabled ? -1 : 0}
+                  className={classes}
+                  title={`${otherProps.answerNumber} ${index + 1}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
+                  role="listitem">
                   {text}
                 </div>
               </A11yWrapper>

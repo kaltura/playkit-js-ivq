@@ -31,7 +31,7 @@ const translates = ({questionIndex}: TimelineMarkerProps): QuizTranslates => {
   };
 };
 
-export const TimelineMarker = withText(translates)(({isDisabled, onClick, ...translates}: TimelineMarkerProps & QuizTranslates) => {
+export const TimelineMarker = withText(translates)(({isDisabled, onClick, ...otherProps}: TimelineMarkerProps & QuizTranslates) => {
   const hoverActive = useSelector((state: any) => state.seekbar.hoverActive);
   useSelector((state: any) => state.seekbar); // trigger update of marker component
   const disabled = isDisabled();
@@ -39,8 +39,8 @@ export const TimelineMarker = withText(translates)(({isDisabled, onClick, ...tra
     return (
       <A11yWrapper onClick={onClick}>
         <div
-          area-label={translates.markerAriaLabel}
           role="button"
+          title={otherProps.markerAriaLabel as string}
           tabIndex={disabled ? -1 : 0}
           className={`${styles.markerWrapper} ${hoverActive ? styles.hover : ''}`}>
           <div className={`${styles.marker}`} />

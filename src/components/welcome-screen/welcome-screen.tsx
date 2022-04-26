@@ -22,7 +22,7 @@ interface WelcomeScreenProps {
 }
 
 export const WelcomeScreen = withText(translates)(
-  ({allowDownload, welcomeMessage, onDownload, ...translates}: WelcomeScreenProps & QuizTranslates) => {
+  ({allowDownload, welcomeMessage, onDownload, ...otherProps}: WelcomeScreenProps & QuizTranslates) => {
     const [isLoading, setLoading] = useState(false);
     const handleDownload = useCallback(() => {
       if (!isLoading) {
@@ -34,11 +34,11 @@ export const WelcomeScreen = withText(translates)(
     }, [onDownload, isLoading]);
 
     return (
-      <div className={styles.welcomeScreenWrapper}>
+      <div className={styles.welcomeScreenWrapper} role="dialog" aria-live="polite">
         <div className={styles.background} />
         <div className={styles.content}>
-          <div tabIndex={0}>
-            <div className={styles.title}>{translates.welcomeTitle}</div>
+          <div role="heading">
+            <div className={styles.title}>{otherProps.welcomeTitle}</div>
             <div className={styles.desc}>{welcomeMessage}</div>
           </div>
           {allowDownload && (
@@ -46,7 +46,7 @@ export const WelcomeScreen = withText(translates)(
               <div
                 tabIndex={0}
                 role="button"
-                aria-label={translates.welcomeDownload}
+                aria-label={otherProps.welcomeDownload}
                 className={[styles.download, isLoading ? styles.disabled : ''].join(' ')}>
                 {isLoading && (
                   <div className={styles.spinnerContainer}>
@@ -64,7 +64,7 @@ export const WelcomeScreen = withText(translates)(
                     />
                   </div>
                 )}
-                <span> {translates.welcomeDownload}</span>
+                <span>{otherProps.welcomeDownload}</span>
               </div>
             </A11yWrapper>
           )}

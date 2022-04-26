@@ -30,7 +30,6 @@ $secondary-button-colors: (
   font-weight: bold;
   line-height: 21px;
   overflow-wrap: break-word;
-  outline-offset: -1px;
 }
 
 @mixin ivq-button {
@@ -136,6 +135,12 @@ $secondary-button-colors: (
   &::-webkit-scrollbar-thumb {
     border-radius: 3px;
     background-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+@mixin outline-fix {
+  &:focus {
+    outline: none !important; // overwrite player !important styles
   }
 }
 

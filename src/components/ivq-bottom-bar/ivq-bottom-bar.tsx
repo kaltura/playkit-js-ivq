@@ -18,7 +18,7 @@ const translates: QuizTranslates = {
   prevQuestionButtonAriaLabel: <Text id="ivq.prev_question_area_label">Previous Question</Text>
 };
 
-export const IvqBottomBar = withText(translates)(({onPrev, onNext, questionCounter, ...translates}: IvqBottomBarProps & QuizTranslates) => {
+export const IvqBottomBar = withText(translates)(({onPrev, onNext, questionCounter, ...otherProps}: IvqBottomBarProps & QuizTranslates) => {
   const [ivqSeekBar, setIvqSeekBar] = useState<VNode<typeof SeekBarPlaybackContainer> | null>(null);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export const IvqBottomBar = withText(translates)(({onPrev, onNext, questionCount
           disabled={!onPrev}
           onClick={onPrev}
           className={[styles.navigationButton, !onPrev ? styles.disabled : ''].join(' ')}
-          aria-label={translates.prevQuestionButtonAriaLabel}>
+          aria-label={otherProps.prevQuestionButtonAriaLabel}>
           <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
         </button>
         <div className={styles.questionIndex}>{questionCounter}</div>
@@ -45,7 +45,7 @@ export const IvqBottomBar = withText(translates)(({onPrev, onNext, questionCount
           disabled={!onNext}
           onClick={onNext}
           className={[styles.navigationButton, !onNext ? styles.disabled : ''].join(' ')}
-          aria-label={translates.nextQuestionButtonAriaLabel}>
+          aria-label={otherProps.nextQuestionButtonAriaLabel}>
           <Icon id="ivq-chevron-right" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_RIGHT} />
         </button>
       </div>
