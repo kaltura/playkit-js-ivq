@@ -2,9 +2,9 @@
   "en": {
     "ivq": {
       "continue_button": "Continue",
-      "continue_button_area_label": "Click to continue",
+      "continue_button_area_label": "Continue quiz with the selected answer",
       "skip_button": "Skip",
-      "skip_button_area_label": "Click to skip",
+      "skip_button_area_label": "Skip for now",
       "question_counter": "Question {{current}} of {{total}}",
       "next_question_area_label": "Next Question",
       "prev_question_area_label": "Previous Question",
@@ -30,13 +30,16 @@
       "correct_answer_is": "The correct answer is:",
       "your_answer": "Your answer",
       "correct_answer": "The correct answer",
+      "incorrect_answer": "The incorrect answer",
       "show_hint": "Show hint",
       "hide_hint": "Hide hint",
       "show_why": "Show why",
       "hide_why": "Hide why",
       "show_feedback": "Show feedback",
       "hide_feedback": "Hide feedback",
-      "marker_area_label": "Jump to Question {{questionIndex}}"
+      "marker_area_label": "Jump to Question {{questionIndex}}",
+      "answer_number": "Answer number",
+      "review_answer": "Click to view the question and your answer"
     }
   }
 }

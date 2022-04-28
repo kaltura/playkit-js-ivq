@@ -1,11 +1,15 @@
 import {h} from 'preact';
-import {useCallback, useState} from 'preact/hooks';
+import {useCallback, useState, useRef, useEffect} from 'preact/hooks';
 import {QuizTranslates} from '../../types';
 import {IvqOverlay} from '../ivq-overlay';
 import {Spinner} from '../spinner';
 import * as styles from './quiz-submit.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
+
+const {
+  redux: {useSelector}
+} = KalturaPlayer.ui;
 
 export interface QuizSubmitProps {
   onReview: () => void;
@@ -27,8 +31,21 @@ const translates = ({onSubmit}: QuizSubmitProps): QuizTranslates => {
   };
 };
 
-export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...translates}: QuizSubmitProps & QuizTranslates) => {
+export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...otherProps}: QuizSubmitProps & QuizTranslates) => {
   const [isLoading, setIsLoading] = useState(false);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const reviewButtonRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    const playerNav = useSelector((state: any) => state.shell.playerNav);
+    if (!playerNav) {
+      return;
+    }
+    if (onSubmit) {
+      submitButtonRef.current?.focus();
+    } else {
+      reviewButtonRef.current?.focus();
+    }
+  }, [onSubmit]);
   const handleReviewClick = useCallback(() => {
     onReview();
   }, [onReview]);
@@ -42,21 +59,29 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...translat
   }, []);
   return (
     <IvqOverlay>
-      <div className={styles.quizSubmitWrapper}>
-        <div className={styles.title}>{translates.title}</div>
-        <div className={styles.description}>{translates.description}</div>
+      <div className={styles.quizSubmitWrapper} role="dialog" aria-live="polite">
+        <div>
+          <div className={styles.title}>{otherProps.title}</div>
+          <div className={styles.description}>{otherProps.description}</div>
+        </div>
         <div className={styles.buttonWrapper}>
           {onSubmit && (
-            <button onClick={handleSubmitClick} className={styles.primaryButton} aria-label={translates.submitButtonAriaLabel} disabled={isLoading}>
-              {isLoading ? <Spinner /> : translates.submitButton}
+            <button
+              onClick={handleSubmitClick}
+              className={styles.primaryButton}
+              aria-label={otherProps.submitButtonAriaLabel}
+              disabled={isLoading}
+              ref={submitButtonRef}>
+              {isLoading ? <Spinner /> : otherProps.submitButton}
             </button>
           )}
           <button
             onClick={handleReviewClick}
             disabled={isLoading}
             className={[onSubmit ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
-            aria-label={translates.reviewButtonAriaLabel}>
-            {translates.reviewButton}
+            aria-label={otherProps.reviewButtonAriaLabel}
+            ref={reviewButtonRef}>
+            {otherProps.reviewButton}
           </button>
         </div>
       </div>

@@ -25,6 +25,13 @@ $secondary-button-colors: (
   overflow: auto;
 }
 
+@mixin ivq-question-content {
+  flex-shrink: 0;
+  font-weight: bold;
+  line-height: 21px;
+  overflow-wrap: break-word;
+}
+
 @mixin ivq-button {
   display: flex;
   justify-content: center;
@@ -128,6 +135,12 @@ $secondary-button-colors: (
   &::-webkit-scrollbar-thumb {
     border-radius: 3px;
     background-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+@mixin outline-fix {
+  &:focus {
+    outline: none !important; // overwrite player !important styles
   }
 }
 

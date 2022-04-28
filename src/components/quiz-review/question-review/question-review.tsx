@@ -38,12 +38,13 @@ const translates = ({questionsAmount, reviewQuestion}: QuestionReviewProps): Qui
     ),
     correctAnswerIs: <Text id="ivq.correct_answer_is">The correct answer is:</Text>,
     yourAnswer: <Text id="ivq.your_answer">Your answer</Text>,
-    correctAnswer: <Text id="ivq.correct_answer">The correct answer</Text>
+    correctAnswer: <Text id="ivq.correct_answer">The correct answer</Text>,
+    incorrectAnswer: <Text id="ivq.incorrect_answer">The incorrect answer</Text>
   };
 };
 
 export const QuestionReview = withText(translates)(
-  ({onBack, onNext, onPrev, questionCounter, reviewQuestion, ...translates}: QuestionReviewProps & QuizTranslates) => {
+  ({onBack, onNext, onPrev, questionCounter, reviewQuestion, ...otherProps}: QuestionReviewProps & QuizTranslates) => {
     const backButtonRef = useRef<HTMLButtonElement>(null);
     const {q, a} = reviewQuestion.qq;
 
@@ -57,15 +58,18 @@ export const QuestionReview = withText(translates)(
       if (q.questionType === KalturaQuizQuestionTypes.TrueFalse) {
         const correctAnswerKey = a?.correctAnswerKeys[0]?.value;
         const correctAnswer = q?.optionalAnswers.find(val => val.key === correctAnswerKey);
+        const isCorrect = a?.answerKey === correctAnswer?.key;
         return (
           <Fragment>
-            <div className={styles.correctAnswerIs}>{`${translates.correctAnswerIs} ${correctAnswer?.text}`}</div>
+            <div className={styles.correctAnswerIs}>{`${otherProps.correctAnswerIs} ${correctAnswer?.text}`}</div>
             {a?.explanation && <QuestionAddons explanation={a.explanation} />}
-            <div className={styles.yourAnswer}>{a?.answerKey === correctAnswer?.key ? translates.correctAnswer : translates.yourAnswer}</div>
-            <div className={styles.trueFalseAnswerWrapper}>
+            <div className={styles.yourAnswer} aria-hidden="true" area-label={isCorrect ? otherProps.correctAnswer : otherProps.incorrectAnswer}>
+              {isCorrect ? otherProps.correctAnswer : otherProps.yourAnswer}
+            </div>
+            <div className={styles.trueFalseAnswerWrapper} role="list">
               {q.optionalAnswers.map(({key, text}) => {
                 return (
-                  <div key={key} className={[styles.trueFalseAnswer, styles.disabled].join(' ')}>
+                  <div key={key} className={[styles.trueFalseAnswer, styles.disabled].join(' ')} role="listitem" aria-hidden="true">
                     {text}
                     {a?.answerKey === key && <QuestionIcon questionType={q.questionType} isCorrect={key === correctAnswer?.key} />}
                   </div>
@@ -97,16 +101,16 @@ export const QuestionReview = withText(translates)(
         });
         return (
           <Fragment>
-            <div className={styles.correctAnswerIs}>{`${translates.correctAnswerIs} ${correctAnswers.join(',')}`}</div>
+            <div className={styles.correctAnswerIs}>{`${otherProps.correctAnswerIs} ${correctAnswers.join(',')}`}</div>
             {a?.explanation && <QuestionAddons explanation={a.explanation} />}
-            <div className={styles.yourAnswer}>{translates.yourAnswer}</div>
+            <div className={styles.yourAnswer}>{otherProps.yourAnswer}</div>
             <div className={styles.multiAnswersWrapper}>
-              <div className={styles.multiAnswersContainer}>
+              <div className={styles.multiAnswersContainer} role="list">
                 {q.optionalAnswers.map(({key, text}, index) => {
                   const renderIncorrectIcon = userIncorrectAnswerKeys.includes(key);
                   const renderCorrectIcon = userCorrectAnswerKeys.includes(key);
                   return (
-                    <div key={key} className={[styles.multiSelectAnswer, styles.disabled].join(' ')}>
+                    <div key={key} className={[styles.multiSelectAnswer, styles.disabled].join(' ')} role="listitem">
                       <div className={styles.questionLabel}>{questionLabels[index]}</div>
                       <div className={styles.questionContent}>{text}</div>
                       {renderCorrectIcon && <QuestionIcon questionType={q.questionType} isCorrect={true} />}
@@ -134,13 +138,13 @@ export const QuestionReview = withText(translates)(
     }, [reviewQuestion]);
     return (
       <Fragment>
-        <div className={styles.questionReviewWrapper}>
+        <div className={styles.questionReviewWrapper} role="dialog" aria-live="polite">
           <div className={styles.backButtonContainer}>
             <button onClick={onBack} className={styles.backButton} ref={backButtonRef}>
-              <div className={styles.iconContainer}>
+              <div className={styles.iconContainer} aria-hidden="true">
                 <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
               </div>
-              {translates.backButton}
+              {otherProps.backButton}
             </button>
           </div>
           <div className={styles.quizQuestionContainer}>

@@ -1,13 +1,16 @@
 import {h} from 'preact';
-import {useMemo, useState, useCallback} from 'preact/hooks';
+import {useMemo, useState, useCallback, useRef, useEffect} from 'preact/hooks';
 import {Spinner} from '../../spinner';
 import {QuizQuestion} from '../../../types';
-import {QuizTranslates} from '../../../types';
+import {QuizTranslates, KalturaQuizQuestionTypes} from '../../../types';
 import {QuestionIcon} from '../question-icon';
 import {A11yWrapper} from '../../a11y-wrapper';
 import * as styles from './question-list-review.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
+const {
+  redux: {useSelector}
+} = KalturaPlayer.ui;
 
 export interface QuestionListReviewProps {
   onRetake?: () => Promise<void>;
@@ -26,13 +29,25 @@ const translates = (): QuizTranslates => {
     retakeButtonAreaLabel: <Text id="ivq.retake_button_area_label">Click to retake the quiz</Text>,
     doneButton: <Text id="ivq.done_button">Done</Text>,
     doneButtonAreaLabel: <Text id="ivq.done_button_area_label">Click to close the review</Text>,
-    quizCompleted: <Text id="ivq.quiz_completed">You completed the quiz</Text>
+    quizCompleted: <Text id="ivq.quiz_completed">You completed the quiz</Text>,
+    reviewAnswer: <Text id="ivq.review_answer">Click to view the question and your answer</Text>,
+    correctAnswer: <Text id="ivq.correct_answer">The correct answer</Text>,
+    incorrectAnswer: <Text id="ivq.incorrect_answer">The incorrect answer</Text>
   };
 };
 
 export const QuestionListReview = withText(translates)(
-  ({onRetake, score, reviewDetails, showAnswers, showScores, onClose, onQuestionClick, ...translates}: QuestionListReviewProps & QuizTranslates) => {
+  ({onRetake, score, reviewDetails, showAnswers, showScores, onClose, onQuestionClick, ...otherProps}: QuestionListReviewProps & QuizTranslates) => {
     const [isLoading, setIsLoading] = useState(false);
+    const questionsContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const playerNav = useSelector((state: any) => state.shell.playerNav);
+      if (!playerNav) {
+        return;
+      }
+      questionsContainerRef.current?.focus();
+    }, [questionsContainerRef.current]);
 
     const handleRetake = useCallback(() => {
       setIsLoading(true);
@@ -42,18 +57,32 @@ export const QuestionListReview = withText(translates)(
         });
     }, [onRetake]);
 
+    const getQuestionTitle = (qq: QuizQuestion) => {
+      if (qq.q.questionType === KalturaQuizQuestionTypes.Reflection) {
+        return qq.q.question;
+      }
+      if (qq.q.questionType === KalturaQuizQuestionTypes.OpenQuestion) {
+        return `${otherProps.reviewAnswer}`;
+      }
+      return `${qq.a?.isCorrect ? otherProps.correctAnswer : otherProps.incorrectAnswer}. ${otherProps.reviewAnswer}`;
+    };
+
     const renderScore = useMemo(() => {
-      return <div className={styles.quizScore}>{`${translates.quizScore} ${(score * 100).toFixed(0)}/100`}</div>;
+      return <legend className={styles.quizScore}>{`${otherProps.quizScore} ${(score * 100).toFixed(0)}/100`}</legend>;
     }, [score]);
     const renderAnswers = useMemo(() => {
       return (
-        <div className={styles.questionsContainer}>
+        <div className={styles.questionsContainer} role="list" tabIndex={-1} ref={questionsContainerRef}>
           {reviewDetails.map((qq, index) => {
             return (
               <A11yWrapper onClick={onQuestionClick(qq, index)}>
-                <div key={qq.id} role="button" tabIndex={0} className={styles.reviewAnswer}>
-                  <div className={styles.questionLabel}>{qq.index + 1}</div>
-                  <div className={styles.questionContent}>{qq.q.question}</div>
+                <div key={qq.id} tabIndex={0} className={styles.reviewAnswer} role="listitem" title={getQuestionTitle(qq)}>
+                  <div className={styles.questionLabel} role="text">
+                    {qq.index + 1}
+                  </div>
+                  <div className={styles.questionContent} role="text">
+                    {qq.q.question}
+                  </div>
                   <QuestionIcon questionType={qq.q.questionType} isCorrect={qq.a?.isCorrect} />
                 </div>
               </A11yWrapper>
@@ -63,20 +92,20 @@ export const QuestionListReview = withText(translates)(
       );
     }, [reviewDetails]);
     return (
-      <div className={styles.quizReviewWrapper}>
-        {showScores ? renderScore : <div className={styles.quizScore}>{translates.quizCompleted}</div>}
+      <div className={styles.quizReviewWrapper} role="dialog" aria-live="polite">
+        {showScores ? renderScore : <div className={styles.quizScore}>{otherProps.quizCompleted}</div>}
         <div className={styles.questionsWrapper}>{showAnswers && renderAnswers}</div>
         <div className={styles.buttonWrapper}>
           {onRetake && (
-            <button onClick={handleRetake} className={styles.primaryButton} aria-label={translates.retakeButtonAreaLabel} disabled={isLoading}>
-              {isLoading ? <Spinner /> : translates.retakeButton}
+            <button onClick={handleRetake} className={styles.primaryButton} aria-label={otherProps.retakeButtonAreaLabel} disabled={isLoading}>
+              {isLoading ? <Spinner /> : otherProps.retakeButton}
             </button>
           )}
           <button
             onClick={onClose}
             className={[onRetake ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
-            aria-label={translates.doneButtonAreaLabel}>
-            {translates.doneButton}
+            aria-label={otherProps.doneButtonAreaLabel}>
+            {otherProps.doneButton}
           </button>
         </div>
       </div>

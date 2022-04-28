@@ -19,8 +19,8 @@ export const OpenQuestion = withText(translates)(({question, selected, onSelect,
     onSelect && onSelect(e.target.value);
   }, [onSelect]);
   return (
-    <div className={styles.openQuestionWrapper}>
-      <div className={styles.questionText}>{question}</div>
+    <div className={styles.openQuestionWrapper} role="alert">
+      <legend className={styles.questionText}>{question}</legend>
       {hint && <QuestionAddons hint={hint} />}
       <div className={styles.textAreaWrapper}>
         <textarea

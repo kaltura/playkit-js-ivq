@@ -13,6 +13,9 @@ import {A11yWrapper} from '../a11y-wrapper';
 import * as styles from './quiz-question-wrapper.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
+const {
+  redux: {useSelector}
+} = KalturaPlayer.ui;
 
 interface QuizQuestionWrapperProps {
   qui: QuizQuestionUI;
@@ -21,9 +24,9 @@ interface QuizQuestionWrapperProps {
 const translates = ({qui}: QuizQuestionWrapperProps): QuizTranslates => {
   return {
     continueButton: <Text id="ivq.continue_button">Continue</Text>,
-    continueButtonAriaLabel: <Text id="ivq.continue_button_area_label">Click to continue</Text>,
+    continueButtonAriaLabel: <Text id="ivq.continue_button_area_label">Continue quiz with the selected answer</Text>,
     skipButton: <Text id="ivq.skip_button">Skip</Text>,
-    skipButtonAriaLabel: <Text id="ivq.skip_button_area_label">Click to skip</Text>,
+    skipButtonAriaLabel: <Text id="ivq.skip_button_area_label">Skip for now</Text>,
     questionCounter: (
       <Text
         id="ivq.question_counter"
@@ -51,6 +54,22 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
   const [isLoading, setIsLoading] = useState(false);
   const continueButtonRef = useRef<HTMLButtonElement>(null);
+  const questionWrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // wait till plugin gets player store
+    setTimeout(() => {
+      const playerNav = useSelector((state: any) => state.shell.playerNav);
+      if (!playerNav) {
+        return;
+      }
+      if (!qui.a) {
+        questionWrapperRef.current?.focus();
+      } else {
+        continueButtonRef.current?.focus();
+      }
+    });
+  }, [qui]);
 
   useEffect(() => {
     setSelected(getSelected(qui));
@@ -90,10 +109,13 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
     (data: Selected, byKeyboard?: boolean) => {
       setSelected(data);
       if (byKeyboard) {
-        continueButtonRef.current?.focus();
+        setTimeout(() => {
+          // set focus after re-render happens
+          continueButtonRef.current?.focus();
+        });
       }
     },
-    [setSelected, continueButtonRef]
+    [selected, continueButtonRef]
   );
 
   const renderIvqQuestion = useMemo(() => {
@@ -119,7 +141,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       case KalturaQuizQuestionTypes.MultiAnswer:
         return <MultiChoice {...questionProps} multiAnswer />;
     }
-  }, [qui, selected, isLoading]);
+  }, [qui.q, selected, isLoading]);
 
   const renderIvqButtons = useMemo(() => {
     const continueDisabled = !selected.length;
@@ -150,8 +172,10 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
 
   return (
     <IvqOverlay>
-      <div className={styles.ivqQuestionContainer} role="dialog" aria-labelledby="dialogTitle" aria-live="polite">
-        <div className={styles.ivqQuestionWrapper}>{renderIvqQuestion}</div>
+      <div className={styles.ivqQuestionContainer}>
+        <div className={styles.ivqQuestionWrapper} ref={questionWrapperRef} tabIndex={-1}>
+          {renderIvqQuestion}
+        </div>
         {renderIvqButtons}
       </div>
       <IvqBottomBar questionCounter={props.questionCounter} onPrev={qui.onPrev} onNext={qui.onNext} />

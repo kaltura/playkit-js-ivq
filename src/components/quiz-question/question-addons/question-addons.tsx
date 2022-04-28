@@ -32,7 +32,7 @@ const translates = ({hint, explanation}: HintProps): QuizTranslates => {
   };
 };
 
-export const QuestionAddons = withText(translates)(({hint, explanation, feedback, ...translates}: HintProps & QuizTranslates) => {
+export const QuestionAddons = withText(translates)(({hint, explanation, feedback, ...otherProps}: HintProps & QuizTranslates) => {
   const [isOpen, setIsOpen] = useState(false);
   const getContent = useMemo(() => {
     if (hint) {
@@ -51,8 +51,8 @@ export const QuestionAddons = withText(translates)(({hint, explanation, feedback
     <div className={styles.questionAddonsWrapper}>
       <A11yWrapper onClick={handleClick}>
         <div role="button" tabIndex={0} className={styles.questionAddonsButton}>
-          {isOpen ? translates.hide : translates.show}
-          <div className={[styles.iconWrapper, isOpen ? styles.active : ''].join(' ')}>
+          {isOpen ? otherProps.hide : otherProps.show}
+          <div className={[styles.iconWrapper, isOpen ? styles.active : ''].join(' ')} aria-hidden="true">
             <Icon
               id="ivq-down-icon"
               height={icons.SmallSize}
@@ -61,7 +61,7 @@ export const QuestionAddons = withText(translates)(({hint, explanation, feedback
               path={icons.DOWN}
             />
           </div>
-          <div className={[styles.iconWrapper, !isOpen ? styles.active : ''].join(' ')}>
+          <div className={[styles.iconWrapper, !isOpen ? styles.active : ''].join(' ')} aria-hidden="true">
             <Icon
               id="ivq-right-icon"
               height={icons.SmallSize}
@@ -72,7 +72,11 @@ export const QuestionAddons = withText(translates)(({hint, explanation, feedback
           </div>
         </div>
       </A11yWrapper>
-      {isOpen && <div className={styles.questionAddonsContent}>{getContent}</div>}
+      {isOpen && (
+        <div className={styles.questionAddonsContent} role="text">
+          {getContent}
+        </div>
+      )}
     </div>
   );
 });

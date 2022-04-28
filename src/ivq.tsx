@@ -111,7 +111,11 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
                 <TimelineMarker
                   {...props}
                   onClick={() => {
-                    this._questionsVisualManager.preparePlayer(qq, true);
+                    // get updated Quiz Question
+                    const quizQuestion = this._dataManager.quizQuestionsMap.get(qq.id);
+                    if (quizQuestion) {
+                      this._questionsVisualManager.preparePlayer(quizQuestion, true);
+                    }
                   }}
                   questionIndex={qq.index}
                   isDisabled={() => {
