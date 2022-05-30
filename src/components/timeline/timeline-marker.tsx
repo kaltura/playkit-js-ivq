@@ -1,22 +1,13 @@
 import {h} from 'preact';
 import {useMemo} from 'preact/hooks';
 import * as styles from './timeline-marker.scss';
-import {QuizTranslates} from '../../types';
+import {QuizTranslates, TimelineMarkerProps} from '../../types';
 import {A11yWrapper} from '../a11y-wrapper';
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
 const {
   redux: {useSelector}
 } = KalturaPlayer.ui;
-
-export interface TimelineMarkerProps {
-  class: string;
-  className: string;
-  style: Record<string, any>;
-  onClick: (e: Event) => void;
-  isDisabled: () => boolean;
-  questionIndex: number;
-}
 
 const translates = ({questionIndex}: TimelineMarkerProps): QuizTranslates => {
   const index = questionIndex + 1;
