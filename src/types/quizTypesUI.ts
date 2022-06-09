@@ -47,3 +47,29 @@ export interface SubmissionDetails {
 }
 
 export type OnClick = (e: KeyboardEvent | MouseEvent, byKeyboard?: boolean) => void;
+
+export interface TimelineMarkerProps {
+  class: string;
+  className: string;
+  style: Record<string, any>;
+  onClick: (e: Event) => void;
+  isDisabled: () => boolean;
+  questionIndex: number;
+}
+
+export interface TimeLineMarker {
+  marker: {
+    get: (props: TimelineMarkerProps) => VNode;
+  };
+  time: number;
+  preview?: {
+    get: ({defaultPreviewProps}: PreviewProps) => VNode;
+    props: {
+      style: Record<string, string>;
+    };
+    className: string;
+    width: number;
+    hideTime: boolean;
+    sticky: boolean;
+  };
+}

@@ -2,14 +2,14 @@ import {h} from 'preact';
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {QuizLoader} from './providers';
-import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PreviewProps, PresetAreas, IvqEventTypes} from './types';
+import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PresetAreas, IvqEventTypes, TimeLineMarker} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsVisualManager} from './questions-visual-manager';
 import {KalturaUserEntry} from './providers/response-types';
 import {WelcomeScreen} from './components/welcome-screen';
 import {QuizSubmit, QuizSubmitProps} from './components/quiz-submit';
 import {QuizReview, QuizReviewProps} from './components/quiz-review';
-import {TimelinePreview, TimelineMarker, TimelineMarkerProps} from './components/timeline';
+import {TimelinePreview, TimelineMarker} from './components/timeline';
 import {QuizDownloadLoader} from './providers/quiz-download-loader';
 import {KalturaIvqMiddleware} from './quiz-middleware';
 
@@ -82,31 +82,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         }
         questionBunch.push(qq.index);
         questionBunchMap.set(qq.id, questionBunch);
-        timelineService.addCuePoint({
+        const timeLineMarker: TimeLineMarker = {
           time: qq.startTime,
-          preview: {
-            get: ({defaultPreviewProps}: PreviewProps) => {
-              return (
-                <TimelinePreview
-                  onQuestionLinkClick={() => {
-                    this._player.currentTime = qq.startTime;
-                  }}
-                  thumbnailInfo={this.player.getThumbnail(defaultPreviewProps.virtualTime)}
-                  questionBunch={questionBunchMap.get(qq.id)!}
-                  questionType={qq.q.questionType}
-                />
-              );
-            },
-            props: {
-              style: {paddingTop: '33%'}
-            },
-            className: 'preview',
-            width: this._player.getThumbnail(0).width,
-            hideTime: false,
-            sticky: true
-          },
           marker: {
-            get: (props: TimelineMarkerProps) => {
+            get: props => {
               return (
                 <TimelineMarker
                   {...props}
@@ -125,7 +104,31 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
               );
             }
           }
-        });
+        };
+        if (this._player.sources?.type !== core.MediaType.AUDIO) {
+          timeLineMarker.preview = {
+            get: ({defaultPreviewProps}) => {
+              return (
+                <TimelinePreview
+                  onQuestionLinkClick={() => {
+                    this._player.currentTime = qq.startTime;
+                  }}
+                  thumbnailInfo={this.player.getThumbnail(defaultPreviewProps.virtualTime)}
+                  questionBunch={questionBunchMap.get(qq.id)!}
+                  questionType={qq.q.questionType}
+                />
+              );
+            },
+            props: {
+              style: {paddingTop: '33%'}
+            },
+            className: 'preview',
+            width: this._player.getThumbnail(0)?.width,
+            hideTime: false,
+            sticky: true
+          };
+        }
+        timelineService.addCuePoint(timeLineMarker);
         questionBunch = [];
       });
     }
