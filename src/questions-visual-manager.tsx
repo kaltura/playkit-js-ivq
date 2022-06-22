@@ -162,4 +162,9 @@ export class QuestionsVisualManager {
 
     this._renderUiComponent(quizQuestionUi, manualChange);
   };
+
+  public reset = () => {
+    this._removeUiComponent();
+    this.quizQuestionJumping = false;
+  };
 }

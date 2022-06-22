@@ -240,4 +240,12 @@ export class DataSyncManager {
     this.prepareQuizData();
     this._onQuestionsLoad(this.quizQuestionsMap);
   };
+
+  public reset = () => {
+    this.quizData = null;
+    this.quizUserEntry = null;
+    this.quizQuestionsMap = new Map();
+    this._quizCuePoints = [];
+    this._quizAnswers = [];
+  };
 }
