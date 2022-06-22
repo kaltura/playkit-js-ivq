@@ -35,7 +35,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this._quizDataPromise = this._makeQuizDataPromise();
     this._quizQuestionsPromise = this._makeQuizQuestionsPromise();
     this._dataManager = new DataSyncManager(
-      this._resolveQuizQuestionsPromise,
+      (qqm: QuizQuestionMap) => this._resolveQuizQuestionsPromise(qqm),
       (qq: KalturaQuizQuestion) => this._questionsVisualManager.onQuestionCuepointActive(qq),
       this._seekControl,
       this.eventManager,
