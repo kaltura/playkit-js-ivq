@@ -345,6 +345,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this._dataManager.reset();
     this._quizDataPromise = this._makeQuizDataPromise();
     this._quizQuestionsPromise = this._makeQuizQuestionsPromise();
+    this.eventManager.removeAll();
+  }
+
+  destroy(): void {
     this.eventManager.destroy();
   }
 }
