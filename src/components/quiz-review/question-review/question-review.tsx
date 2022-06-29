@@ -23,6 +23,7 @@ interface QuestionReviewProps {
   questionsAmount: number;
   onBack: () => void;
   reviewQuestion: ReviewQuestion;
+  getSeekBarNode: () => Element | null;
 }
 
 const translates = ({questionsAmount, reviewQuestion}: QuestionReviewProps): QuizTranslates => {
@@ -44,7 +45,7 @@ const translates = ({questionsAmount, reviewQuestion}: QuestionReviewProps): Qui
 };
 
 export const QuestionReview = withText(translates)(
-  ({onBack, onNext, onPrev, questionCounter, reviewQuestion, ...otherProps}: QuestionReviewProps & QuizTranslates) => {
+  ({onBack, onNext, onPrev, questionCounter, reviewQuestion, getSeekBarNode, ...otherProps}: QuestionReviewProps & QuizTranslates) => {
     const backButtonRef = useRef<HTMLButtonElement>(null);
     const {q, a} = reviewQuestion.qq;
 
@@ -152,7 +153,7 @@ export const QuestionReview = withText(translates)(
             {renderCorrectAnswers}
           </div>
         </div>
-        <IvqBottomBar questionCounter={questionCounter} onPrev={onPrev} onNext={onNext} />
+        <IvqBottomBar questionCounter={questionCounter} onPrev={onPrev} onNext={onNext} getSeekBarNode={getSeekBarNode} />
       </Fragment>
     );
   }

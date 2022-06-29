@@ -13,9 +13,11 @@ export interface QuizReviewProps {
   onClose: () => void;
   showAnswers: boolean;
   showScores: boolean;
+  getSeekBarNode: () => Element | null;
+  restoreSeekBar: () => void;
 }
 
-export const QuizReview = ({reviewDetails, preparePlayer, ...questionListReviewProps}: QuizReviewProps) => {
+export const QuizReview = ({reviewDetails, preparePlayer, getSeekBarNode, restoreSeekBar, ...questionListReviewProps}: QuizReviewProps) => {
   const [reviewQuestion, setReviewQuestion] = useState<ReviewQuestion | null>(null);
 
   const handleQuestionClick = useCallback(
@@ -31,7 +33,8 @@ export const QuizReview = ({reviewDetails, preparePlayer, ...questionListReviewP
   );
   const handleBackClick = useCallback(() => {
     setReviewQuestion(null);
-  }, []);
+    restoreSeekBar();
+  }, [restoreSeekBar]);
   const handleNavigationClick = useCallback(
     (shift: number) => {
       const nextQuizQuestion = reviewQuestion && reviewDetails[reviewQuestion.index + shift];
@@ -56,9 +59,10 @@ export const QuizReview = ({reviewDetails, preparePlayer, ...questionListReviewP
         onPrev={handleNavigationClick(-1)}
         reviewQuestion={reviewQuestion}
         questionsAmount={reviewDetails.length}
+        getSeekBarNode={getSeekBarNode}
       />
     );
-  }, [reviewQuestion, reviewDetails]);
+  }, [reviewQuestion, reviewDetails, getSeekBarNode]);
 
   const renderReviewQuestionsList = useMemo(() => {
     return <QuestionListReview onQuestionClick={handleQuestionClick} reviewDetails={reviewDetails} {...questionListReviewProps} />;

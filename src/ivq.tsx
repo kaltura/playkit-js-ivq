@@ -2,7 +2,7 @@ import {h} from 'preact';
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {QuizLoader} from './providers';
-import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PresetAreas, IvqEventTypes, TimeLineMarker} from './types';
+import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PresetAreas, IvqEventTypes, TimeLineMarker, UiComponentArea} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsVisualManager} from './questions-visual-manager';
 import {KalturaUserEntry} from './providers/response-types';
@@ -14,6 +14,9 @@ import {QuizDownloadLoader} from './providers/quiz-download-loader';
 import {KalturaIvqMiddleware} from './quiz-middleware';
 
 const {EventType} = core;
+
+const SEEKBAR_SELECTOR = '.playkit-seek-bar';
+const SEEKBAR_PARENT_SELECTOR = '.playkit-bottom-bar-area';
 
 export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _player: KalturaPlayerTypes.Player;
@@ -43,7 +46,15 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this.logger,
       (event: string, payload: unknown) => this.dispatchEvent(event, payload)
     );
-    this._questionsVisualManager = new QuestionsVisualManager(() => this._dataManager.quizQuestionsMap, this._player, this.eventManager);
+    this._questionsVisualManager = new QuestionsVisualManager(
+      () => this._dataManager.quizQuestionsMap,
+      this._player,
+      this.eventManager,
+      this._setOverlay,
+      this._removeOverlay,
+      () => Boolean(this._removeActiveOverlay),
+      this._getSeekBarNode
+    );
   }
 
   get ready() {
@@ -69,6 +80,24 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     }
   }
 
+  private _getSeekBarParentNode = () => {
+    return this._player.getView().parentNode?.parentNode?.querySelector(SEEKBAR_PARENT_SELECTOR) || null;
+  };
+
+  private _getSeekBarNode = () => {
+    return this._player.getView().parentNode?.parentNode?.querySelector(SEEKBAR_SELECTOR) || null;
+  };
+
+  private _restoreSeekBar = () => {
+    const seekBarParentNode = this._getSeekBarParentNode();
+    if (seekBarParentNode && !seekBarParentNode?.querySelector(SEEKBAR_SELECTOR)) {
+      const seekBarNode = this._getSeekBarNode();
+      if (seekBarNode) {
+        seekBarParentNode.append(seekBarNode);
+      }
+    }
+  };
+
   private _handleTimeline(qqm: QuizQuestionMap) {
     const timelineService: any = this._player.getService('timeline');
     if (!timelineService) {
@@ -80,6 +109,13 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         if (qq.startTime === qq.prev?.startTime) {
           return;
         }
+        const handleOnQuestionClick = () => {
+          // get updated Quiz Question
+          const quizQuestion = this._dataManager.quizQuestionsMap.get(qq.id);
+          if (quizQuestion) {
+            this._questionsVisualManager.preparePlayer(quizQuestion, true);
+          }
+        };
         questionBunch.push(qq.index);
         questionBunchMap.set(qq.id, questionBunch);
         const timeLineMarker: TimeLineMarker = {
@@ -89,16 +125,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
               return (
                 <TimelineMarker
                   {...props}
-                  onClick={() => {
-                    // get updated Quiz Question
-                    const quizQuestion = this._dataManager.quizQuestionsMap.get(qq.id);
-                    if (quizQuestion) {
-                      this._questionsVisualManager.preparePlayer(quizQuestion, true);
-                    }
-                  }}
+                  onClick={handleOnQuestionClick}
                   questionIndex={qq.index}
                   isDisabled={() => {
-                    return Boolean(this._questionsVisualManager.removeQuestionOverlay || this._removeActiveOverlay);
+                    return Boolean(this._removeActiveOverlay);
                   }}
                 />
               );
@@ -110,9 +140,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             get: ({defaultPreviewProps}) => {
               return (
                 <TimelinePreview
-                  onQuestionLinkClick={() => {
-                    this._player.currentTime = qq.startTime;
-                  }}
+                  onQuestionLinkClick={handleOnQuestionClick}
                   thumbnailInfo={this.player.getThumbnail(defaultPreviewProps.virtualTime)}
                   questionBunch={questionBunchMap.get(qq.id)!}
                   questionType={qq.q.questionType}
@@ -167,6 +195,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   };
 
   private _removeOverlay = () => {
+    this._restoreSeekBar();
     if (this._removeActiveOverlay) {
       this._removeActiveOverlay();
       this._removeActiveOverlay = null;
@@ -187,7 +216,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._player.ui.addComponent({
         label: 'kaltura-ivq-welcome-screen',
         presets: PresetAreas,
-        container: 'GuiArea',
+        container: UiComponentArea,
         get: () => (
           <WelcomeScreen
             onClose={() => {
@@ -214,7 +243,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         this._player.ui.addComponent({
           label: 'kaltura-ivq-review-screen',
           presets: PresetAreas,
-          container: 'GuiArea',
+          container: UiComponentArea,
           replaceComponent: 'PrePlaybackPlayOverlay',
           get: () => {
             const params: QuizReviewProps = {
@@ -225,7 +254,9 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
               reviewDetails,
               showAnswers: showCorrectAfterSubmission,
               showScores: showGradeAfterSubmission,
-              preparePlayer: this._questionsVisualManager.preparePlayer
+              preparePlayer: this._questionsVisualManager.preparePlayer,
+              getSeekBarNode: this._getSeekBarNode,
+              restoreSeekBar: this._restoreSeekBar
             };
             if (this._dataManager.isRetakeAllowed()) {
               params.onRetake = () => {
@@ -248,7 +279,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         this._player.ui.addComponent({
           label: 'kaltura-ivq-submit-screen',
           presets: PresetAreas,
-          container: 'GuiArea',
+          container: UiComponentArea,
           replaceComponent: 'PrePlaybackPlayOverlay',
           get: () => {
             const params: QuizSubmitProps = {
