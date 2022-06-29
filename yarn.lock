@@ -5124,7 +5124,7 @@ jsonparse@^1.2.0:
 
 "kaltura-player-js@https://github.com/kaltura/kaltura-player-js.git#master":
   version "3.3.0"
-  resolved "https://github.com/kaltura/kaltura-player-js.git#0930159baefe980718f27843de29bc85a59d7682"
+  resolved "https://github.com/kaltura/kaltura-player-js.git#10e3f4214218e8b5038de6e5d5a6c7ee8f96e179"
   dependencies:
     "@babel/polyfill" "^7.0.0"
     "@playkit-js/playkit-js" "^0.80.3"
