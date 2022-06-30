@@ -554,30 +554,30 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.3.tgz#0300943770e04231041a51bd39f0439b5c7ab4f0"
   integrity sha512-nkalE/f1RvRGChwBnEIoBfSEYOXnCRdleKuv6+lePbMDrMZXeDQnqak5XDOeBgrPPyPfAdcCu/B5z+v3VhplGg==
 
-"@playkit-js/playkit-js-dash@1.30.0":
-  version "1.30.0"
-  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-dash/-/playkit-js-dash-1.30.0.tgz#6985d86b88e5b3ccf976f7ad020bfeca5aab7af8"
-  integrity sha512-jMnlhuN3ryXlKHFvOI8leySZKj/oWjuXjCsmhhP/OyROR2tMW9qhJEJPPzyAonCXnnlV31g5WHm+7/ZCW1rDbA==
+"@playkit-js/playkit-js-dash@1.30.1":
+  version "1.30.1"
+  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-dash/-/playkit-js-dash-1.30.1.tgz#a68f74d4b7d94d5f0771ad5d3fdd9808bf88e67e"
+  integrity sha512-WZMC5AujABOHQclcDJw9dtnUcvjoBSgBcyVu/BbyKXjz9ao9kiUdw4zIVMVv+P7fU0tZIpRTIyKbcU1uOafMqw==
 
 "@playkit-js/playkit-js-hls@1.30.1":
   version "1.30.1"
   resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-hls/-/playkit-js-hls-1.30.1.tgz#1c6298cafadfabe9510e013f319774f486f3a4c6"
   integrity sha512-92nrsOXBQveF+BmKqC2LxLp+zGjqKvBCh5vL8Ea0+COzha/jPovKtwhGxzyF3gTIukYoocMC8IisFFQCIPkCmw==
 
-"@playkit-js/playkit-js-ui@0.70.1":
-  version "0.70.1"
-  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-ui/-/playkit-js-ui-0.70.1.tgz#3da2b6e22b8cc1b49e626054ece4ace6b25b9636"
-  integrity sha512-i4E7L5RyPpyvxS7uU4Ju0H/z4oAKUetnveYCKT9SQwoA8GthrRgXTUScdPQgIZSaFpSlm+4cTyJJvifyGTk0Ug==
+"@playkit-js/playkit-js-ui@^0.72.0":
+  version "0.72.0"
+  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-ui/-/playkit-js-ui-0.72.0.tgz#d8b855f2a339903c3207f04c5890a25538f22933"
+  integrity sha512-+NSxOET30Ut4W/WNaepZCnaBHJSLOoAPZbBrXwVucA5Z3NG8wTmsoEd58FCwpT8vWTUwVSFxzli/uUiwfXlYHQ==
   dependencies:
     preact "^10.3.4"
     preact-i18n "^2.0.0-preactx.2"
     react-redux "^7.2.0"
     redux "^4.0.5"
 
-"@playkit-js/playkit-js@0.79.0":
-  version "0.79.0"
-  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js/-/playkit-js-0.79.0.tgz#853b6af69954638951cda420856891acfd9b66e2"
-  integrity sha512-cVz+ewW5j02jZDck5vLnIaBLTs8Jh3dNLB1h0nyZVqpXRx1kZsl9iyCIIVbuM8AaCQDokaTkqGUEp8680EmCyg==
+"@playkit-js/playkit-js@^0.80.3":
+  version "0.80.3"
+  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js/-/playkit-js-0.80.3.tgz#07e47e560aeadc6ca3b20afde87dfdf4ab8f7ac0"
+  integrity sha512-l7WWGLqL4KnP+TZZzGxsgQLj4chYZYsdF+35laSzFSxzJXsTi7ra8HCtNCWNHu5y3mfer2jjhl5kjMyCU6dt4Q==
   dependencies:
     js-logger "^1.6.0"
     ua-parser-js "1.0.2"
@@ -5095,17 +5095,17 @@ jsonparse@^1.2.0:
   integrity sha1-P02uSpH6wxX3EGL4UhzCOfE2YoA=
 
 "kaltura-player-js@https://github.com/kaltura/kaltura-player-js.git#master":
-  version "3.1.0"
-  resolved "https://github.com/kaltura/kaltura-player-js.git#d29f30f97d11d93bb7eb411f16bb1919dbe57ea5"
+  version "3.3.0"
+  resolved "https://github.com/kaltura/kaltura-player-js.git#49ce6be5f3865b2f1b92d513246757d27fce2a16"
   dependencies:
     "@babel/polyfill" "^7.0.0"
-    "@playkit-js/playkit-js" "0.79.0"
-    "@playkit-js/playkit-js-dash" "1.30.0"
+    "@playkit-js/playkit-js" "^0.80.3"
+    "@playkit-js/playkit-js-dash" "1.30.1"
     "@playkit-js/playkit-js-hls" "1.30.1"
-    "@playkit-js/playkit-js-ui" "0.70.1"
+    "@playkit-js/playkit-js-ui" "^0.72.0"
     hls.js "^1.1.5"
     intersection-observer "^0.12.0"
-    playkit-js-providers "https://github.com/kaltura/playkit-js-providers.git#v2.34.0"
+    playkit-js-providers "https://github.com/kaltura/playkit-js-providers.git#v2.35.1"
     proxy-polyfill "^0.3.0"
     shaka-player "3.3.0"
 
@@ -6563,9 +6563,9 @@ pkg-dir@^5.0.0:
   dependencies:
     find-up "^5.0.0"
 
-"playkit-js-providers@https://github.com/kaltura/playkit-js-providers.git#v2.34.0":
-  version "2.34.0"
-  resolved "https://github.com/kaltura/playkit-js-providers.git#647b4bb8842e6a823e9d7744fed01c419c1512cb"
+"playkit-js-providers@https://github.com/kaltura/playkit-js-providers.git#v2.35.1":
+  version "2.35.1"
+  resolved "https://github.com/kaltura/playkit-js-providers.git#6e6d586c5c4695cdaab8f2b9fe16c9a36477e1f3"
 
 please-upgrade-node@^3.2.0:
   version "3.2.0"
