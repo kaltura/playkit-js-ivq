@@ -25,6 +25,7 @@ export const IvqBottomBar = withText(translates)(
     useEffect(() => {
       const seekBarNode = getSeekBarNode();
       if (ivqBottomBarRef.current && seekBarNode) {
+        // inject player seek bar into IvqBottomBar component
         ivqBottomBarRef.current.prepend(seekBarNode);
       }
     }, []);

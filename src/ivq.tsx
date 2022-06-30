@@ -2,7 +2,18 @@ import {h} from 'preact';
 // @ts-ignore
 import {core} from 'kaltura-player-js';
 import {QuizLoader} from './providers';
-import {IvqConfig, QuizQuestion, QuizQuestionMap, KalturaQuizQuestion, PresetAreas, IvqEventTypes, TimeLineMarker, UiComponentArea} from './types';
+import {
+  IvqConfig,
+  QuizQuestion,
+  QuizQuestionMap,
+  KalturaQuizQuestion,
+  PresetAreas,
+  IvqEventTypes,
+  TimeLineMarker,
+  UiComponentArea,
+  KalturaPlayerSeekBarSelector,
+  KalturaPlayerBottomBarSelector
+} from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsVisualManager} from './questions-visual-manager';
 import {KalturaUserEntry} from './providers/response-types';
@@ -14,9 +25,6 @@ import {QuizDownloadLoader} from './providers/quiz-download-loader';
 import {KalturaIvqMiddleware} from './quiz-middleware';
 
 const {EventType} = core;
-
-const SEEKBAR_SELECTOR = '.playkit-seek-bar';
-const SEEKBAR_PARENT_SELECTOR = '.playkit-bottom-bar-area';
 
 export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _player: KalturaPlayerTypes.Player;
@@ -82,19 +90,20 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     }
   }
 
-  private _getSeekBarParentNode = () => {
-    return this._player.getView().parentNode?.parentNode?.querySelector(SEEKBAR_PARENT_SELECTOR) || null;
+  private _getBottomBarNode = () => {
+    return this._player.getView().parentNode?.parentNode?.querySelector(KalturaPlayerBottomBarSelector) || null;
   };
 
   private _getSeekBarNode = () => {
-    return this._player.getView().parentNode?.parentNode?.querySelector(SEEKBAR_SELECTOR) || null;
+    return this._player.getView().parentNode?.parentNode?.querySelector(KalturaPlayerSeekBarSelector) || null;
   };
 
   private _restoreSeekBar = () => {
-    const seekBarParentNode = this._getSeekBarParentNode();
-    if (seekBarParentNode && !seekBarParentNode?.querySelector(SEEKBAR_SELECTOR)) {
+    const seekBarParentNode = this._getBottomBarNode();
+    if (seekBarParentNode && !seekBarParentNode?.querySelector(KalturaPlayerSeekBarSelector)) {
       const seekBarNode = this._getSeekBarNode();
       if (seekBarNode) {
+        // move player seek bar from IvqBottomBar to Kaltura player bottom bar
         seekBarParentNode.append(seekBarNode);
       }
     }

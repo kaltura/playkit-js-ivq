@@ -26,9 +26,9 @@ export class QuestionsVisualManager {
     private _getQuizQuestionMap: () => QuizQuestionMap,
     private _player: KalturaPlayerTypes.Player,
     private _eventManager: KalturaPlayerTypes.EventManager,
-    private _setOverlay: Function,
+    private _setOverlay: (overlay: Function) => void,
     private _removeOverlay: () => void,
-    private _isOverlayActive: () => boolean,
+    private _isOverlayExist: () => boolean,
     private _getSeekBarNode: () => Element | null
   ) {}
 
@@ -78,10 +78,9 @@ export class QuestionsVisualManager {
   };
 
   private _renderUiComponent = (quizQuestionUi: QuizQuestionUI, updateComponent: boolean) => {
-    if (updateComponent && this._isOverlayActive()) {
+    if (updateComponent && this._isOverlayExist()) {
       this._updateQuestionComponent(quizQuestionUi);
     } else {
-      this._removeOverlay();
       this._setOverlay(
         this._player.ui.addComponent({
           label: 'kaltura-ivq-question-wrapper',
