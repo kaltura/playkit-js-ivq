@@ -19,6 +19,7 @@ const {
 
 interface QuizQuestionWrapperProps {
   qui: QuizQuestionUI;
+  getSeekBarNode: Element | null;
 }
 
 const translates = ({qui}: QuizQuestionWrapperProps): QuizTranslates => {
@@ -50,7 +51,7 @@ const getSelected = (qui: QuizQuestionUI): string => {
 };
 
 export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrapperProps & QuizTranslates) => {
-  const {qui} = props;
+  const {qui, getSeekBarNode} = props;
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
   const [isLoading, setIsLoading] = useState(false);
   const continueButtonRef = useRef<HTMLButtonElement>(null);
@@ -178,7 +179,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
         </div>
         {renderIvqButtons}
       </div>
-      <IvqBottomBar questionCounter={props.questionCounter} onPrev={qui.onPrev} onNext={qui.onNext} />
+      <IvqBottomBar questionCounter={props.questionCounter} onPrev={qui.onPrev} onNext={qui.onNext} getSeekBarNode={getSeekBarNode} />
     </IvqOverlay>
   );
 });

@@ -10,7 +10,8 @@ import {
   Selected,
   KalturaQuizQuestionTypes,
   SubmissionDetails,
-  PresetAreas
+  PresetAreas,
+  UiComponentArea
 } from './types';
 import {QuizQuestionWrapper} from './components/quiz-question';
 
@@ -21,11 +22,14 @@ const SEEK_DELTA = 0.3;
 export class QuestionsVisualManager {
   private _updateQuestionComponent = (qui: QuizQuestionUI) => {};
   public quizQuestionJumping = false;
-  public removeQuestionOverlay: Function | null = null;
   constructor(
     private _getQuizQuestionMap: () => QuizQuestionMap,
     private _player: KalturaPlayerTypes.Player,
-    private _eventManager: KalturaPlayerTypes.EventManager
+    private _eventManager: KalturaPlayerTypes.EventManager,
+    private _setOverlay: (overlay: Function) => void,
+    private _removeOverlay: () => void,
+    private _isOverlayExist: () => boolean,
+    private _getSeekBarNode: () => Element | null
   ) {}
 
   public onQuestionCuepointActive({id}: KalturaQuizQuestion) {
@@ -74,29 +78,23 @@ export class QuestionsVisualManager {
   };
 
   private _renderUiComponent = (quizQuestionUi: QuizQuestionUI, updateComponent: boolean) => {
-    if (updateComponent && this.removeQuestionOverlay) {
+    if (updateComponent && this._isOverlayExist()) {
       this._updateQuestionComponent(quizQuestionUi);
     } else {
-      this._removeUiComponent();
-      this.removeQuestionOverlay = this._player.ui.addComponent({
-        label: 'kaltura-ivq-question-wrapper',
-        presets: PresetAreas,
-        container: 'GuiArea',
-        get: () => {
-          const [qui, setQui] = useState<QuizQuestionUI | null>(null);
-          this._updateQuestionComponent = (qui: QuizQuestionUI) => {
-            setQui(qui);
-          };
-          return <QuizQuestionWrapper qui={qui || quizQuestionUi} />;
-        }
-      });
-    }
-  };
-
-  private _removeUiComponent = () => {
-    if (this.removeQuestionOverlay) {
-      this.removeQuestionOverlay();
-      this.removeQuestionOverlay = null;
+      this._setOverlay(
+        this._player.ui.addComponent({
+          label: 'kaltura-ivq-question-wrapper',
+          presets: PresetAreas,
+          container: UiComponentArea,
+          get: () => {
+            const [qui, setQui] = useState<QuizQuestionUI | null>(null);
+            this._updateQuestionComponent = (qui: QuizQuestionUI) => {
+              setQui(qui);
+            };
+            return <QuizQuestionWrapper qui={qui || quizQuestionUi} getSeekBarNode={this._getSeekBarNode} />;
+          }
+        })
+      );
     }
   };
 
@@ -127,7 +125,7 @@ export class QuestionsVisualManager {
       if (qq.startTime === next?.startTime) {
         this.preparePlayer(this._getQuizQuestionMap().get(next.id)!, true);
       } else {
-        this._removeUiComponent();
+        this._removeOverlay();
         this._player.play();
       }
     };
@@ -164,7 +162,6 @@ export class QuestionsVisualManager {
   };
 
   public reset = () => {
-    this._removeUiComponent();
     this.quizQuestionJumping = false;
   };
 }
