@@ -29,6 +29,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _maxCurrentTime = 0;
   private _seekControlEnabled = false;
   private _removeActiveOverlay: null | Function = null;
+  private _playlistOptions: null | KalturaPlayerTypes.Playlist['options'] = null;
 
   static defaultConfig: IvqConfig = {};
 
@@ -72,6 +73,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._getQuiz();
       this._quizQuestionsPromise.then((qqm: QuizQuestionMap) => {
         this._handleTimeline(qqm);
+        this._handlePlaylistConfiguration();
         this.eventManager.listen(this._player, this._player.Event.ENDED, this._handleEndEvent);
       });
     } else {
@@ -97,6 +99,16 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       }
     }
   };
+
+  private _handlePlaylistConfiguration() {
+    const {items, options} = this._player.playlist;
+    if (items?.length && (options?.autoContinue || options?.loop)) {
+      // save playlist options
+      this._playlistOptions = {...options};
+      options.autoContinue = false;
+      options.loop = false;
+    }
+  }
 
   private _handleTimeline(qqm: QuizQuestionMap) {
     const timelineService: any = this._player.getService('timeline');
@@ -250,6 +262,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
               score: this._dataManager.quizUserEntry?.score || 0,
               onClose: () => {
                 this._removeOverlay();
+                const {playlist} = this._player;
+                if (this._playlistOptions?.loop || (this._playlistOptions?.autoContinue && playlist.next)) {
+                  playlist.playNext();
+                }
               },
               reviewDetails,
               showAnswers: showCorrectAfterSubmission,
@@ -377,6 +393,15 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this._quizDataPromise = this._makeQuizDataPromise();
     this._quizQuestionsPromise = this._makeQuizQuestionsPromise();
     this.eventManager.removeAll();
+    this._seekControlEnabled = false;
+    this._maxCurrentTime = 0;
+    if (this._playlistOptions) {
+      // restore playlist options
+      const {autoContinue, loop} = this._playlistOptions;
+      this._player.playlist.options.autoContinue = autoContinue;
+      this._player.playlist.options.loop = loop;
+      this._playlistOptions = null;
+    }
   }
 
   destroy(): void {
