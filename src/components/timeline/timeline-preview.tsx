@@ -20,15 +20,18 @@ interface TimelinePreviewProps {
 }
 
 const getFramePreviewImgContainerStyle = (thumbnailInfo: ThumbnailInfo) => {
-  return {
+  return thumbnailInfo ? {
     height: `${thumbnailInfo.height}px`,
     width: `${thumbnailInfo.width}px`
-  };
+  } : {};
 };
 const getFramePreviewImgStyle = (thumbnailInfo: ThumbnailInfo) => {
-  let framePreviewImgStyle = `height: 100%; width: 100%; background: url(${thumbnailInfo.url});`;
-  framePreviewImgStyle += `background-position: -${thumbnailInfo.x}px -${thumbnailInfo.y}px;`;
-  return framePreviewImgStyle;
+  if (thumbnailInfo) {
+    let framePreviewImgStyle = `height: 100%; width: 100%; background: url(${thumbnailInfo.url});`;
+    framePreviewImgStyle += `background-position: -${thumbnailInfo.x}px -${thumbnailInfo.y}px;`;
+    return framePreviewImgStyle;
+  }
+  return '';
 };
 
 export const TimelinePreview = withText(translates)(
