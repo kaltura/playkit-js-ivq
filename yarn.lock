@@ -554,10 +554,10 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.3.tgz#0300943770e04231041a51bd39f0439b5c7ab4f0"
   integrity sha512-nkalE/f1RvRGChwBnEIoBfSEYOXnCRdleKuv6+lePbMDrMZXeDQnqak5XDOeBgrPPyPfAdcCu/B5z+v3VhplGg==
 
-"@playkit-js/playkit-js-dash@1.30.1":
-  version "1.30.1"
-  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-dash/-/playkit-js-dash-1.30.1.tgz#a68f74d4b7d94d5f0771ad5d3fdd9808bf88e67e"
-  integrity sha512-WZMC5AujABOHQclcDJw9dtnUcvjoBSgBcyVu/BbyKXjz9ao9kiUdw4zIVMVv+P7fU0tZIpRTIyKbcU1uOafMqw==
+"@playkit-js/playkit-js-dash@1.30.2":
+  version "1.30.2"
+  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-dash/-/playkit-js-dash-1.30.2.tgz#b539a16dff6dae1afa89f7113d779b7dcb804309"
+  integrity sha512-v1HZfp0iShCMY79zR6uqmsnvbjTy5nP2+oi5N2xxidZl3Be19ZeePHXsOoZ65kkQJthYhbnOnVUlEQbRzg3kwA==
 
 "@playkit-js/playkit-js-hls@1.30.1":
   version "1.30.1"
@@ -5095,19 +5095,19 @@ jsonparse@^1.2.0:
   integrity sha1-P02uSpH6wxX3EGL4UhzCOfE2YoA=
 
 "kaltura-player-js@https://github.com/kaltura/kaltura-player-js.git#master":
-  version "3.3.0"
-  resolved "https://github.com/kaltura/kaltura-player-js.git#49ce6be5f3865b2f1b92d513246757d27fce2a16"
+  version "3.4.0"
+  resolved "https://github.com/kaltura/kaltura-player-js.git#76b949e3d3a794731e249e68c78bd2d0e9f7b2f2"
   dependencies:
     "@babel/polyfill" "^7.0.0"
     "@playkit-js/playkit-js" "^0.80.3"
-    "@playkit-js/playkit-js-dash" "1.30.1"
+    "@playkit-js/playkit-js-dash" "1.30.2"
     "@playkit-js/playkit-js-hls" "1.30.1"
     "@playkit-js/playkit-js-ui" "^0.72.0"
     hls.js "^1.1.5"
     intersection-observer "^0.12.0"
     playkit-js-providers "https://github.com/kaltura/playkit-js-providers.git#v2.35.1"
     proxy-polyfill "^0.3.0"
-    shaka-player "3.3.0"
+    shaka-player "3.3.3"
 
 keyv@3.0.0:
   version "3.0.0"
@@ -7481,10 +7481,10 @@ setprototypeof@1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-shaka-player@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/shaka-player/-/shaka-player-3.3.0.tgz#50fdd7aa551376ddb7f6b90f2df18398af26142f"
-  integrity sha512-R73sL0X7KEgMSWbCsZXFeeq/kzv7z0Fjl2sYGbPQb0skR01v7Krw8H7XbihEKlKnGEvuIZvzkPrJZ3UXl+x4WQ==
+shaka-player@3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/shaka-player/-/shaka-player-3.3.3.tgz#c94b12c5ffafd8cbf67baa654cdb4a01fc9ff722"
+  integrity sha512-E6VRILD9rKunKCQ+lbUnNqqxAvoKuw/6vNaIC+Gz9nW2lYfLX22XCu0wjGZlkvwaR9Q1H+PF7A9iZzzoctSWwg==
   dependencies:
     eme-encryption-scheme-polyfill "^2.0.3"
 
