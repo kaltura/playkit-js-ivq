@@ -26,6 +26,8 @@ import {KalturaIvqMiddleware} from './quiz-middleware';
 
 const {EventType} = core;
 
+const HAS_IVQ_OVERLAY_CLASSNAME = 'has-ivq-plugin-overlay';
+
 export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _player: KalturaPlayerTypes.Player;
   private _resolveQuizDataPromise = () => {};
@@ -213,6 +215,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _setOverlay = (fn: Function) => {
     this._removeOverlay();
     this._removeActiveOverlay = fn;
+    this._player.ui.store?.dispatch(KalturaPlayer.ui.reducers.shell.actions.addPlayerClass(HAS_IVQ_OVERLAY_CLASSNAME));
   };
 
   private _removeOverlay = () => {
@@ -220,6 +223,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if (this._removeActiveOverlay) {
       this._removeActiveOverlay();
       this._removeActiveOverlay = null;
+      this._player.ui.store?.dispatch(KalturaPlayer.ui.reducers.shell.actions.removePlayerClass(HAS_IVQ_OVERLAY_CLASSNAME));
     }
   };
 
