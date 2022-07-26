@@ -5,3 +5,7 @@
     padding: 0 !important; // overwrite responsive overlay styles
   }
 }
+
+:global(.playkit-player.has-ivq-plugin-overlay .playkit-playlist-next-screen-overlay) {
+  display: none;
+}
