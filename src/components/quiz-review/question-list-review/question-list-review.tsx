@@ -24,13 +24,13 @@ export interface QuestionListReviewProps {
 
 const translates = (): QuizTranslates => {
   return {
-    quizScore: <Text id="ivq.quiz_score" data-testid="quizScoreTitle">Your score is</Text>,
+    quizScore: <Text id="ivq.quiz_score">Your score is</Text>,
     retakeButton: <Text id="ivq.retake_button">Retake</Text>,
-    retakeButtonAreaLabel: <Text id="ivq.retake_button_area_label" data-testid="reviewRetakeButton">Click to retake the quiz</Text>,
+    retakeButtonAreaLabel: <Text id="ivq.retake_button_area_label">Click to retake the quiz</Text>,
     doneButton: <Text id="ivq.done_button">Done</Text>,
     doneButtonAreaLabel: <Text id="ivq.done_button_area_label">Click to close the review</Text>,
     quizCompleted: <Text id="ivq.quiz_completed">You completed the quiz</Text>,
-    reviewAnswer: <Text id="ivq.review_answer" data-testid="reviewAnswer">Click to view the question and your answer</Text>,
+    reviewAnswer: <Text id="ivq.review_answer">Click to view the question and your answer</Text>,
     correctAnswer: <Text id="ivq.correct_answer">The correct answer</Text>,
     incorrectAnswer: <Text id="ivq.incorrect_answer">The incorrect answer</Text>
   };
@@ -97,7 +97,7 @@ export const QuestionListReview = withText(translates)(
         <div className={styles.questionsWrapper}>{showAnswers && renderAnswers}</div>
         <div className={styles.buttonWrapper} data-testid="reviewButtonWrapper">
           {onRetake && (
-            <button onClick={handleRetake} className={styles.primaryButton} aria-label={otherProps.retakeButtonAreaLabel} disabled={isLoading}>
+            <button onClick={handleRetake} className={styles.primaryButton} aria-label={otherProps.retakeButtonAreaLabel} data-testid="reviewRetakeButton" disabled={isLoading}>
               {isLoading ? <Spinner /> : otherProps.retakeButton}
             </button>
           )}
