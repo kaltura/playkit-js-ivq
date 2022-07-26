@@ -24,9 +24,9 @@ interface QuizQuestionWrapperProps {
 
 const translates = ({qui}: QuizQuestionWrapperProps): QuizTranslates => {
   return {
-    continueButton: <Text id="ivq.continue_button">Continue</Text>,
+    continueButton: <Text id="ivq.continue_button" data-testid="continueButton">Continue</Text>,
     continueButtonAriaLabel: <Text id="ivq.continue_button_area_label">Continue quiz with the selected answer</Text>,
-    skipButton: <Text id="ivq.skip_button">Skip</Text>,
+    skipButton: <Text id="ivq.skip_button" data-testid="skipButton">Skip</Text>,
     skipButtonAriaLabel: <Text id="ivq.skip_button_area_label">Skip for now</Text>,
     questionCounter: (
       <Text
@@ -173,8 +173,8 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
 
   return (
     <IvqOverlay>
-      <div className={styles.ivqQuestionContainer}>
-        <div className={styles.ivqQuestionWrapper} ref={questionWrapperRef} tabIndex={-1}>
+      <div className={styles.ivqQuestionContainer} data-testid="ivqQuestionContainer">
+        <div className={styles.ivqQuestionWrapper} ref={questionWrapperRef} tabIndex={-1} data-testid="ivqQuestionWrapper">
           {renderIvqQuestion}
         </div>
         {renderIvqButtons}

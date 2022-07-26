@@ -33,6 +33,7 @@ export const TimelineMarker = withText(translates)(({isDisabled, onClick, ...oth
           role="button"
           title={otherProps.markerAriaLabel as string}
           tabIndex={disabled ? -1 : 0}
+          data-testid="cuePointContainer"
           className={`${styles.markerWrapper} ${hoverActive ? styles.hover : ''}`}>
           <div className={`${styles.marker}`} />
         </div>

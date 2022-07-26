@@ -24,10 +24,10 @@ export const TrueFalse = withText(translates)(
       [onSelect]
     );
     return (
-      <div className={styles.trueFalseWrapper} role="alert">
-        <legend className={styles.questionText}>{question}</legend>
+      <div className={styles.trueFalseWrapper} role="alert" data-testid="trueFalseContainer">
+        <legend className={styles.questionText} data-testid="trueFalseQuestionTitle">{question}</legend>
         {hint && <QuestionAddons hint={hint} />}
-        <div className={styles.optionalAnswersWrapper} role="list">
+        <div className={styles.optionalAnswersWrapper} role="list" data-testid="trueFalseAnswersContainer">
           {optionalAnswers.map(({key, text}, index) => {
             const isActive = selected.includes(key);
             const classes = [styles.trueFalseAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ');
@@ -36,6 +36,7 @@ export const TrueFalse = withText(translates)(
                 <div
                   key={key}
                   tabIndex={disabled ? -1 : 0}
+                  data-testid="trueFalseAnswerContent"
                   className={classes}
                   title={`${otherProps.answerNumber} ${index + 1}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
                   role="listitem">
