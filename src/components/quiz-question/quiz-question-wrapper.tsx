@@ -24,9 +24,9 @@ interface QuizQuestionWrapperProps {
 
 const translates = ({qui}: QuizQuestionWrapperProps): QuizTranslates => {
   return {
-    continueButton: <Text id="ivq.continue_button" data-testid="continueButton">Continue</Text>,
+    continueButton: <Text id="ivq.continue_button">Continue</Text>,
     continueButtonAriaLabel: <Text id="ivq.continue_button_area_label">Continue quiz with the selected answer</Text>,
-    skipButton: <Text id="ivq.skip_button" data-testid="skipButton">Skip</Text>,
+    skipButton: <Text id="ivq.skip_button">Skip</Text>,
     skipButtonAriaLabel: <Text id="ivq.skip_button_area_label">Skip for now</Text>,
     questionCounter: (
       <Text
@@ -151,6 +151,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
         <A11yWrapper onClick={handleContinue}>
           <button
             ref={continueButtonRef}
+            data-testid="continueButton"
             disabled={continueDisabled}
             aria-label={props.continueButtonAriaLabel}
             className={[styles.continueButton, continueDisabled ? styles.disabled : ''].join(' ')}>
@@ -160,6 +161,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
 
         {qui.onSkip && (
           <button
+            data-testid="skipButton"
             onClick={handleSkip}
             aria-label={props.skipButtonAriaLabel}
             className={[styles.skipButton, isLoading ? styles.disabled : ''].join(' ')}
