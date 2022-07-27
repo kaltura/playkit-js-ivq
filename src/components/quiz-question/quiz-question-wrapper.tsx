@@ -151,6 +151,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
         <A11yWrapper onClick={handleContinue}>
           <button
             ref={continueButtonRef}
+            data-testid="continueButton"
             disabled={continueDisabled}
             aria-label={props.continueButtonAriaLabel}
             className={[styles.continueButton, continueDisabled ? styles.disabled : ''].join(' ')}>
@@ -160,6 +161,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
 
         {qui.onSkip && (
           <button
+            data-testid="skipButton"
             onClick={handleSkip}
             aria-label={props.skipButtonAriaLabel}
             className={[styles.skipButton, isLoading ? styles.disabled : ''].join(' ')}
@@ -173,8 +175,8 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
 
   return (
     <IvqOverlay>
-      <div className={styles.ivqQuestionContainer}>
-        <div className={styles.ivqQuestionWrapper} ref={questionWrapperRef} tabIndex={-1}>
+      <div className={styles.ivqQuestionContainer} data-testid="ivqQuestionContainer">
+        <div className={styles.ivqQuestionWrapper} ref={questionWrapperRef} tabIndex={-1} data-testid="ivqQuestionWrapper">
           {renderIvqQuestion}
         </div>
         {renderIvqButtons}

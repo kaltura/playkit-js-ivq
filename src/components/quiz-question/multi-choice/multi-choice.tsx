@@ -42,11 +42,11 @@ export const MultiChoice = withText(translates)(
     );
 
     return (
-      <div className={styles.multiChoiceWrapper} role="alert">
-        <legend className={styles.questionText}>{question}</legend>
+      <div className={styles.multiChoiceWrapper} data-testid="multipleChoiceContainer" role="alert">
+        <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle">{question}</legend>
         {hint && <QuestionAddons hint={hint} />}
-        <div className={styles.optionalAnswersWrapper}>
-          <div className={styles.optionalAnswersContainer} role="list">
+        <div className={styles.optionalAnswersWrapper} data-testid="multipleChoiceAnswersWrapper">
+          <div className={styles.optionalAnswersContainer} role="list" data-testid="multipleChoiceAnswersContainer">
             {optionalAnswers.map(({key, text}, index) => {
               const isActive = selectedArray.includes(key);
               return (
@@ -55,12 +55,13 @@ export const MultiChoice = withText(translates)(
                     key={key}
                     role="listitem"
                     tabIndex={disabled ? -1 : 0}
+                    data-testid="multipleChoiceSelectAnswer"
                     title={`${otherProps.answerNumber} ${index + 1}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
                     className={[styles.multiSelectAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ')}>
-                    <div className={styles.questionLabel} role="text">
+                    <div className={styles.questionLabel} data-testid="multipleChoiceQuestionLabel" role="text">
                       {questionLabels[index]}
                     </div>
-                    <div className={styles.questionContent} role="text">
+                    <div className={styles.questionContent} data-testid="multipleChoiceQuestionContent" role="text">
                       {text}
                     </div>
                   </div>

@@ -19,8 +19,8 @@ export const OpenQuestion = withText(translates)(({question, selected, onSelect,
     onSelect && onSelect(e.target.value);
   }, [onSelect]);
   return (
-    <div className={styles.openQuestionWrapper} role="alert">
-      <legend className={styles.questionText}>{question}</legend>
+    <div className={styles.openQuestionWrapper} data-testid="openQuestionContainer" role="alert">
+      <legend className={styles.questionText} data-testid="openQuestionTitle">{question}</legend>
       {hint && <QuestionAddons hint={hint} />}
       <div className={styles.textAreaWrapper}>
         <textarea
@@ -30,6 +30,7 @@ export const OpenQuestion = withText(translates)(({question, selected, onSelect,
           maxLength={MAX_LENGTH}
           onChange={handleChange}
           disabled={!onSelect}
+          data-testid="openQuestionAnswerInput"
         />
         <div className={styles.charCounter}>{`${selected.length}/${MAX_LENGTH}`}</div>
       </div>

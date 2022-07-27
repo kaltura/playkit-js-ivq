@@ -36,10 +36,10 @@ export const WelcomeScreen = withText(translates)(
     return (
       <div className={styles.welcomeScreenWrapper} role="dialog" aria-live="polite">
         <div className={styles.background} />
-        <div className={styles.content}>
+        <div className={styles.content} data-testid="welcomeScreenContent">
           <div role="heading">
-            <div className={styles.title}>{otherProps.welcomeTitle}</div>
-            <div className={styles.desc}>{welcomeMessage}</div>
+            <div className={styles.title} data-testid="welcomeScreenTitle">{otherProps.welcomeTitle}</div>
+            <div className={styles.desc} data-testid="welcomeScreenDescription">{welcomeMessage}</div>
           </div>
           {allowDownload && (
             <A11yWrapper onClick={handleDownload}>
@@ -47,6 +47,7 @@ export const WelcomeScreen = withText(translates)(
                 tabIndex={0}
                 role="button"
                 aria-label={otherProps.welcomeDownload}
+                data-testid="downloadPreTestContainer"
                 className={[styles.download, isLoading ? styles.disabled : ''].join(' ')}>
                 {isLoading && (
                   <div className={styles.spinnerContainer}>
@@ -54,9 +55,10 @@ export const WelcomeScreen = withText(translates)(
                   </div>
                 )}
                 {!isLoading && (
-                  <div className={styles.icon}>
+                  <div className={styles.icon} data-testid="downloadPreTestIcon">
                     <Icon
                       id="ivq-download"
+                      data-testid="downloadPreTestIcon"
                       height={icons.MediumSize}
                       width={icons.MediumSize}
                       viewBox={`0 0 ${icons.MediumSize} ${icons.MediumSize}`}

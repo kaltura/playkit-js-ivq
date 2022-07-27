@@ -68,19 +68,19 @@ export const QuestionListReview = withText(translates)(
     };
 
     const renderScore = useMemo(() => {
-      return <legend className={styles.quizScore}>{`${otherProps.quizScore} ${(score * 100).toFixed(0)}/100`}</legend>;
+      return <legend data-testid="quizScoreTitle" className={styles.quizScore}>{`${otherProps.quizScore} ${(score * 100).toFixed(0)}/100`}</legend>;
     }, [score]);
     const renderAnswers = useMemo(() => {
       return (
-        <div className={styles.questionsContainer} role="list" tabIndex={-1} ref={questionsContainerRef}>
+        <div className={styles.questionsContainer} data-testid="reviewQuestionsContainer" role="list" tabIndex={-1} ref={questionsContainerRef}>
           {reviewDetails.map((qq, index) => {
             return (
               <A11yWrapper onClick={onQuestionClick(qq, index)}>
-                <div key={qq.id} tabIndex={0} className={styles.reviewAnswer} role="listitem" title={getQuestionTitle(qq)}>
-                  <div className={styles.questionLabel} role="text">
+                <div key={qq.id} tabIndex={0} className={styles.reviewAnswer} role="listitem" title={getQuestionTitle(qq)} data-testid="reviewAnswer">
+                  <div className={styles.questionLabel} data-testid="reviewQuestionLabel" role="text">
                     {qq.index + 1}
                   </div>
-                  <div className={styles.questionContent} role="text">
+                  <div className={styles.questionContent} role="text" data-testid="reviewQuestionContent">
                     {qq.q.question}
                   </div>
                   <QuestionIcon questionType={qq.q.questionType} isCorrect={qq.a?.isCorrect} />
@@ -93,16 +93,17 @@ export const QuestionListReview = withText(translates)(
     }, [reviewDetails]);
     return (
       <div className={styles.quizReviewWrapper} role="dialog" aria-live="polite">
-        {showScores ? renderScore : <div className={styles.quizScore}>{otherProps.quizCompleted}</div>}
+        {showScores ? renderScore : <div className={styles.quizScore} data-testid="quizScoreTitle">{otherProps.quizCompleted}</div>}
         <div className={styles.questionsWrapper}>{showAnswers && renderAnswers}</div>
-        <div className={styles.buttonWrapper}>
+        <div className={styles.buttonWrapper} data-testid="reviewButtonWrapper">
           {onRetake && (
-            <button onClick={handleRetake} className={styles.primaryButton} aria-label={otherProps.retakeButtonAreaLabel} disabled={isLoading}>
+            <button onClick={handleRetake} className={styles.primaryButton} aria-label={otherProps.retakeButtonAreaLabel} data-testid="reviewRetakeButton" disabled={isLoading}>
               {isLoading ? <Spinner /> : otherProps.retakeButton}
             </button>
           )}
           <button
             onClick={onClose}
+            data-testid="reviewDoneButton"
             className={[onRetake ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
             aria-label={otherProps.doneButtonAreaLabel}>
             {otherProps.doneButton}

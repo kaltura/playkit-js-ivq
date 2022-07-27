@@ -60,5 +60,5 @@ const renderQuestionIcon = (questionType: KalturaQuizQuestionTypes, isCorrect?: 
 
 export const QuestionIcon = ({questionType, isCorrect}: QuestionIconProps) => {
   const [questionIcon, questionIconStyles] = renderQuestionIcon(questionType, isCorrect);
-  return <div className={[styles.questionIcon, questionIconStyles].join(' ')}>{questionIcon}</div>;
+  return <div className={[styles.questionIcon, questionIconStyles].join(' ')} data-testid="reviewQuestionIcon">{questionIcon}</div>;
 };
