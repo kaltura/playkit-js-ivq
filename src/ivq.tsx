@@ -391,17 +391,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         this.logger.warn(e);
       })
       .finally(() => {
-        const engineType = this._player.engineType;
-        if (engineType === 'youtube') {
-          // for youtube entries - quiz is not supported
-          this._resolveQuizDataPromise();
-          this.reset();
-        } else {
-          this._resolveQuizDataPromise();
-          if (this._dataManager.quizData?.showWelcomePage && !this._player.config.playback.autoplay) {
-            this._player.pause();
-            this._showWelcomeScreen();
-          }
+        this._resolveQuizDataPromise();
+        if (this._dataManager.quizData?.showWelcomePage && !this._player.config.playback.autoplay) {
+          this._player.pause();
+          this._showWelcomeScreen();
         }
       });
   }
