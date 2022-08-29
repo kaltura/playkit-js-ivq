@@ -7,7 +7,7 @@ on:
   push:
     tags:
       - '*'
-  
+
 jobs:
    dev_build:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
