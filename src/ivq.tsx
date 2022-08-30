@@ -228,6 +228,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   };
 
   private _showWelcomeScreen = () => {
+    this.logger.debug("show 'Welcome Screen'");
     const handleDownload = () => {
       return this._player.provider
         .doRequest([{loader: QuizDownloadLoader, params: {entryId: this._player.sources.id}}])
@@ -289,9 +290,11 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             };
             if (this._dataManager.isRetakeAllowed()) {
               params.onRetake = () => {
-                return this._onQuizRetake().then(() => {
-                  this._removeOverlay();
-                });
+                return this._onQuizRetake()
+                  .then(this._removeOverlay)
+                  .catch((e: any) => {
+                    this.logger.warn(e);
+                  });
               };
             }
             return <QuizReview {...params} />;
@@ -319,12 +322,17 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             };
             if (submissionDetails.showSubmitButton) {
               params.onSubmit = () => {
-                return this._dataManager.submitQuiz().then(() => {
-                  this._removeOverlay();
-                  if (this._dataManager.quizData?.showGradeAfterSubmission) {
-                    this._displayQuizReview();
-                  }
-                });
+                return this._dataManager
+                  .submitQuiz()
+                  .then(() => {
+                    this._removeOverlay();
+                    if (this._dataManager.quizData?.showGradeAfterSubmission) {
+                      this._displayQuizReview();
+                    }
+                  })
+                  .catch((e: any) => {
+                    this.logger.warn(e);
+                  });
               };
             }
             return <QuizSubmit {...params} />;
@@ -349,7 +357,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _onQuizRetake = (): Promise<void> => {
     return this._dataManager.createNewQuizUserEntry().then((quizNewUserEntry: KalturaUserEntry) => {
       if (!quizNewUserEntry) {
-        this.logger.warn('quizUserEntryId absent');
+        throw 'QuizRetake: quizNewUserEntry absent';
       } else {
         this.dispatchEvent(IvqEventTypes.QUIZ_RETAKE);
         this._dataManager.retakeQuiz(quizNewUserEntry);
@@ -371,24 +379,38 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           const quizAnswers = quizLoader?.response?.quizAnswers;
           if (!quizData) {
             this.logger.warn('quiz data absent');
-          } else {
-            if (!lastQuizUserEntry) {
-              // in case if quizUserEntryId doesn't exist - create new one
-              return this._dataManager.createNewQuizUserEntry().then((quizNewUserEntry: KalturaUserEntry) => {
-                if (!quizNewUserEntry) {
-                  this.logger.warn('quizUserEntryId absent');
-                } else {
-                  this._dataManager.initDataManager(quizData, quizNewUserEntry, quizAnswers);
-                }
-              });
-            } else {
-              this._dataManager.initDataManager(quizData, lastQuizUserEntry, quizAnswers);
-            }
+            return;
           }
+          const {setQuizUserEntry, setQuizAnswers, setQuizData, isSubmitAllowed, isRetakeAllowed} = this._dataManager;
+          // set main quiz data
+          setQuizData(quizData);
+          if (lastQuizUserEntry) {
+            // set lastQuizUserEntry to define if submit and retake allowed
+            setQuizUserEntry(lastQuizUserEntry);
+          }
+          if (!lastQuizUserEntry || (!isSubmitAllowed() && isRetakeAllowed())) {
+            // in case if quiz attempt doesn't exist
+            // OR user has more attempts and latest attempt submitted - create new quiz attempt.
+            return this._dataManager.createNewQuizUserEntry().then((quizNewUserEntry: KalturaUserEntry) => {
+              if (!quizNewUserEntry) {
+                throw 'quizUserEntryId absent';
+              } else {
+                // for new quiz attempt answers should be empty;
+                setQuizAnswers([]);
+                setQuizUserEntry(quizNewUserEntry);
+                this._dataManager.initDataManager();
+              }
+            });
+          }
+          // set answers for last quiz attempt
+          if (quizAnswers) {
+            setQuizAnswers(quizAnswers);
+          }
+          this._dataManager.initDataManager();
         }
       })
       .catch((e: any) => {
-        this.logger.warn(e);
+        this.logger.warn("can't process quiz data", e);
       })
       .finally(() => {
         this._resolveQuizDataPromise();

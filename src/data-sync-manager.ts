@@ -1,6 +1,6 @@
 // @ts-ignore
 import {core} from 'kaltura-player-js';
-import {getKeyValue, stringToBoolean} from './utils';
+import {getKeyValue, stringToBoolean, isNumber} from './utils';
 import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry} from './providers/response-types';
 import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes, QuizQuestion, IvqEventTypes} from './types';
 import {QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader, QuizAnswerLoader} from './providers';
@@ -35,8 +35,8 @@ export class DataSyncManager {
     this._eventManager.listen(this._player, this._player.Event.TIMED_METADATA_ADDED, this._onTimedMetadataAdded);
   };
 
-  public initDataManager(rawQuizData: KalturaQuiz, quizUserEntry: KalturaUserEntry, quizAnswers: KalturaQuizAnswer[] = []) {
-    this._logger.debug('initDataManager', rawQuizData, quizUserEntry, quizAnswers);
+  public setQuizData = (rawQuizData: KalturaQuiz) => {
+    this._logger.debug('setQuizData', rawQuizData);
     this.quizData = {
       ...rawQuizData,
       welcomeMessage: getKeyValue(rawQuizData.uiAttributes, 'welcomeMessage'),
@@ -46,8 +46,23 @@ export class DataSyncManager {
       canSkip: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'canSkip')),
       preventSeek: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'banSeek'))
     };
-    this._quizAnswers = quizAnswers;
+  };
+
+  public setQuizUserEntry = (quizUserEntry: KalturaUserEntry) => {
+    this._logger.debug('setQuizUserEntry', quizUserEntry);
     this.quizUserEntry = quizUserEntry;
+  };
+
+  public setQuizAnswers = (quizAnswers: KalturaQuizAnswer[] = []) => {
+    this._logger.debug('setQuizAnswers', quizAnswers);
+    this._quizAnswers = quizAnswers;
+  };
+
+  public initDataManager = () => {
+    if (!this.quizData || !this.quizUserEntry) {
+      this._logger.warn('initDataManager: quizData or quizUserEntry absent');
+      return;
+    }
     if (this.quizData.preventSeek) {
       this._enableSeekControl();
     }
@@ -58,7 +73,7 @@ export class DataSyncManager {
       scoreType: this.quizData.scoreType,
       allowAnswerUpdate: this.quizData?.allowAnswerUpdate
     });
-  }
+  };
 
   public submitQuiz = () => {
     const params = {
@@ -118,7 +133,7 @@ export class DataSyncManager {
   };
 
   public isSubmitAllowed = () => {
-    return !(typeof this.quizUserEntry?.score === 'number');
+    return !isNumber(this.quizUserEntry?.score);
   };
 
   public isRetakeAllowed = () => {
@@ -126,8 +141,11 @@ export class DataSyncManager {
     return submittedAttempts < (this.quizData?.attemptsAllowed || 1);
   };
 
-  public _getSubmittedAttempts = () => {
-    return this.isSubmitAllowed() ? 0 : this.quizUserEntry!.version + 1;
+  private _getSubmittedAttempts = () => {
+    if (this.isSubmitAllowed() || !isNumber(this.quizUserEntry!.version)) {
+      return 0;
+    }
+    return this.quizUserEntry!.version + 1;
   };
 
   public prepareQuizData = () => {
@@ -189,8 +207,8 @@ export class DataSyncManager {
   };
 
   public retakeQuiz = (quizNewUserEntry: KalturaUserEntry) => {
-    this.quizUserEntry = quizNewUserEntry;
-    this._quizAnswers = [];
+    this.setQuizUserEntry(quizNewUserEntry);
+    this.setQuizAnswers([]);
     this.prepareQuizData();
   };
 

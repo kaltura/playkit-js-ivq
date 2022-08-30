@@ -11,6 +11,10 @@ export const stringToBoolean = (value: string) => {
   return value === 'true';
 };
 
+export const isNumber = (value: unknown) => {
+  return typeof value === 'number';
+};
+
 export const makeQuestionLabels = () =>
   Array.from(Array(26))
     .map((e, i) => i + 'A'.charCodeAt(0))
