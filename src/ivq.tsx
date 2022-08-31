@@ -144,6 +144,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         const timeLineMarker: TimeLineMarker = {
           time: qq.startTime,
           marker: {
+            width: 124,
+            height: 32,
             get: props => {
               return (
                 <TimelineMarker
