@@ -60,6 +60,8 @@ export interface TimelineMarkerProps {
 export interface TimeLineMarker {
   marker: {
     get: (props: TimelineMarkerProps) => VNode;
+    width?: number;
+    height?: number;
   };
   time: number;
   preview?: {
