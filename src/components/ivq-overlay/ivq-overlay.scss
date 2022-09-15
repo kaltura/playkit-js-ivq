@@ -1,3 +1,9 @@
+@import '../../theme.scss';
+
+:global(.ivq) {
+  @include reset-css();
+}
+
 .ivqOverlay {
   > :global(.playkit-overlay .playkit-overlay-contents) {
     display: flex;

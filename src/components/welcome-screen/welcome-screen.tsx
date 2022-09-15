@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {useCallback, useState, useEffect} from 'preact/hooks';
+import {useCallback, useState} from 'preact/hooks';
 
 import {KalturaNullableBoolean} from '../../providers/response-types';
 import * as styles from './welcome-screen.scss';
@@ -34,12 +34,16 @@ export const WelcomeScreen = withText(translates)(
     }, [onDownload, isLoading]);
 
     return (
-      <div className={styles.welcomeScreenWrapper} role="dialog" aria-live="polite">
+      <div className={['ivq', styles.welcomeScreenWrapper].join(' ')} role="dialog" aria-live="polite">
         <div className={styles.background} />
         <div className={styles.content} data-testid="welcomeScreenContent">
           <div role="heading">
-            <div className={styles.title} data-testid="welcomeScreenTitle">{otherProps.welcomeTitle}</div>
-            <div className={styles.desc} data-testid="welcomeScreenDescription">{welcomeMessage}</div>
+            <div className={styles.title} data-testid="welcomeScreenTitle">
+              {otherProps.welcomeTitle}
+            </div>
+            <div className={styles.desc} data-testid="welcomeScreenDescription">
+              {welcomeMessage}
+            </div>
           </div>
           {allowDownload && (
             <A11yWrapper onClick={handleDownload}>
