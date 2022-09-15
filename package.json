@@ -57,5 +57,9 @@
     "playkit-js",
     "playkit-js-ivq",
     "html5 player"
+  ],
+  "kalturaDependencies" : [
+    "playkit-kaltura-cuepoints",
+    "playkit-timeline"
   ]
 }
