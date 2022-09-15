@@ -175,7 +175,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
 
   return (
     <IvqOverlay>
-      <div className={styles.ivqQuestionContainer} data-testid="ivqQuestionContainer">
+      <div className={['ivq', styles.ivqQuestionContainer].join(' ')} data-testid="ivqQuestionContainer">
         <div className={styles.ivqQuestionWrapper} ref={questionWrapperRef} tabIndex={-1} data-testid="ivqQuestionWrapper">
           {renderIvqQuestion}
         </div>

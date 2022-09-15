@@ -46,14 +46,12 @@
       flex-shrink: 0;
       overflow-wrap: break-word;
       font-weight: bold;
-      line-height: 21px;
       margin-bottom: 4px;
     }
     .correctAnswerIs {
       @include ivq-text;
       flex-shrink: 0;
       font-size: 16px;
-      line-height: 21px;
       margin-bottom: 10px;
     }
 
@@ -63,7 +61,6 @@
       flex-shrink: 0;
       overflow-wrap: break-word;
       font-size: 14px;
-      line-height: 18px;
     }
 
     .yourAnswer {

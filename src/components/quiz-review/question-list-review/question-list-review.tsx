@@ -92,12 +92,23 @@ export const QuestionListReview = withText(translates)(
       );
     }, [reviewDetails]);
     return (
-      <div className={styles.quizReviewWrapper} role="dialog" aria-live="polite">
-        {showScores ? renderScore : <div className={styles.quizScore} data-testid="quizScoreTitle">{otherProps.quizCompleted}</div>}
+      <div className={['ivq', styles.quizReviewWrapper].join(' ')} role="dialog" aria-live="polite">
+        {showScores ? (
+          renderScore
+        ) : (
+          <div className={styles.quizScore} data-testid="quizScoreTitle">
+            {otherProps.quizCompleted}
+          </div>
+        )}
         <div className={styles.questionsWrapper}>{showAnswers && renderAnswers}</div>
         <div className={styles.buttonWrapper} data-testid="reviewButtonWrapper">
           {onRetake && (
-            <button onClick={handleRetake} className={styles.primaryButton} aria-label={otherProps.retakeButtonAreaLabel} data-testid="reviewRetakeButton" disabled={isLoading}>
+            <button
+              onClick={handleRetake}
+              className={styles.primaryButton}
+              aria-label={otherProps.retakeButtonAreaLabel}
+              data-testid="reviewRetakeButton"
+              disabled={isLoading}>
               {isLoading ? <Spinner /> : otherProps.retakeButton}
             </button>
           )}

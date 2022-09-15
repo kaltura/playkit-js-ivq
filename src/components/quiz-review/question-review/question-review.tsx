@@ -139,7 +139,7 @@ export const QuestionReview = withText(translates)(
     }, [reviewQuestion]);
     return (
       <Fragment>
-        <div className={styles.questionReviewWrapper} role="dialog" aria-live="polite">
+        <div className={['ivq', styles.questionReviewWrapper].join(' ')} role="dialog" aria-live="polite">
           <div className={styles.backButtonContainer}>
             <button onClick={onBack} className={styles.backButton} ref={backButtonRef}>
               <div className={styles.iconContainer} aria-hidden="true">
