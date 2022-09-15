@@ -41,6 +41,10 @@ Finally, add the bundle as a script tag in your page, and initialize the player
 ```html
 <script type="text/javascript" src="/PATH/TO/FILE/kaltura-player.js"></script>
 <!--Kaltura player-->
+<script type="text/javascript" src="/PATH/TO/FILE/playkit-js-timeline.js"></script>
+<!--PlayKit cuepoints plugin-->
+<script type="text/javascript" src="/PATH/TO/FILE/playkit-kaltura-cuepoints.js"></script>
+<!--PlayKit cuepoints plugin-->
 <script type="text/javascript" src="/PATH/TO/FILE/playkit-ivq.js"></script>
 <!--PlayKit ivq plugin-->
 <div id="player-placeholder" style="height:360px; width:640px">
@@ -50,8 +54,9 @@ Finally, add the bundle as a script tag in your page, and initialize the player
      ...
      targetId: 'player-placeholder',
      plugins: {
-       ivq: {
-       }
+      ivq: { ... },
+      timeline: { ... },
+      kalturaCuepoints: { ... },
      }
      ...
     };
@@ -63,34 +68,9 @@ Finally, add the bundle as a script tag in your page, and initialize the player
 
 ## Documentation
 
-IVQ plugin configuration can been found here:
+IVQ plugin dependencies can been found here:
 
-- **[Configuration](docs/configuration.md)**
-
-###Slides configuration
-If you are showing slides, you MUST also include kalturaCuePoints plugin in the configuration as follow -
-
-```html
-plugins: { ivq: {...}, kalturaCuepoints: { } }
-```
-
-## Running the tests
-
-Tests can be run locally via [Karma], which will run on Chrome, Firefox and Safari
-
-[karma]: https://karma-runner.github.io/1.0/index.html
-
-```
-yarn run test
-```
-
-You can test individual browsers:
-
-```
-yarn run test:chrome
-yarn run test:firefox
-yarn run test:safari
-```
+- **[Dependencies](#dependencies)**
 
 ### And coding style tests
 
@@ -99,10 +79,6 @@ We use ESLint [recommended set](http://eslint.org/docs/rules/) with some additio
 See [ESLint config](.eslintrc.json) for full configuration.
 
 We also use [.editorconfig](.editorconfig) to maintain consistent coding styles and settings, please make sure you comply with the styling.
-
-## Compatibility
-
-TBD
 
 ## Contributing
 
@@ -115,3 +91,10 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ## License
 
 This project is licensed under the AGPL-3.0 License - see the [LICENSE.md](LICENSE.md) file for details
+
+<a name="dependencies"></a>
+## Dependencies
+
+Plugin dependencies:<br/>
+<a href="https://github.com/kaltura/playkit-js-kaltura-cuepoints">Cue Points</a><br/>
+<a href="https://github.com/kaltura/playkit-js-timeline">Timeline</a>
