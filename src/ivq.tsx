@@ -17,7 +17,7 @@ import {
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsVisualManager} from './questions-visual-manager';
 import {KalturaUserEntry} from './providers/response-types';
-import {WelcomeScreen} from './components/welcome-screen';
+import {WelcomeScreen, WelcomeScreenProps} from './components/welcome-screen';
 import {QuizSubmit, QuizSubmitProps} from './components/quiz-submit';
 import {QuizReview, QuizReviewProps} from './components/quiz-review';
 import {TimelinePreview, TimelineMarker} from './components/timeline';
@@ -78,7 +78,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
 
   loadMedia(): void {
     const kalturaCuePointService: any = this._player.getService('kalturaCuepoints');
-    if (kalturaCuePointService) {
+    if (kalturaCuePointService && !this._player.isLive()) {
       this._getQuestions(kalturaCuePointService);
       this._getQuiz();
       this._quizQuestionsPromise.then((qqm: QuizQuestionMap) => {
@@ -87,7 +87,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         this.eventManager.listen(this._player, this._player.Event.ENDED, this._handleEndEvent);
       });
     } else {
-      this.logger.warn('kalturaCuepoints service is not registered');
+      this.logger.warn('kalturaCuepoints service is not registered or entry Live');
       this._resolveQuizDataPromise();
     }
   }
@@ -229,7 +229,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     }
   };
 
-  private _showWelcomeScreen = () => {
+  private _showWelcomeScreen = (prePlaybackState = false) => {
     this.logger.debug("show 'Welcome Screen'");
     const handleDownload = () => {
       return this._player.provider
@@ -240,22 +240,25 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           }
         });
     };
+    const welcomeScreenProps: WelcomeScreenProps = {
+      welcomeMessage: this._dataManager.quizData?.welcomeMessage
+    };
+    if (this._dataManager.quizData?.allowDownload) {
+      welcomeScreenProps['onDownload'] = handleDownload;
+    }
+    if (!prePlaybackState) {
+      welcomeScreenProps['poster'] = this._player.poster || '';
+      welcomeScreenProps['onClose'] = () => {
+        this._player.play();
+        this._removeOverlay();
+      };
+    }
     this._setOverlay(
       this._player.ui.addComponent({
         label: 'kaltura-ivq-welcome-screen',
         presets: PresetAreas,
         container: UiComponentArea,
-        get: () => (
-          <WelcomeScreen
-            onClose={() => {
-              this._player.play();
-              this._removeOverlay();
-            }}
-            welcomeMessage={this._dataManager.quizData?.welcomeMessage}
-            allowDownload={this._dataManager.quizData?.allowDownload}
-            onDownload={handleDownload}
-          />
-        )
+        get: () => <WelcomeScreen {...welcomeScreenProps} />
       })
     );
     this.eventManager.listenOnce(this._player, EventType.PLAY, () => {
@@ -364,6 +367,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         this.dispatchEvent(IvqEventTypes.QUIZ_RETAKE);
         this._dataManager.retakeQuiz(quizNewUserEntry);
         this._player.currentTime = 0;
+        this._manageWelcomeScreen(true);
         this._player.play();
       }
     });
@@ -386,6 +390,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           const {setQuizUserEntry, setQuizAnswers, setQuizData, isSubmitAllowed, isRetakeAllowed} = this._dataManager;
           // set main quiz data
           setQuizData(quizData);
+          this._manageWelcomeScreen();
           if (lastQuizUserEntry) {
             // set lastQuizUserEntry to define if submit and retake allowed
             setQuizUserEntry(lastQuizUserEntry);
@@ -416,12 +421,22 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       })
       .finally(() => {
         this._resolveQuizDataPromise();
-        if (this._dataManager.quizData?.showWelcomePage && !this._player.config.playback.autoplay) {
-          this._player.pause();
-          this._showWelcomeScreen();
-        }
       });
   }
+
+  private _manageWelcomeScreen = (retake = false) => {
+    if (this._dataManager.quizData?.showWelcomePage) {
+      if (this._player.config.playback.autoplay || retake) {
+        this.eventManager.listenOnce(this.player, this.player.Event.PLAY, () => {
+          this._player.pause();
+          this._showWelcomeScreen();
+        });
+      } else {
+        // before first play event duration is NaN
+        this._showWelcomeScreen(Number.isNaN(this._player.duration));
+      }
+    }
+  };
 
   reset(): void {
     this._removeOverlay();
