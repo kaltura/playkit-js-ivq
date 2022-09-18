@@ -1,6 +1,6 @@
 {
   "name": "@playkit-js/playkit-js-ivq",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "main": "dist/playkit-ivq.js",
   "scripts": {
     "clean": "rm -rf ./dist",
@@ -58,7 +58,7 @@
     "playkit-js-ivq",
     "html5 player"
   ],
-  "kalturaDependencies" : [
+  "kalturaDependencies": [
     "playkit-kaltura-cuepoints",
     "playkit-timeline"
   ]
