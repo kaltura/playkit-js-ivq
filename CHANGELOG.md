@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.1](https://github.com/kaltura/playkit-js-ivq/compare/v0.5.0...v0.5.1) (2022-09-19)
+
+
+### Bug Fixes
+
+* **FEV-1422:** ko translates update ([#54](https://github.com/kaltura/playkit-js-ivq/issues/54)) ([42c7863](https://github.com/kaltura/playkit-js-ivq/commit/42c7863))
+
+
+
+## [0.5.0](https://github.com/kaltura/playkit-js-ivq/compare/v0.4.0...v0.5.0) (2022-09-18)
+
+
+### Bug Fixes
+
+* **FEV-1234:** Safari Voiceover issues and other small a11y fixes ([#33](https://github.com/kaltura/playkit-js-ivq/issues/33)) ([bcb9b1b](https://github.com/kaltura/playkit-js-ivq/commit/bcb9b1b))
+* **FEV-1255:** displays timeline preview only for video type of entries ([#34](https://github.com/kaltura/playkit-js-ivq/issues/34)) ([b3e2223](https://github.com/kaltura/playkit-js-ivq/commit/b3e2223))
+* **FEV-1269:** fix thumbnail runtime errors and prevent quiz from loading on Youtube entries ([aa18f9d](https://github.com/kaltura/playkit-js-ivq/commit/aa18f9d))
+* **FEV-1277:** Player seek-bar markers doesn't disappears on media switch ([#37](https://github.com/kaltura/playkit-js-ivq/issues/37)) ([3f34b51](https://github.com/kaltura/playkit-js-ivq/commit/3f34b51))
+* **FEV-1277:** The quiz review and quiz questions shown on other non quiz entries ([#35](https://github.com/kaltura/playkit-js-ivq/issues/35)) ([9a8cbb6](https://github.com/kaltura/playkit-js-ivq/commit/9a8cbb6))
+* **FEV-1279:** resolve quiz ready promise after reset ([#36](https://github.com/kaltura/playkit-js-ivq/issues/36)) ([eae4892](https://github.com/kaltura/playkit-js-ivq/commit/eae4892))
+* **FEV-1290:** When auto continue is set to true the quiz review/submit is not shown to the user ([#38](https://github.com/kaltura/playkit-js-ivq/issues/38)) ([12f6f79](https://github.com/kaltura/playkit-js-ivq/commit/12f6f79))
+* **FEV-1291:** youtube support ([#45](https://github.com/kaltura/playkit-js-ivq/issues/45)) ([26df1c6](https://github.com/kaltura/playkit-js-ivq/commit/26df1c6))
+* **FEV-1292:** hide play-next overlay if ivq overlay active ([#41](https://github.com/kaltura/playkit-js-ivq/issues/41)) ([1264089](https://github.com/kaltura/playkit-js-ivq/commit/1264089))
+* **FEV-1302:** fix project dependencies ([#39](https://github.com/kaltura/playkit-js-ivq/issues/39)) ([f545228](https://github.com/kaltura/playkit-js-ivq/commit/f545228))
+* **FEV-1328:** quiz retake feature ([#47](https://github.com/kaltura/playkit-js-ivq/issues/47)) ([144033c](https://github.com/kaltura/playkit-js-ivq/commit/144033c))
+* **FEV-1392:** add width and height for quiz timeline marker ([#48](https://github.com/kaltura/playkit-js-ivq/issues/48)) ([10f9083](https://github.com/kaltura/playkit-js-ivq/commit/10f9083))
+* **FEV-1422:** ko translates update ([546c3e0](https://github.com/kaltura/playkit-js-ivq/commit/546c3e0))
+* **FEV-1446:** For true\false and open question there is a scroll arrows when the page set to Korean language. ([#52](https://github.com/kaltura/playkit-js-ivq/issues/52)) ([913e2c1](https://github.com/kaltura/playkit-js-ivq/commit/913e2c1))
+
+
+### Features
+
+* **FEV-1422:** Quiz plugin localisation (KO) ([#50](https://github.com/kaltura/playkit-js-ivq/issues/50)) ([2cd29a3](https://github.com/kaltura/playkit-js-ivq/commit/2cd29a3))
+* **FEV-1422:** upd KO translates ([#51](https://github.com/kaltura/playkit-js-ivq/issues/51)) ([449dc8c](https://github.com/kaltura/playkit-js-ivq/commit/449dc8c))
+
+
+
 ## [0.4.0](https://github.com/kaltura/playkit-js-ivq/compare/v0.3.1...v0.4.0) (2022-04-13)
 
 
