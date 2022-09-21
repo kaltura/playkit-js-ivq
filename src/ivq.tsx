@@ -432,10 +432,14 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           this._showWelcomeScreen();
         });
       } else {
-        // before first play event duration is NaN
-        this._showWelcomeScreen(Number.isNaN(this._player.duration));
+        this._showWelcomeScreen(this._isFirstPlay());
       }
     }
+  };
+
+  private _isFirstPlay = () => {
+    // before first play event happened the player duration eq: NaN
+    return Number.isNaN(this._player.duration);
   };
 
   reset(): void {
