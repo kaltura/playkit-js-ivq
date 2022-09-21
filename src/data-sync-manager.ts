@@ -149,13 +149,12 @@ export class DataSyncManager {
   };
 
   public prepareQuizData = () => {
-    const quizCues = this._getQuizQuePoints(this._quizCuePoints);
-    quizCues.forEach((cue, index) => {
+    this._quizCuePoints.forEach((cue, index) => {
       const a = this._quizAnswers.find((answer: KalturaQuizAnswer) => {
         return cue.id === answer.parentId;
       });
-      let prev = quizCues[index - 1];
-      let next = quizCues[index + 1];
+      let prev = this._quizCuePoints[index - 1];
+      let next = this._quizCuePoints[index + 1];
       if (prev) {
         prev = {
           id: prev.id,
@@ -254,9 +253,12 @@ export class DataSyncManager {
     }
   };
   private _onTimedMetadataAdded = ({payload}: TimedMetadataEvent) => {
-    this._quizCuePoints = payload.cues;
-    this.prepareQuizData();
-    this._onQuestionsLoad(this.quizQuestionsMap);
+    const quizCues = this._getQuizQuePoints(payload.cues);
+    if (quizCues.length) {
+      this._quizCuePoints = quizCues;
+      this.prepareQuizData();
+      this._onQuestionsLoad(this.quizQuestionsMap);
+    }
   };
 
   public reset = () => {

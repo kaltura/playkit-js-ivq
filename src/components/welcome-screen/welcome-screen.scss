@@ -6,6 +6,13 @@
   top: 0;
   width: 100%;
   height: 100%;
+  text-align: left;
+
+  &.withPoster {
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
 
   .background {
     position: absolute;
@@ -32,24 +39,33 @@
       font-size: 14px;
       padding-top: 16px;
     }
-    .download {
-      @include ivq-secondary-button;
-      .spinnerContainer {
-        margin: 2px;
-      }
-      .icon {
-        height: 24px;
-        width: 24px;
-      }
-      > span {
-        margin-left: 4px;
-      }
-      padding: 8px 12px 8px 8px;
-      width: fit-content;
+    .buttonWrapper {
+      display: flex;
+      width: 100%;
+      justify-content: flex-start;
       margin-top: 16px;
+
+      .startQuizButton {
+        @include ivq-primary-button;
+        min-width: 80px;
+        margin-right: 8px;
+      }
+
+      .download {
+        @include ivq-secondary-button;
+        .spinnerContainer {
+          margin: 2px;
+        }
+        .icon {
+          height: 24px;
+          width: 24px;
+        }
+        > span {
+          margin-left: 4px;
+        }
+        padding: 8px 12px 8px 8px;
+        width: fit-content;
+      }
     }
-  }
-  button {
-    @include ivq-primary-button;
   }
 }
