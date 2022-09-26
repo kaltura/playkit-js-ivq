@@ -22,11 +22,11 @@ const translates = ({onSubmit}: QuizSubmitProps): QuizTranslates => {
     submitButtonAriaLabel: <Text id="ivq.submit_button_area_label">Click to submit quiz</Text>,
     reviewButton: <Text id="ivq.review_button">Review</Text>,
     reviewButtonAriaLabel: <Text id="ivq.review_button_area_label">Click to review quiz</Text>,
-    title: onSubmit ? <Text id="ivq.submit_title">Quiz Completed</Text> : <Text id="ivq.review_title">You Almost Done</Text>,
+    title: onSubmit ? <Text id="ivq.submit_title">Quiz completed</Text> : <Text id="ivq.review_title">You are almost done</Text>,
     description: onSubmit ? (
-      <Text id="ivq.submit_description">Take a moment to review your answers or go ahead and submit</Text>
+      <Text id="ivq.submit_description">Take a moment to review your answers or go ahead to submit your answers.</Text>
     ) : (
-      <Text id="ivq.review_description">It appears that some questions remained unanswered You must answer all questions before you can submit</Text>
+      <Text id="ivq.review_description">It appears that some questions remained unanswered. Please complete the quiz to submit.</Text>
     )
   };
 };
