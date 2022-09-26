@@ -138,7 +138,7 @@ export class DataSyncManager {
 
   public isRetakeAllowed = () => {
     const submittedAttempts = this._getSubmittedAttempts();
-    return submittedAttempts < (this.quizData?.attemptsAllowed || 1);
+    return submittedAttempts < (this.quizData?.attemptsAllowed || 0);
   };
 
   private _getSubmittedAttempts = () => {
