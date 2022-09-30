@@ -54,6 +54,7 @@ export interface TimelineMarkerProps {
   style: Record<string, any>;
   onClick: (e: Event) => void;
   isDisabled: () => boolean;
+  getSeekBarNode: () => Element | null;
   questionIndex: number;
 }
 

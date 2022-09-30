@@ -150,6 +150,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
               return (
                 <TimelineMarker
                   {...props}
+                  getSeekBarNode={this._getSeekBarNode}
                   onClick={handleOnQuestionClick}
                   questionIndex={qq.index}
                   isDisabled={() => {
