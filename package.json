@@ -58,8 +58,11 @@
     "playkit-js-ivq",
     "html5 player"
   ],
-  "kalturaDependencies": [
-    "playkit-kaltura-cuepoints",
-    "playkit-timeline"
-  ]
+  "kaltura": {
+    "name": "ivq",
+    "dependencies": {
+      "playkit-kaltura-cuepoints": "1.6.2",
+      "playkit-timeline": "1.2.2"
+    }
+  }
 }
