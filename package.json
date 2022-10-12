@@ -1,6 +1,6 @@
 {
   "name": "@playkit-js/playkit-js-ivq",
-  "version": "0.5.4",
+  "version": "3.0.0",
   "main": "dist/playkit-ivq.js",
   "scripts": {
     "clean": "rm -rf ./dist",
