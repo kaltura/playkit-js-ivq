@@ -19,14 +19,15 @@ export const OpenQuestion = withText(translates)(({question, selected, onSelect,
     onSelect && onSelect(e.target.value);
   }, [onSelect]);
   return (
-    <div className={styles.openQuestionWrapper} data-testid="openQuestionContainer" role="alert">
-      <legend className={styles.questionText} data-testid="openQuestionTitle">{question}</legend>
+    <div className={styles.openQuestionWrapper} data-testid="openQuestionContainer">
+      <legend className={styles.questionText} data-testid="openQuestionTitle" tabIndex={0} role="text">{question}</legend>
       {hint && <QuestionAddons hint={hint} />}
       <div className={styles.textAreaWrapper}>
         <textarea
           className={styles.questionAnswer}
           value={selected}
           placeholder={openQuestionPlaceHolder as string}
+          aria-label={openQuestionPlaceHolder as string}
           maxLength={MAX_LENGTH}
           onChange={handleChange}
           disabled={!onSelect}
