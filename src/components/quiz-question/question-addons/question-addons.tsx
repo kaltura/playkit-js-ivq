@@ -2,7 +2,7 @@ import {h} from 'preact';
 import {useMemo, useCallback, useState} from 'preact/hooks';
 import {QuizTranslates} from '../../../types';
 import {icons} from '../../icons';
-import {A11yWrapper} from '@playkit-js/common';
+import {A11yWrapper} from '../../a11y-wrapper';
 import * as styles from './question-addons.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -73,7 +73,7 @@ export const QuestionAddons = withText(translates)(({hint, explanation, feedback
         </div>
       </A11yWrapper>
       {isOpen && (
-        <div className={styles.questionAddonsContent} aria-live="polite" role="text">
+        <div className={styles.questionAddonsContent} role="text">
           {getContent}
         </div>
       )}

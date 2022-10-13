@@ -2,7 +2,7 @@ import {h} from 'preact';
 import {useCallback} from 'preact/hooks';
 import {QuestionProps, QuizTranslates} from '../../../types';
 import {QuestionAddons} from '../question-addons';
-import {A11yWrapper} from '@playkit-js/common';
+import {A11yWrapper} from '../../a11y-wrapper';
 import * as styles from './true-false.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -24,8 +24,8 @@ export const TrueFalse = withText(translates)(
       [onSelect]
     );
     return (
-      <div className={styles.trueFalseWrapper} data-testid="trueFalseContainer">
-        <legend className={styles.questionText} data-testid="trueFalseQuestionTitle" tabIndex={0} role="text">{question}</legend>
+      <div className={styles.trueFalseWrapper} role="alert" data-testid="trueFalseContainer">
+        <legend className={styles.questionText} data-testid="trueFalseQuestionTitle">{question}</legend>
         {hint && <QuestionAddons hint={hint} />}
         <div className={styles.optionalAnswersWrapper} role="list" data-testid="trueFalseAnswersContainer">
           {optionalAnswers.map(({key, text}, index) => {

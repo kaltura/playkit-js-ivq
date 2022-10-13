@@ -64,8 +64,5 @@
       "playkit-kaltura-cuepoints": "1.6.2",
       "playkit-timeline": "1.2.2"
     }
-  },
-  "dependencies": {
-    "@playkit-js/common": "^1.0.7"
   }
 }

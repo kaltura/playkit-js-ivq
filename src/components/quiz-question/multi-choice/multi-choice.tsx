@@ -3,7 +3,7 @@ import {useCallback} from 'preact/hooks';
 import {makeQuestionLabels} from '../../../utils';
 import {QuestionProps, QuizTranslates} from '../../../types';
 import {QuestionAddons} from '../question-addons';
-import {A11yWrapper} from '@playkit-js/common';
+import {A11yWrapper} from '../../a11y-wrapper';
 import * as styles from './multi-choice.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -42,8 +42,8 @@ export const MultiChoice = withText(translates)(
     );
 
     return (
-      <div className={styles.multiChoiceWrapper} data-testid="multipleChoiceContainer">
-        <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle" tabIndex={0} role="text">{question}</legend>
+      <div className={styles.multiChoiceWrapper} data-testid="multipleChoiceContainer" role="alert">
+        <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle">{question}</legend>
         {hint && <QuestionAddons hint={hint} />}
         <div className={styles.optionalAnswersWrapper} data-testid="multipleChoiceAnswersWrapper">
           <div className={styles.optionalAnswersContainer} role="list" data-testid="multipleChoiceAnswersContainer">

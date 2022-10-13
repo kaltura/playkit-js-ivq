@@ -5,7 +5,7 @@ import * as styles from './welcome-screen.scss';
 import {QuizTranslates} from '../../types';
 import {icons} from '../icons';
 import {Spinner} from '../spinner';
-import {A11yWrapper} from '@playkit-js/common';
+import {A11yWrapper} from '../a11y-wrapper';
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 const {Icon} = KalturaPlayer.ui.components;
 const {Overlay} = KalturaPlayer.ui.components;
@@ -39,10 +39,12 @@ export const WelcomeScreen = withText(translates)(
       () => (
         <div
           className={['ivq', styles.welcomeScreenWrapper, poster ? styles.withPoster : ''].join(' ')}
-          style={{backgroundImage: poster ? `url(${poster})` : 'none'}}>
+          style={{backgroundImage: poster ? `url(${poster})` : 'none'}}
+          role="dialog"
+          aria-live="polite">
           <div className={styles.background} />
           <div className={styles.content} data-testid="welcomeScreenContent">
-            <div title={`${otherProps.welcomeTitle}. ${welcomeMessage}`} tabIndex={0} role="text" aria-live="polite">
+            <div role="heading">
               <div className={styles.title} data-testid="welcomeScreenTitle">
                 {otherProps.welcomeTitle}
               </div>

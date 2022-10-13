@@ -4,7 +4,7 @@ import {Spinner} from '../../spinner';
 import {QuizQuestion} from '../../../types';
 import {QuizTranslates, KalturaQuizQuestionTypes} from '../../../types';
 import {QuestionIcon} from '../question-icon';
-import {A11yWrapper} from '@playkit-js/common';
+import {A11yWrapper} from '../../a11y-wrapper';
 import * as styles from './question-list-review.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -68,7 +68,7 @@ export const QuestionListReview = withText(translates)(
     };
 
     const renderScore = useMemo(() => {
-      return <legend data-testid="quizScoreTitle" className={styles.quizScore} tabIndex={0} role="text">{`${otherProps.quizScore} ${(score * 100).toFixed(0)}/100`}</legend>;
+      return <legend data-testid="quizScoreTitle" className={styles.quizScore}>{`${otherProps.quizScore} ${(score * 100).toFixed(0)}/100`}</legend>;
     }, [score]);
     const renderAnswers = useMemo(() => {
       return (
@@ -96,7 +96,7 @@ export const QuestionListReview = withText(translates)(
         {showScores ? (
           renderScore
         ) : (
-          <div className={styles.quizScore} data-testid="quizScoreTitle" tabIndex={0} role="text">
+          <div className={styles.quizScore} data-testid="quizScoreTitle">
             {otherProps.quizCompleted}
           </div>
         )}

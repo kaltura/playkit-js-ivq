@@ -59,8 +59,8 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...otherPro
   }, []);
   return (
     <IvqOverlay>
-      <div className={['ivq', styles.quizSubmitWrapper].join(' ')} data-testid="submitContainer">
-        <div tabIndex={0} role="text">
+      <div className={['ivq', styles.quizSubmitWrapper].join(' ')} data-testid="submitContainer" role="dialog" aria-live="polite">
+        <div>
           <div className={styles.title}>{otherProps.title}</div>
           <div className={styles.description}>{otherProps.description}</div>
         </div>

@@ -2,7 +2,7 @@ import {h} from 'preact';
 import {useMemo, useCallback} from 'preact/hooks';
 import * as styles from './timeline-marker.scss';
 import {QuizTranslates, TimelineMarkerProps} from '../../types';
-import {A11yWrapper} from '@playkit-js/common';
+import {A11yWrapper} from '../a11y-wrapper';
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
 const {

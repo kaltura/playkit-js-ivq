@@ -29,9 +29,6 @@
     position: absolute;
     bottom: 0px;
     padding: 32px;
-    & > div:focus {
-      outline: none !important; // overwride player styles
-    }
 
     .title {
       font-weight: 700;
