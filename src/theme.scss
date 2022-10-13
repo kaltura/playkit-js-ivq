@@ -30,6 +30,9 @@ $secondary-button-colors: (
   font-weight: bold;
   line-height: normal;
   overflow-wrap: break-word;
+  &:focus {
+    outline: none !important; // overwride player styles
+  }
 }
 
 @mixin ivq-button {

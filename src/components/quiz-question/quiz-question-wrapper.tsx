@@ -9,7 +9,7 @@ import {KalturaQuizQuestionTypes, Selected, QuestionProps, QuizTranslates} from 
 import {IvqOverlay} from '../ivq-overlay';
 import {Spinner} from '../spinner';
 import {IvqBottomBar} from '../ivq-bottom-bar';
-import {A11yWrapper} from '../a11y-wrapper';
+import {A11yWrapper} from '@playkit-js/common';
 import * as styles from './quiz-question-wrapper.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
