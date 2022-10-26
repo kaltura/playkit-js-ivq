@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/kaltura/playkit-js-ivq/compare/v0.5.4...v3.0.1) (2022-10-26)
+
+
+### Bug Fixes
+
+* **FEV-1243:** timeline marker a11y ([#58](https://github.com/kaltura/playkit-js-ivq/issues/58)) ([41c740d](https://github.com/kaltura/playkit-js-ivq/commit/41c740d))
+* **FEV-1455:** quiz a11y ([#62](https://github.com/kaltura/playkit-js-ivq/issues/62)) ([43c2bda](https://github.com/kaltura/playkit-js-ivq/commit/43c2bda))
+* **FEV-1529:** retake quiz attempts ([#57](https://github.com/kaltura/playkit-js-ivq/issues/57)) ([6084916](https://github.com/kaltura/playkit-js-ivq/commit/6084916))
+
+
+
 ### [0.5.4](https://github.com/kaltura/playkit-js-ivq/compare/v0.5.3...v0.5.4) (2022-09-26)
 
 
