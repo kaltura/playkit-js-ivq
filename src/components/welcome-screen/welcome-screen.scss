@@ -24,7 +24,7 @@
     transform: rotate(-180deg);
   }
   .content {
-    color: map-get($theme-colors, 'primary');
+    color: $tone-1;
     font-size: 14px;
     position: absolute;
     bottom: 0px;

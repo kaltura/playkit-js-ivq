@@ -23,7 +23,7 @@
     &:hover {
       overflow: auto;
     }
-    
+
     .questionsContainer {
       display: flex;
       flex-direction: column;
@@ -45,7 +45,7 @@
         .questionLabel,
         .questionContent {
           height: 100%;
-          background: map-get($theme-colors, 'semi-gray');
+          background: $button-background;
         }
         .questionLabel {
           display: flex;

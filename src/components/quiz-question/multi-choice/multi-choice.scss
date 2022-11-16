@@ -45,7 +45,7 @@
         }
         &:not(.active) {
           > div {
-            background: map-get($theme-colors, 'semi-gray');
+            background: $button-background;
           }
           .questionLabel {
             border-right-width: 1px;
@@ -62,7 +62,7 @@
           padding: 5px 8px;
           border-right-style: solid;
           border-right-width: 1px;
-          border-right-color: map-get($theme-colors, 'primary');
+          border-right-color: $tone-1;
         }
         .questionContent {
           flex-grow: 1;

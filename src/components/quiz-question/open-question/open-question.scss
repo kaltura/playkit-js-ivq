@@ -21,11 +21,11 @@
       padding: 8px;
       border-width: 1px;
       border-style: solid;
-      border-color: map-get($theme-colors, 'secondary');
+      border-color: $tone-4;
       border-radius: 4px;
       box-sizing: border-box;
       background: rgba(0, 0, 0, 0.3);
-      color: map-get($theme-colors, 'primary');
+      color: $tone-1;
       font-family: inherit;
       min-height: 80px;
       max-height: 120px;
@@ -42,7 +42,7 @@
       font-size: 14px;
     }
     ::selection {
-      background-color: #5b80a7;
+      background-color: $text-selected-color;
     }
   }
 }
