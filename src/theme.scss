@@ -1,10 +1,10 @@
 @import '~@playkit-js/playkit-js-ui';
 
 $brand-color: #006efa;
-$brand-color-dark: #004cad;
-$focus-color: #4798ff;
-
-$text-selected-color: #5b80a7;
+$brand-color-dark: darken($brand-color, 15%);
+$primary-text-contrast: #ffffff;
+$text-selected-color: lighten($brand-color, 15%);
+$roundness-1: 4px;
 
 $button-background: rgba(255, 255, 255, 0.12);
 $button-background-active: rgba(255, 255, 255, 0.2);
@@ -13,7 +13,7 @@ $button-background-active: rgba(255, 255, 255, 0.2);
   font-style: normal;
   line-height: normal;
   font-size: 18px;
-  color: $tone-1;
+  color: #ffffff;
   overflow: auto;
 }
 
@@ -33,7 +33,7 @@ $button-background-active: rgba(255, 255, 255, 0.2);
   align-items: center;
   padding: 4px 8px;
   height: 32px;
-  border-radius: 4px;
+  border-radius: $roundness-1;
   border-width: 1px;
   border-color: transparent;
   font-style: normal;
@@ -41,7 +41,7 @@ $button-background-active: rgba(255, 255, 255, 0.2);
   font-size: 14px;
   line-height: 17px;
   text-align: left;
-  color: $tone-1;
+  color: #ffffff;
   box-sizing: border-box;
   &:hover:not(.disabled) {
     cursor: pointer;
@@ -50,12 +50,13 @@ $button-background-active: rgba(255, 255, 255, 0.2);
 
 @mixin ivq-primary-button {
   @include ivq-button;
+  color: $primary-text-contrast;
   background: $brand-color;
   &:hover:not(.disabled) {
     background: $brand-color-dark;
   }
   &:focus:not(.disabled) {
-    background: $focus-color;
+    background: lighten($brand-color, 15%);
   }
   &.disabled {
     border-width: 1px;
@@ -68,6 +69,7 @@ $button-background-active: rgba(255, 255, 255, 0.2);
 
 @mixin ivq-secondary-button {
   @include ivq-button;
+  color: $tone-1;
   background: transparent;
   &:hover:not(.disabled) {
     background: $tone-4;
@@ -90,11 +92,11 @@ $button-background-active: rgba(255, 255, 255, 0.2);
   background: $button-background;
   border-style: solid;
   border-width: 1px;
-  border-radius: 4px;
+  border-radius: $roundness-1;
   border-color: transparent;
   font-size: 16px;
   line-height: normal;
-  color: $tone-1;
+  color: #ffffff;
   cursor: pointer;
   box-sizing: border-box;
   outline-offset: -1px;
