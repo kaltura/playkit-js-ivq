@@ -40,7 +40,8 @@ const translates = ({questionsAmount, reviewQuestion}: QuestionReviewProps): Qui
     correctAnswerIs: <Text id="ivq.correct_answer_is">The correct answer is:</Text>,
     yourAnswer: <Text id="ivq.your_answer">Your answer</Text>,
     correctAnswer: <Text id="ivq.correct_answer">The correct answer</Text>,
-    incorrectAnswer: <Text id="ivq.incorrect_answer">The incorrect answer</Text>
+    incorrectAnswer: <Text id="ivq.incorrect_answer">The incorrect answer</Text>,
+    questionLabel: <Text id="ivq.question">Question</Text>
   };
 };
 
@@ -59,18 +60,19 @@ export const QuestionReview = withText(translates)(
       if (q.questionType === KalturaQuizQuestionTypes.TrueFalse) {
         const correctAnswerKey = a?.correctAnswerKeys[0]?.value;
         const correctAnswer = q?.optionalAnswers.find(val => val.key === correctAnswerKey);
-        const isCorrect = a?.answerKey === correctAnswer?.key;
+        const userAnswer = q?.optionalAnswers.find(val => val.key === a?.answerKey);
         return (
           <Fragment>
             <div className={styles.correctAnswerIs}>{`${otherProps.correctAnswerIs} ${correctAnswer?.text}`}</div>
             {a?.explanation && <QuestionAddons explanation={a.explanation} />}
-            <div className={styles.yourAnswer} aria-hidden="true" aria-label={isCorrect ? otherProps.correctAnswer : otherProps.incorrectAnswer}>
-              {isCorrect ? otherProps.correctAnswer : otherProps.yourAnswer}
+            <div className={styles.yourAnswer}>
+              {otherProps.yourAnswer}
+              <span className={styles.visuallyHidden}>{`: ${userAnswer?.text}`}</span>
             </div>
-            <div className={styles.trueFalseAnswerWrapper} role="list">
+            <div className={styles.trueFalseAnswerWrapper} role="listbox" aria-hidden="true">
               {q.optionalAnswers.map(({key, text}) => {
                 return (
-                  <div key={key} className={[styles.trueFalseAnswer, styles.disabled].join(' ')} role="listitem" aria-hidden="true">
+                  <div key={key} className={[styles.trueFalseAnswer, styles.disabled].join(' ')} role="option">
                     {text}
                     {a?.answerKey === key && <QuestionIcon questionType={q.questionType} isCorrect={key === correctAnswer?.key} />}
                   </div>
@@ -87,6 +89,7 @@ export const QuestionReview = withText(translates)(
         const userCorrectAnswerKeys: Array<string> = [];
         const userIncorrectAnswerKeys: Array<string> = [];
         const userAnswerKeys = a?.answerKey.split(',') || [];
+        const userAnswerKeysLabels: Array<string> = [];
         q.optionalAnswers.forEach((optionalAnswer, index) => {
           const isCorrect = correctAnswersKeys?.includes(optionalAnswer.key);
           if (isCorrect) {
@@ -95,8 +98,10 @@ export const QuestionReview = withText(translates)(
           if (userAnswerKeys.includes(optionalAnswer.key)) {
             if (isCorrect) {
               userCorrectAnswerKeys.push(optionalAnswer.key);
+              userAnswerKeysLabels.push(questionLabels[index]);
             } else {
               userIncorrectAnswerKeys.push(optionalAnswer.key);
+              userAnswerKeysLabels.push(questionLabels[index]);
             }
           }
         });
@@ -104,14 +109,17 @@ export const QuestionReview = withText(translates)(
           <Fragment>
             <div className={styles.correctAnswerIs}>{`${otherProps.correctAnswerIs} ${correctAnswers.join(',')}`}</div>
             {a?.explanation && <QuestionAddons explanation={a.explanation} />}
-            <div className={styles.yourAnswer}>{otherProps.yourAnswer}</div>
-            <div className={styles.multiAnswersWrapper}>
-              <div className={styles.multiAnswersContainer} role="list">
+            <div className={styles.yourAnswer}>
+              {otherProps.yourAnswer}
+              <span className={styles.visuallyHidden}>{`: ${userAnswerKeysLabels.join(',')}`}</span>
+            </div>
+            <div className={styles.multiAnswersWrapper} aria-hidden="true">
+              <div className={styles.multiAnswersContainer} role="listbox">
                 {q.optionalAnswers.map(({key, text}, index) => {
                   const renderIncorrectIcon = userIncorrectAnswerKeys.includes(key);
                   const renderCorrectIcon = userCorrectAnswerKeys.includes(key);
                   return (
-                    <div key={key} className={[styles.multiSelectAnswer, styles.disabled].join(' ')} role="listitem">
+                    <div key={key} className={[styles.multiSelectAnswer, styles.disabled].join(' ')} role="option">
                       <div className={styles.questionLabel}>{questionLabels[index]}</div>
                       <div className={styles.questionContent}>{text}</div>
                       {renderCorrectIcon && <QuestionIcon questionType={q.questionType} isCorrect={true} />}
@@ -149,7 +157,10 @@ export const QuestionReview = withText(translates)(
             </button>
           </div>
           <div className={styles.quizQuestionContainer}>
-            <div className={styles.questionText}>{q.question}</div>
+            <legend className={styles.questionText}>
+              <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${reviewQuestion.index + 1}:`}</span>
+              {q.question}
+            </legend>
             {renderCorrectAnswers}
           </div>
         </div>
