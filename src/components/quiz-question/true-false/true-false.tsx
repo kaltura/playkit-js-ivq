@@ -51,7 +51,7 @@ export const TrueFalse = withText(translates)(
                   aria-selected={isActive}
                   aria-disabled={disabled}
                   className={classes}
-                  aria-label={`${otherProps.answerNumber} ${index + 1}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
+                  aria-label={`${otherProps.answerNumber} ${index + 1}, ${text}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
                   role="option">
                   {text}
                 </div>
