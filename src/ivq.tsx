@@ -107,6 +107,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       if (seekBarNode) {
         // move player seek bar from IvqBottomBar to Kaltura player bottom bar
         seekBarParentNode.append(seekBarNode);
+        seekBarNode.setAttribute('role', 'slider');
       }
     }
   };

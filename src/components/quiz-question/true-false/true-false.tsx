@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {useCallback} from 'preact/hooks';
+import {useCallback, useEffect, useRef} from 'preact/hooks';
 import {QuestionProps, QuizTranslates} from '../../../types';
 import {QuestionAddons} from '../question-addons';
 import {A11yWrapper} from '@playkit-js/common';
@@ -23,9 +23,16 @@ export const TrueFalse = withText(translates)(
       },
       [onSelect]
     );
+    const quizQuestionRef = useRef<HTMLLegendElement>(null);
+    useEffect(() => {
+      quizQuestionRef.current?.focus();
+    }, [question]);
+
     return (
       <div className={styles.trueFalseWrapper} data-testid="trueFalseContainer">
-        <legend className={styles.questionText} data-testid="trueFalseQuestionTitle" tabIndex={0} role="text">{question}</legend>
+        <legend className={styles.questionText} data-testid="trueFalseQuestionTitle" tabIndex={0} role="text" ref={quizQuestionRef}>
+          {question}
+        </legend>
         {hint && <QuestionAddons hint={hint} />}
         <div className={styles.optionalAnswersWrapper} role="list" data-testid="trueFalseAnswersContainer">
           {optionalAnswers.map(({key, text}, index) => {

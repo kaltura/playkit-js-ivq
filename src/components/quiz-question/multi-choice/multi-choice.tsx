@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {useCallback} from 'preact/hooks';
+import {useCallback, useEffect, useRef} from 'preact/hooks';
 import {makeQuestionLabels} from '../../../utils';
 import {QuestionProps, QuizTranslates} from '../../../types';
 import {QuestionAddons} from '../question-addons';
@@ -25,6 +25,11 @@ export const MultiChoice = withText(translates)(
   ({question, optionalAnswers, selected, onSelect, hint, multiAnswer, ...otherProps}: QuestionProps & MultiChoiceProps & QuizTranslates) => {
     const selectedArray = selected ? selected.split(',') : [];
     const disabled = !onSelect;
+    const quizQuestionRef = useRef<HTMLLegendElement>(null);
+
+    useEffect(() => {
+      quizQuestionRef.current?.focus();
+    }, [question]);
 
     const handleSelect = useCallback(
       (key: string, isActive: boolean) => (e: Event, byKeyboard?: boolean) => {
@@ -43,19 +48,23 @@ export const MultiChoice = withText(translates)(
 
     return (
       <div className={styles.multiChoiceWrapper} data-testid="multipleChoiceContainer">
-        <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle" tabIndex={0} role="text">{question}</legend>
+        <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle" tabIndex={0} role="text" ref={quizQuestionRef}>
+          {question}
+        </legend>
         {hint && <QuestionAddons hint={hint} />}
         <div className={styles.optionalAnswersWrapper} data-testid="multipleChoiceAnswersWrapper">
-          <div className={styles.optionalAnswersContainer} role="list" data-testid="multipleChoiceAnswersContainer">
+          <div className={styles.optionalAnswersContainer} role="listbox" data-testid="multipleChoiceAnswersContainer">
             {optionalAnswers.map(({key, text}, index) => {
               const isActive = selectedArray.includes(key);
               return (
                 <A11yWrapper onClick={handleSelect(key, isActive)}>
                   <div
                     key={key}
-                    role="listitem"
+                    role="option"
                     tabIndex={disabled ? -1 : 0}
                     data-testid="multipleChoiceSelectAnswer"
+                    aria-selected={isActive}
+                    aria-multiselectable={Boolean(multiAnswer)}
                     title={`${otherProps.answerNumber} ${index + 1}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
                     className={[styles.multiSelectAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ')}>
                     <div className={styles.questionLabel} data-testid="multipleChoiceQuestionLabel" role="text">
