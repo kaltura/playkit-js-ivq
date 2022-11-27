@@ -11,5 +11,8 @@
     @include ivq-question-content;
     font-size: 16px;
     font-weight: normal;
+    .visuallyHidden {
+      @include visually-hidden;
+    }
   }
 }

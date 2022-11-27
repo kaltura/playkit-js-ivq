@@ -7,11 +7,12 @@ const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
 const translates = (): QuizTranslates => {
   return {
-    reflectionPoint: <Text id="ivq.reflection_point">Reflection Point</Text>
+    reflectionPoint: <Text id="ivq.reflection_point">Reflection Point</Text>,
+    questionLabel: <Text id="ivq.question">Question</Text>
   };
 };
 
-export const ReflectionPoint = withText(translates)(({question, reflectionPoint}: QuestionProps & QuizTranslates) => {
+export const ReflectionPoint = withText(translates)(({question, questionIndex, ...otherProps}: QuestionProps & QuizTranslates) => {
   const quizQuestionRef = useRef<HTMLLegendElement>(null);
   useEffect(() => {
     quizQuestionRef.current?.focus();
@@ -19,13 +20,8 @@ export const ReflectionPoint = withText(translates)(({question, reflectionPoint}
 
   return (
     <div className={styles.reflectionPointWrapper}>
-      <legend
-        className={styles.reflectionText}
-        data-testid="reflectionPointTitle"
-        tabIndex={0}
-        role="text"
-        ref={quizQuestionRef}
-        aria-label={`${reflectionPoint} ${question}`}>
+      <legend className={styles.reflectionText} data-testid="reflectionPointTitle" tabIndex={0} role="text" ref={quizQuestionRef}>
+        <span className={styles.visuallyHidden}>{`${otherProps.questionLabel}# ${questionIndex}, ${otherProps.reflectionPoint}:`}</span>
         {question}
       </legend>
     </div>

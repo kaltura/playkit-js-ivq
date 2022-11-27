@@ -64,7 +64,7 @@ export const QuestionReview = withText(translates)(
           <Fragment>
             <div className={styles.correctAnswerIs}>{`${otherProps.correctAnswerIs} ${correctAnswer?.text}`}</div>
             {a?.explanation && <QuestionAddons explanation={a.explanation} />}
-            <div className={styles.yourAnswer} aria-hidden="true" area-label={isCorrect ? otherProps.correctAnswer : otherProps.incorrectAnswer}>
+            <div className={styles.yourAnswer} aria-hidden="true" aria-label={isCorrect ? otherProps.correctAnswer : otherProps.incorrectAnswer}>
               {isCorrect ? otherProps.correctAnswer : otherProps.yourAnswer}
             </div>
             <div className={styles.trueFalseAnswerWrapper} role="list">

@@ -11,7 +11,8 @@ const {withText, Text} = KalturaPlayer.ui.preacti18n;
 const translates = (): QuizTranslates => {
   return {
     answerNumber: <Text id="ivq.answer_number">answer number</Text>,
-    yourAnswer: <Text id="ivq.your_answer">Your answer</Text>
+    yourAnswer: <Text id="ivq.your_answer">Your answer</Text>,
+    questionLabel: <Text id="ivq.question">Question</Text>
   };
 };
 
@@ -22,13 +23,24 @@ interface MultiChoiceProps {
 const questionLabels = makeQuestionLabels();
 
 export const MultiChoice = withText(translates)(
-  ({question, optionalAnswers, selected, onSelect, hint, multiAnswer, ...otherProps}: QuestionProps & MultiChoiceProps & QuizTranslates) => {
+  ({
+    question,
+    optionalAnswers,
+    selected,
+    onSelect,
+    hint,
+    multiAnswer,
+    questionIndex,
+    ...otherProps
+  }: QuestionProps & MultiChoiceProps & QuizTranslates) => {
     const selectedArray = selected ? selected.split(',') : [];
     const disabled = !onSelect;
     const quizQuestionRef = useRef<HTMLLegendElement>(null);
 
     useEffect(() => {
-      quizQuestionRef.current?.focus();
+      if (!disabled) {
+        quizQuestionRef.current?.focus();
+      }
     }, [question]);
 
     const handleSelect = useCallback(
@@ -49,6 +61,7 @@ export const MultiChoice = withText(translates)(
     return (
       <div className={styles.multiChoiceWrapper} data-testid="multipleChoiceContainer">
         <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle" tabIndex={0} role="text" ref={quizQuestionRef}>
+          <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
           {question}
         </legend>
         {hint && <QuestionAddons hint={hint} />}
@@ -61,11 +74,12 @@ export const MultiChoice = withText(translates)(
                   <div
                     key={key}
                     role="option"
-                    tabIndex={disabled ? -1 : 0}
+                    tabIndex={0}
                     data-testid="multipleChoiceSelectAnswer"
                     aria-selected={isActive}
+                    aria-disabled={disabled}
                     aria-multiselectable={Boolean(multiAnswer)}
-                    title={`${otherProps.answerNumber} ${index + 1}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
+                    aria-label={`${otherProps.answerNumber} ${index + 1}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
                     className={[styles.multiSelectAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ')}>
                     <div className={styles.questionLabel} data-testid="multipleChoiceQuestionLabel" role="text">
                       {questionLabels[index]}
