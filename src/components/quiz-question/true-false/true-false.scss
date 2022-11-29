@@ -9,6 +9,9 @@
   .questionText {
     @include ivq-text;
     @include ivq-question-content;
+    .visuallyHidden {
+      @include visually-hidden;
+    }
   }
   .optionalAnswersWrapper {
     display: flex;

@@ -18,6 +18,7 @@ export interface QuizQuestionUI {
 export interface QuestionProps {
   question: string;
   optionalAnswers: Array<KalturaQuizOptionalAnswer>;
+  questionIndex: number;
   hint?: string;
   onSelect?: (data: Selected, byKeyboard?: boolean) => void;
   selected: Selected;

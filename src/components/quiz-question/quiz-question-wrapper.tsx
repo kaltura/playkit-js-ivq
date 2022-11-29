@@ -55,7 +55,6 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
   const [isLoading, setIsLoading] = useState(false);
   const continueButtonRef = useRef<HTMLButtonElement>(null);
-  const questionWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // wait till plugin gets player store
@@ -64,9 +63,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       if (!playerNav) {
         return;
       }
-      if (!qui.a) {
-        questionWrapperRef.current?.focus();
-      } else {
+      if (qui.a) {
         continueButtonRef.current?.focus();
       }
     });
@@ -123,6 +120,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
     const {question, optionalAnswers, hint} = qui.q;
     const questionProps: QuestionProps = {
       question,
+      questionIndex: qui.questionIndex[0],
       optionalAnswers,
       hint,
       selected
@@ -146,6 +144,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
 
   const renderIvqButtons = useMemo(() => {
     const continueDisabled = !selected.length;
+    const continueButtonAriaLabel = qui.q.questionType === KalturaQuizQuestionTypes.Reflection ? props.continueButton : props.continueButtonAriaLabel;
     return (
       <div className={styles.ivqButtonsWrapper}>
         <A11yWrapper onClick={handleContinue}>
@@ -153,7 +152,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
             ref={continueButtonRef}
             data-testid="continueButton"
             disabled={continueDisabled}
-            aria-label={props.continueButtonAriaLabel}
+            aria-label={continueButtonAriaLabel}
             className={[styles.continueButton, continueDisabled ? styles.disabled : ''].join(' ')}>
             {isLoading ? <Spinner /> : props.continueButton}
           </button>
@@ -176,7 +175,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   return (
     <IvqOverlay>
       <div className={['ivq', styles.ivqQuestionContainer].join(' ')} data-testid="ivqQuestionContainer">
-        <div className={styles.ivqQuestionWrapper} ref={questionWrapperRef} tabIndex={-1} data-testid="ivqQuestionWrapper">
+        <div className={styles.ivqQuestionWrapper} data-testid="ivqQuestionWrapper">
           {renderIvqQuestion}
         </div>
         {renderIvqButtons}
