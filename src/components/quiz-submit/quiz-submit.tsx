@@ -1,5 +1,6 @@
 import {h} from 'preact';
 import {useCallback, useState, useRef, useEffect} from 'preact/hooks';
+import {A11yWrapper} from '@playkit-js/common';
 import {QuizTranslates} from '../../types';
 import {IvqOverlay} from '../ivq-overlay';
 import {Spinner} from '../spinner';
@@ -33,8 +34,8 @@ const translates = ({onSubmit}: QuizSubmitProps): QuizTranslates => {
 
 export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...otherProps}: QuizSubmitProps & QuizTranslates) => {
   const [isLoading, setIsLoading] = useState(false);
-  const submitButtonRef = useRef<HTMLButtonElement>(null);
-  const reviewButtonRef = useRef<HTMLButtonElement>(null);
+  const submitButtonRef = useRef<HTMLDivElement>(null);
+  const reviewButtonRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const playerNav = useSelector((state: any) => state.shell.playerNav);
     if (!playerNav) {
@@ -66,23 +67,29 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...otherPro
         </div>
         <div className={styles.buttonWrapper} data-testid="submitButton">
           {onSubmit && (
-            <button
-              onClick={handleSubmitClick}
-              className={styles.primaryButton}
-              aria-label={otherProps.submitButtonAriaLabel}
-              disabled={isLoading}
-              ref={submitButtonRef}>
-              {isLoading ? <Spinner /> : otherProps.submitButton}
-            </button>
+            <A11yWrapper onClick={handleSubmitClick}>
+              <div
+                role="button"
+                tabIndex={0}
+                className={styles.primaryButton}
+                aria-label={otherProps.submitButtonAriaLabel}
+                disabled={isLoading}
+                ref={submitButtonRef}>
+                {isLoading ? <Spinner /> : otherProps.submitButton}
+              </div>
+            </A11yWrapper>
           )}
-          <button
-            onClick={handleReviewClick}
-            disabled={isLoading}
-            className={[onSubmit ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
-            aria-label={otherProps.reviewButtonAriaLabel}
-            ref={reviewButtonRef}>
-            {otherProps.reviewButton}
-          </button>
+          <A11yWrapper onClick={handleReviewClick}>
+            <div
+              role="button"
+              tabIndex={0}
+              disabled={isLoading}
+              className={[onSubmit ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
+              aria-label={otherProps.reviewButtonAriaLabel}
+              ref={reviewButtonRef}>
+              {otherProps.reviewButton}
+            </div>
+          </A11yWrapper>
         </div>
       </div>
     </IvqOverlay>
