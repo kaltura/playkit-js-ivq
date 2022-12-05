@@ -31,14 +31,14 @@ export const TimelineMarker = withText(translates)(({isDisabled, onClick, getSee
       // change slider role to prevent interrupts reading marker content by screen-readers
       seekBarNode.setAttribute('role', 'none');
     }
-  }, []);
-  const handleBlur = useCallback(() => {
+  }, [getSeekBarNode]);
+  const handleBlur = () => {
     const seekBarNode = getSeekBarNode();
     if (seekBarNode) {
       // restore slider role
       seekBarNode.setAttribute('role', 'slider');
     }
-  }, []);
+  };
   const disabled = isDisabled();
   const renderMarker = useMemo(() => {
     return (
