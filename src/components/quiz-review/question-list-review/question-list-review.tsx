@@ -104,22 +104,28 @@ export const QuestionListReview = withText(translates)(
         <div className={styles.questionsWrapper}>{showAnswers && renderAnswers}</div>
         <div className={styles.buttonWrapper} data-testid="reviewButtonWrapper">
           {onRetake && (
-            <button
-              onClick={handleRetake}
-              className={styles.primaryButton}
-              aria-label={otherProps.retakeButtonAreaLabel}
-              data-testid="reviewRetakeButton"
-              disabled={isLoading}>
-              {isLoading ? <Spinner /> : otherProps.retakeButton}
-            </button>
+            <A11yWrapper onClick={handleRetake}>
+              <div
+                role="button"
+                tabIndex={0}
+                className={styles.primaryButton}
+                aria-label={otherProps.retakeButtonAreaLabel}
+                data-testid="reviewRetakeButton"
+                disabled={isLoading}>
+                {isLoading ? <Spinner /> : otherProps.retakeButton}
+              </div>
+            </A11yWrapper>
           )}
-          <button
-            onClick={onClose}
-            data-testid="reviewDoneButton"
-            className={[onRetake ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
-            aria-label={otherProps.doneButtonAreaLabel}>
-            {otherProps.doneButton}
-          </button>
+          <A11yWrapper onClick={onClose}>
+            <div
+              role="button"
+              tabIndex={0}
+              data-testid="reviewDoneButton"
+              className={[onRetake ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
+              aria-label={otherProps.doneButtonAreaLabel}>
+              {otherProps.doneButton}
+            </div>
+          </A11yWrapper>
         </div>
       </div>
     );

@@ -1,5 +1,6 @@
 import {h, Fragment} from 'preact';
 import {useMemo, useRef, useEffect} from 'preact/hooks';
+import {A11yWrapper} from '@playkit-js/common';
 import {QuizTranslates, QuizQuestion, KalturaQuizQuestionTypes} from '../../../types';
 import {makeQuestionLabels} from '../../../utils';
 import {icons} from '../../icons';
@@ -47,7 +48,7 @@ const translates = ({questionsAmount, reviewQuestion}: QuestionReviewProps): Qui
 
 export const QuestionReview = withText(translates)(
   ({onBack, onNext, onPrev, questionCounter, reviewQuestion, getSeekBarNode, ...otherProps}: QuestionReviewProps & QuizTranslates) => {
-    const backButtonRef = useRef<HTMLButtonElement>(null);
+    const backButtonRef = useRef<HTMLDivElement>(null);
     const {q, a} = reviewQuestion.qq;
 
     useEffect(() => {
@@ -149,12 +150,14 @@ export const QuestionReview = withText(translates)(
       <Fragment>
         <div className={['ivq', styles.questionReviewWrapper].join(' ')} role="dialog" aria-live="polite">
           <div className={styles.backButtonContainer}>
-            <button onClick={onBack} className={styles.backButton} ref={backButtonRef}>
-              <div className={styles.iconContainer} aria-hidden="true">
-                <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
+            <A11yWrapper onClick={onBack}>
+              <div role="button" tabIndex={0} className={styles.backButton} ref={backButtonRef}>
+                <div className={styles.iconContainer} aria-hidden="true">
+                  <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
+                </div>
+                {otherProps.backButton}
               </div>
-              {otherProps.backButton}
-            </button>
+            </A11yWrapper>
           </div>
           <div className={styles.quizQuestionContainer}>
             <legend className={styles.questionText}>

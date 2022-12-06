@@ -54,7 +54,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   const {qui, getSeekBarNode} = props;
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
   const [isLoading, setIsLoading] = useState(false);
-  const continueButtonRef = useRef<HTMLButtonElement>(null);
+  const continueButtonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // wait till plugin gets player store
@@ -148,25 +148,30 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
     return (
       <div className={styles.ivqButtonsWrapper}>
         <A11yWrapper onClick={handleContinue}>
-          <button
+          <div
+            role="button"
+            tabIndex={0}
             ref={continueButtonRef}
             data-testid="continueButton"
             disabled={continueDisabled}
             aria-label={continueButtonAriaLabel}
             className={[styles.continueButton, continueDisabled ? styles.disabled : ''].join(' ')}>
             {isLoading ? <Spinner /> : props.continueButton}
-          </button>
+          </div>
         </A11yWrapper>
 
         {qui.onSkip && (
-          <button
-            data-testid="skipButton"
-            onClick={handleSkip}
-            aria-label={props.skipButtonAriaLabel}
-            className={[styles.skipButton, isLoading ? styles.disabled : ''].join(' ')}
-            disabled={isLoading}>
-            {props.skipButton}
-          </button>
+          <A11yWrapper onClick={handleSkip}>
+            <div
+              role="button"
+              tabIndex={0}
+              data-testid="skipButton"
+              aria-label={props.skipButtonAriaLabel}
+              className={[styles.skipButton, isLoading ? styles.disabled : ''].join(' ')}
+              disabled={isLoading}>
+              {props.skipButton}
+            </div>
+          </A11yWrapper>
         )}
       </div>
     );
