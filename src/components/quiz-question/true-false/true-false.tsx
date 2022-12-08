@@ -31,6 +31,29 @@ export const TrueFalse = withText(translates)(
       }
     }, [question]);
 
+    let answersOptionsRefMap: Map<number, HTMLElement | null> = new Map();
+    useEffect(() => {
+        return () => {
+            answersOptionsRefMap = new Map();
+        }
+    }, []);
+
+      const setAnswerOptionRef = (index: number, ref: HTMLElement | null) => {
+          return answersOptionsRefMap.set(index, ref);
+      };
+
+      const getAnswerOptionRef = (index: number) => {
+          return answersOptionsRefMap.get(index);
+      };
+
+      const handleLeftKeyPressed = (currentIndex: number) => {
+          getAnswerOptionRef(currentIndex - 1)?.focus();
+      };
+
+      const handleRightKeyPressed = (currentIndex: number) => {
+          getAnswerOptionRef(currentIndex + 1)?.focus();
+      };
+
     return (
       <div className={styles.trueFalseWrapper} data-testid="trueFalseContainer">
         <legend className={styles.questionText} data-testid="trueFalseQuestionTitle" tabIndex={0} role="text" ref={quizQuestionRef}>
@@ -43,8 +66,17 @@ export const TrueFalse = withText(translates)(
             const isActive = selected.includes(key);
             const classes = [styles.trueFalseAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ');
             return (
-              <A11yWrapper onClick={handleSelect(key)}>
+              <A11yWrapper
+                  onClick={handleSelect(key)}
+                  onUpKeyPressed={() => {}}
+                  onDownKeyPressed={() => {}}
+                  onLeftKeyPressed={() => handleLeftKeyPressed(index)}
+                  onRightKeyPressed={() => handleRightKeyPressed(index)}
+              >
                 <div
+                  ref={node => {
+                      setAnswerOptionRef(index, node);
+                  }}
                   key={key}
                   tabIndex={0}
                   data-testid="trueFalseAnswerContent"
