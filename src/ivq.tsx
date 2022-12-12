@@ -127,6 +127,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if (!timelineService) {
       this.logger.warn('No timeline service available');
     } else {
+      const isMarkerDisabled = () => Boolean(this._removeActiveOverlay);
       const questionBunchMap = new Map<string, Array<number>>();
       let questionBunch: Array<number> = [];
       qqm.forEach((qq: QuizQuestion) => {
@@ -148,14 +149,13 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             width: 124,
             height: 32,
             get: props => {
-              const isDisabled = () => Boolean(this._removeActiveOverlay);
               return (
                 <TimelineMarker
                   {...props}
                   getSeekBarNode={this._getSeekBarNode}
                   onClick={handleOnQuestionClick}
                   questionIndex={qq.index}
-                  isDisabled={isDisabled}
+                  isDisabled={isMarkerDisabled}
                 />
               );
             }
