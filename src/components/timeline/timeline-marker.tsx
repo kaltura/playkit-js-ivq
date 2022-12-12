@@ -25,22 +25,22 @@ const translates = ({questionIndex}: TimelineMarkerProps): QuizTranslates => {
 export const TimelineMarker = withText(translates)(({isDisabled, onClick, getSeekBarNode, ...otherProps}: TimelineMarkerProps & QuizTranslates) => {
   const hoverActive = useSelector((state: any) => state.seekbar.hoverActive);
   useSelector((state: any) => state.seekbar); // trigger update of marker component
-  const handleFocus = () => {
-    const seekBarNode = getSeekBarNode();
-    if (seekBarNode) {
-      // change slider role to prevent interrupts reading marker content by screen-readers
-      seekBarNode.setAttribute('role', 'none');
-    }
-  };
-  const handleBlur = () => {
-    const seekBarNode = getSeekBarNode();
-    if (seekBarNode) {
-      // restore slider role
-      seekBarNode.setAttribute('role', 'slider');
-    }
-  };
   const disabled = isDisabled();
   const renderMarker = useMemo(() => {
+    const handleFocus = () => {
+      const seekBarNode = getSeekBarNode();
+      if (seekBarNode) {
+        // change slider role to prevent interrupts reading marker content by screen-readers
+        seekBarNode.setAttribute('role', 'none');
+      }
+    };
+    const handleBlur = () => {
+      const seekBarNode = getSeekBarNode();
+      if (seekBarNode) {
+        // restore slider role
+        seekBarNode.setAttribute('role', 'slider');
+      }
+    };
     return (
       <A11yWrapper onClick={onClick}>
         <div

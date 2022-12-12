@@ -148,15 +148,14 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             width: 124,
             height: 32,
             get: props => {
+              const isDisabled = () => Boolean(this._removeActiveOverlay);
               return (
                 <TimelineMarker
                   {...props}
                   getSeekBarNode={this._getSeekBarNode}
                   onClick={handleOnQuestionClick}
                   questionIndex={qq.index}
-                  isDisabled={() => {
-                    return Boolean(this._removeActiveOverlay);
-                  }}
+                  isDisabled={isDisabled}
                 />
               );
             }
