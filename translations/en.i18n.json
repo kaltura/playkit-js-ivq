@@ -41,7 +41,9 @@
       "hide_feedback": "Hide feedback",
       "marker_area_label": "Jump to Question {{questionIndex}}",
       "answer_number": "Answer number",
-      "review_answer": "Click to view the question and your answer"
+      "review_answer": "Click to view the question and your answer",
+      "tip": "All questions must be answered. The quiz will be submitted at the end.",
+      "available_attempts_message": "Total attempts available for this quiz: {{availableAttempts}}"
     }
   }
 }

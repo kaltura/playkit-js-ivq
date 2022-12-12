@@ -243,8 +243,14 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         });
     };
     const welcomeScreenProps: WelcomeScreenProps = {
-      welcomeMessage: this._dataManager.quizData?.welcomeMessage
+      welcomeMessage: this._dataManager.quizData?.welcomeMessage,
+      inVideoTip: this._dataManager.quizData?.inVideoTip,
     };
+    let availableAttempts = (this._dataManager.quizData?.attemptsAllowed || 0) - (this._dataManager.quizUserEntry?.version || 0);
+    if (this._dataManager.quizUserEntry?.status === 'quiz.3'){
+      availableAttempts--
+    }
+    welcomeScreenProps['availableAttempts'] = availableAttempts;
     if (this._dataManager.quizData?.allowDownload) {
       welcomeScreenProps['onDownload'] = handleDownload;
     }
@@ -392,11 +398,11 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           const {setQuizUserEntry, setQuizAnswers, setQuizData, isSubmitAllowed, isRetakeAllowed} = this._dataManager;
           // set main quiz data
           setQuizData(quizData);
-          this._manageWelcomeScreen();
           if (lastQuizUserEntry) {
             // set lastQuizUserEntry to define if submit and retake allowed
             setQuizUserEntry(lastQuizUserEntry);
           }
+          this._manageWelcomeScreen();
           if (!lastQuizUserEntry || (!isSubmitAllowed() && isRetakeAllowed())) {
             // in case if quiz attempt doesn't exist
             // OR user has more attempts and latest attempt submitted - create new quiz attempt.
