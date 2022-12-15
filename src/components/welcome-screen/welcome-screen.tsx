@@ -10,21 +10,32 @@ const {withText, Text} = KalturaPlayer.ui.preacti18n;
 const {Icon} = KalturaPlayer.ui.components;
 const {Overlay} = KalturaPlayer.ui.components;
 
-const translates: QuizTranslates = {
-  welcomeTitle: <Text id="ivq.welcome_title">Start your video quiz!</Text>,
-  welcomeDownload: <Text id="ivq.welcome_download">Download Pre-Test</Text>,
-  startQuiz: <Text id="ivq.start_quiz">Start Quiz</Text>
-};
 
 export interface WelcomeScreenProps {
   welcomeMessage?: string;
+  inVideoTip? : boolean;
   onDownload?: () => Promise<void>;
   onClose?: () => void;
   poster?: string;
+  availableAttempts?: number;
 }
+const translates= ({availableAttempts}: WelcomeScreenProps): QuizTranslates => {
+    return {
+        welcomeTitle: <Text id="ivq.welcome_title">Start your video quiz!</Text>,
+        tip: <Text id="ivq.tip">All questions must be answered. The quiz will be submitted at the end.</Text>,
+        availableAttemptsMessage:
+            <Text
+              id="ivq.available_attempts"
+              fields={{
+                availableAttempts: availableAttempts
+        }}>{`Total attempts available for this quiz: ${availableAttempts}`}</Text>,
+        welcomeDownload: <Text id="ivq.welcome_download">Download Pre-Test</Text>,
+        startQuiz: <Text id="ivq.start_quiz">Start Quiz</Text>
+    }
+};
 
 export const WelcomeScreen = withText(translates)(
-  ({welcomeMessage, onDownload, poster, onClose, ...otherProps}: WelcomeScreenProps & QuizTranslates) => {
+  ({welcomeMessage,inVideoTip, onDownload, poster, onClose, availableAttempts, ...otherProps}: WelcomeScreenProps & QuizTranslates) => {
     const [isLoading, setLoading] = useState(false);
     const handleDownload = useCallback(() => {
       if (!isLoading) {
@@ -42,13 +53,23 @@ export const WelcomeScreen = withText(translates)(
           style={{backgroundImage: poster ? `url(${poster})` : 'none'}}>
           <div className={styles.background} />
           <div className={styles.content} data-testid="welcomeScreenContent">
-            <div title={`${otherProps.welcomeTitle}. ${welcomeMessage}`} tabIndex={0} role="text" aria-live="polite">
+            <div title={`${otherProps.welcomeTitle}. ${welcomeMessage}. ${otherProps.tip} ${otherProps.availableAttemptsMessage}`} tabIndex={0} role="text" aria-live="polite">
               <div className={styles.title} data-testid="welcomeScreenTitle">
                 {otherProps.welcomeTitle}
               </div>
               <div className={styles.desc} data-testid="welcomeScreenDescription">
                 {welcomeMessage}
               </div>
+              {inVideoTip?
+              <div className={styles.tip} data-testid="welcomeScreenTip">
+                  {otherProps.tip}
+              </div> : ""
+              }
+            {availableAttempts && availableAttempts > 0 ?
+                <div className={styles.attempts} data-testid="welcomeScreenAttempts">
+                    {otherProps.availableAttemptsMessage}
+                </div> : ""
+            }
             </div>
             <div className={styles.buttonWrapper}>
               {onClose && (

@@ -148,6 +148,11 @@ export class DataSyncManager {
     return this.quizUserEntry!.version + 1;
   };
 
+  public getAvailableAttempts = () =>{
+    let availableAttempts = (this.quizData?.attemptsAllowed || 0) - (this.quizUserEntry?.version || 0);
+    return !this.isSubmitAllowed() ? availableAttempts - 1 : availableAttempts;
+  }
+
   public prepareQuizData = () => {
     this._quizCuePoints.forEach((cue, index) => {
       const a = this._quizAnswers.find((answer: KalturaQuizAnswer) => {
