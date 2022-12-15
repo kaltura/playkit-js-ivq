@@ -36,12 +36,19 @@ export const MultiChoice = withText(translates)(
     const selectedArray = selected ? selected.split(',') : [];
     const disabled = !onSelect;
     const quizQuestionRef = useRef<HTMLLegendElement>(null);
+    let answersOptionsRefMap: Map<number, HTMLElement | null> = new Map();
 
     useEffect(() => {
       if (!disabled) {
         quizQuestionRef.current?.focus();
       }
     }, [question]);
+
+    useEffect(() => {
+        return () => {
+            answersOptionsRefMap = new Map();
+        }
+    }, []);
 
     const handleSelect = useCallback(
       (key: string, isActive: boolean) => (e: Event, byKeyboard?: boolean) => {
@@ -58,6 +65,22 @@ export const MultiChoice = withText(translates)(
       [onSelect, selectedArray]
     );
 
+    const setAnswerOptionRef = (index: number, ref: HTMLElement | null) => {
+        return answersOptionsRefMap.set(index, ref);
+    };
+
+    const getAnswerOptionRef = (index: number) => {
+        return answersOptionsRefMap.get(index);
+    };
+
+    const handleUpKeyPressed = (currentIndex: number) => {
+        getAnswerOptionRef(currentIndex - 1)?.focus();
+    };
+
+    const handleDownKeyPressed = (currentIndex: number) => {
+        getAnswerOptionRef(currentIndex + 1)?.focus();
+    };
+
     return (
       <div className={styles.multiChoiceWrapper} data-testid="multipleChoiceContainer">
         <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle" tabIndex={0} role="text" ref={quizQuestionRef}>
@@ -70,8 +93,15 @@ export const MultiChoice = withText(translates)(
             {optionalAnswers.map(({key, text}, index) => {
               const isActive = selectedArray.includes(key);
               return (
-                <A11yWrapper onClick={handleSelect(key, isActive)}>
+                <A11yWrapper
+                    onClick={handleSelect(key, isActive)}
+                    onUpKeyPressed={() => handleUpKeyPressed(index)}
+                    onDownKeyPressed={() => handleDownKeyPressed(index)}
+                >
                   <div
+                    ref={node => {
+                        setAnswerOptionRef(index, node);
+                    }}
                     key={key}
                     role="option"
                     tabIndex={0}
