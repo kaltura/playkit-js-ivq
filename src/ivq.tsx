@@ -246,11 +246,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       welcomeMessage: this._dataManager.quizData?.welcomeMessage,
       inVideoTip: this._dataManager.quizData?.inVideoTip,
     };
-    let availableAttempts = (this._dataManager.quizData?.attemptsAllowed || 0) - (this._dataManager.quizUserEntry?.version || 0);
-    if (this._dataManager.quizUserEntry?.status === 'quiz.3'){
-      availableAttempts--
-    }
-    welcomeScreenProps['availableAttempts'] = availableAttempts;
+    welcomeScreenProps['availableAttempts'] = this._dataManager.getAvailableAttempts();
     if (this._dataManager.quizData?.allowDownload) {
       welcomeScreenProps['onDownload'] = handleDownload;
     }
