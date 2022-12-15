@@ -49,6 +49,7 @@ export const WelcomeScreen = withText(translates)(
     const renderWelcomeScreen = useMemo(
       () => (
         <div
+          data-testid="welcomeScreenRoot"
           className={['ivq', styles.welcomeScreenWrapper, poster ? styles.withPoster : ''].join(' ')}
           style={{backgroundImage: poster ? `url(${poster})` : 'none'}}>
           <div className={styles.background} />

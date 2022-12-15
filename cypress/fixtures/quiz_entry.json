@@ -1,0 +1,19 @@
+[
+  {
+    "partnerId": 1091,
+    "ks": "",
+    "userId": 0,
+    "objectType": "KalturaStartWidgetSessionResponse"
+  },
+  {
+    "id": 1863275415,
+    "entryId": "0_5n7s22ge",
+    "userId": "",
+    "partnerId": 5174,
+    "status": 1,
+    "createdAt": 1671115082,
+    "updatedAt": 1671115082,
+    "type": "quiz.QUIZ",
+    "objectType": "KalturaQuizUserEntry"
+  }
+]

@@ -28,10 +28,18 @@ yarn install
 
 ### Building
 
-Then, build the player
+Then, build the plugin
 
 ```javascript
 yarn run build
+```
+
+### Testing
+
+The plugin uses `cypress` tool for e2e tests
+
+```javascript
+yarn run test
 ```
 
 ### Embed the library in your test page
@@ -71,14 +79,6 @@ Finally, add the bundle as a script tag in your page, and initialize the player
 IVQ plugin dependencies can been found here:
 
 - **[Dependencies](#dependencies)**
-
-### And coding style tests
-
-We use ESLint [recommended set](http://eslint.org/docs/rules/) with some additions for enforcing [Flow] types and other rules.
-
-See [ESLint config](.eslintrc.json) for full configuration.
-
-We also use [.editorconfig](.editorconfig) to maintain consistent coding styles and settings, please make sure you comply with the styling.
 
 ## Contributing
 
