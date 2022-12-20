@@ -4,7 +4,7 @@ const MANIFEST = `#EXTM3U
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=509496,RESOLUTION=480x272,AUDIO="audio",SUBTITLES="subs"
 ${location.origin}/media/index.m3u8`;
 
-const preparePage = (ivqConf = {}) => {
+const preparePage = (ivqConf = {}, playerConf = {}) => {
   cy.visit('index.html');
   cy.window().then(win => {
     try {
@@ -18,6 +18,7 @@ const preparePage = (ivqConf = {}) => {
             serviceUrl: 'http://mock-api'
           }
         },
+        ...playerConf,
         plugins: {
           ivq: ivqConf
         }
@@ -83,6 +84,19 @@ describe('IVQ plugin', () => {
       cy.get('[data-testid="welcomeScreenAttempts"]').should($div => {
         expect($div.text()).to.eq('Total attempts available for this quiz: 88');
       });
+      cy.get('.playkit-pre-playback-play-button').click({force: true});
+      cy.get('[data-testid="welcomeScreenRoot"]').should('not.exist');
+    });
+    it('should show welcome screen if auto-play enabled', () => {
+      mockQuiz();
+      preparePage({}, {playback: {autoplay: true}});
+      cy.get('.playkit-pre-playback-play-button').should('not.exist');
+      cy.get('[data-testid="welcomeScreenRoot"]').should('exist');
+      cy.get('[data-testid="startQuiz"]').should($div => {
+        expect($div.text()).to.eq('Start Quiz');
+      });
+      cy.get('[data-testid="startQuiz"]').click({force: true});
+      cy.get('[data-testid="welcomeScreenRoot"]').should('not.exist');
     });
     it('should not show welcome screen', () => {
       mockQuiz('quiz_welcome_page_disabled.json');
@@ -90,7 +104,7 @@ describe('IVQ plugin', () => {
       cy.get('.playkit-pre-playback-play-button').should('exist');
       cy.get('[data-testid="welcomeScreenRoot"]').should('not.exist');
     });
-    it('should render and test download quiz', () => {
+    it('should render and test download quiz button', () => {
       mockQuiz();
       preparePage();
       cy.get('[data-testid="downloadPreTestContainer"]').should($div => {
