@@ -1,6 +1,7 @@
 import {h} from 'preact';
 // @ts-ignore
 import {core} from 'kaltura-player-js';
+import {ContribServices, FloatingUIModes, FloatingPositions, FloatingItem} from '@playkit-js/common';
 import {QuizLoader} from './providers';
 import {
   IvqConfig,
@@ -20,6 +21,7 @@ import {KalturaUserEntry} from './providers/response-types';
 import {WelcomeScreen, WelcomeScreenProps} from './components/welcome-screen';
 import {QuizSubmit, QuizSubmitProps} from './components/quiz-submit';
 import {QuizReview, QuizReviewProps} from './components/quiz-review';
+import {IvqPopup, IvqPopupProps, IvqPupupTypes} from './components/ivq-popup';
 import {TimelinePreview, TimelineMarker} from './components/timeline';
 import {QuizDownloadLoader} from './providers/quiz-download-loader';
 import {KalturaIvqMiddleware} from './quiz-middleware';
@@ -39,7 +41,9 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _maxCurrentTime = 0;
   private _seekControlEnabled = false;
   private _removeActiveOverlay: null | Function = null;
+  private _ivqPopup: null | FloatingItem = null;
   private _playlistOptions: null | KalturaPlayerTypes.Playlist['options'] = null;
+  private _contribServices: ContribServices;
 
   static defaultConfig: IvqConfig = {};
 
@@ -66,10 +70,16 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       () => Boolean(this._removeActiveOverlay),
       this._getSeekBarNode
     );
+    this._contribServices = ContribServices.get({kalturaPlayer: this._player});
   }
 
   get ready() {
     return this._quizDataPromise;
+  }
+
+  // TODO: remove once contribServices migrated to BasePlugin
+  getUIComponents(): any[] {
+    return this._contribServices.register();
   }
 
   getMiddlewareImpl(): KalturaIvqMiddleware {
@@ -215,6 +225,25 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     }
   };
 
+  private _manageIvqBanner = () => {
+    const popupProps: IvqPopupProps = {
+      onClose: this._removeIvqBanner,
+      type: IvqPupupTypes.submit
+    };
+    this._ivqPopup = this._contribServices.floatingManager.add({
+      label: 'IVQ popup',
+      mode: FloatingUIModes.FirstPlay,
+      position: FloatingPositions.InteractiveArea,
+      renderContent: () => <IvqPopup {...popupProps} />
+    });
+  };
+
+  private _removeIvqBanner = () => {
+    if (this._ivqPopup) {
+      this._contribServices.floatingManager.remove(this._ivqPopup);
+    }
+  };
+
   private _setOverlay = (fn: Function) => {
     this._removeOverlay();
     this._removeActiveOverlay = fn;
@@ -243,17 +272,23 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     };
     const welcomeScreenProps: WelcomeScreenProps = {
       welcomeMessage: this._dataManager.quizData?.welcomeMessage,
-      inVideoTip: this._dataManager.quizData?.inVideoTip,
+      inVideoTip: this._dataManager.quizData?.inVideoTip
     };
     welcomeScreenProps['availableAttempts'] = this._dataManager.getAvailableAttempts();
     if (this._dataManager.quizData?.allowDownload) {
       welcomeScreenProps['onDownload'] = handleDownload;
     }
-    if (!prePlaybackState) {
+    if (prePlaybackState) {
+      this.eventManager.listenOnce(this._player, EventType.PLAY, () => {
+        this._removeOverlay();
+        this._manageIvqBanner();
+      });
+    } else {
       welcomeScreenProps['poster'] = this._player.poster || '';
       welcomeScreenProps['onClose'] = () => {
         this._player.play();
         this._removeOverlay();
+        this._manageIvqBanner();
       };
     }
     this._setOverlay(
@@ -264,9 +299,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         get: () => <WelcomeScreen {...welcomeScreenProps} />
       })
     );
-    this.eventManager.listenOnce(this._player, EventType.PLAY, () => {
-      this._removeOverlay();
-    });
   };
 
   private _displayQuizReview = () => {
@@ -461,6 +493,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._player.playlist.options.loop = loop;
       this._playlistOptions = null;
     }
+    this._removeIvqBanner();
+    this._contribServices.reset();
   }
 
   destroy(): void {

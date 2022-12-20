@@ -113,9 +113,10 @@ describe('IVQ plugin', () => {
       cy.get('[data-testid="downloadPreTestContainer"]').click({force: true});
       cy.wait('@download');
     });
-    it('should not render download quiz', () => {
+    it('should not render download quiz button', () => {
       mockQuiz('quiz_download_disabled.json');
       preparePage();
+      cy.get('[data-testid="welcomeScreenRoot"]').should('exist');
       cy.get('[data-testid="downloadPreTestContainer"]').should('not.exist');
     });
   });

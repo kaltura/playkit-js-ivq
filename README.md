@@ -42,6 +42,9 @@ The plugin uses `cypress` tool for e2e tests
 yarn run test
 ```
 
+UI conf file (`cypress/public/ui-conf.js`) contains Kaltura player and plugin dependencies.
+Keep Kaltura player and dependency versinos aligned to currently released versions.
+
 ### Embed the library in your test page
 
 Finally, add the bundle as a script tag in your page, and initialize the player
