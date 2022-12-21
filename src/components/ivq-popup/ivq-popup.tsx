@@ -16,8 +16,8 @@ export enum IvqPupupTypes {
 export interface IvqPopupProps {
   type: IvqPupupTypes;
   onClose: () => void;
-  onSubmit?: OnClick;
-  onReview?: OnClick;
+  onSubmit: OnClick;
+  onReview: OnClick;
 }
 
 const translates = ({type}: IvqPopupProps): QuizTranslates => {
@@ -39,7 +39,7 @@ const translates = ({type}: IvqPopupProps): QuizTranslates => {
   } else if (type === IvqPupupTypes.submit) {
     return {
       ...ivqTranslates,
-      title: <Text id="ivq.quiz_completed">Quiz Completed</Text>,
+      title: <Text id="ivq.quiz_completed_title">Quiz Completed</Text>,
       description: <Text id="ivq.quiz_submit_description">Take a moment to review your answers or go ahead to submit your answers.</Text>
     };
   } else {
@@ -78,12 +78,12 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
       <div className={styles.description}>{otherProps.description}</div>
       {type === IvqPupupTypes.submit && (
         <div className={styles.buttonsWrapper}>
-          <A11yWrapper onClick={onReview!}>
+          <A11yWrapper onClick={onReview}>
             <div role="button" tabIndex={0} className={styles.secondaryButton} aria-label={otherProps.reviewButtonAriaLabel}>
               {otherProps.reviewButton}
             </div>
           </A11yWrapper>
-          <A11yWrapper onClick={onSubmit!}>
+          <A11yWrapper onClick={onSubmit}>
             <div role="button" tabIndex={0} className={styles.primaryButton} aria-label={otherProps.submitButtonAriaLabel}>
               {otherProps.submitButton}
             </div>

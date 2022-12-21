@@ -59,7 +59,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this.eventManager,
       this.player,
       this.logger,
-      (event: string, payload: unknown) => this.dispatchEvent(event, payload)
+      (event: string, payload: unknown) => this.dispatchEvent(event, payload),
+      this._manageIvqBanner
     );
     this._questionsVisualManager = new QuestionsVisualManager(
       () => this._dataManager.quizQuestionsMap,
@@ -226,13 +227,32 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   };
 
   private _manageIvqBanner = () => {
+    this.logger.debug("show 'IVQ Banner'");
+    this._removeIvqBanner();
+    const submissionDetails = this._questionsVisualManager.getSubmissionDetails();
+    let type: IvqPupupTypes = IvqPupupTypes.almostDone;
+    if (submissionDetails.showSubmitButton) {
+      if (this._dataManager.quizData?.preventSeek) {
+        type = IvqPupupTypes.completed;
+      } else {
+        type = IvqPupupTypes.submit;
+      }
+    }
     const popupProps: IvqPopupProps = {
+      type,
       onClose: this._removeIvqBanner,
-      type: IvqPupupTypes.submit
+      onReview: () => {
+        this._player.pause();
+        submissionDetails.onReview();
+      },
+      onSubmit: () => {
+        this._player.pause();
+        this._displayQuizSubmit();
+      }
     };
     this._ivqPopup = this._contribServices.floatingManager.add({
       label: 'IVQ popup',
-      mode: FloatingUIModes.FirstPlay,
+      mode: FloatingUIModes.Immediate,
       position: FloatingPositions.InteractiveArea,
       renderContent: () => <IvqPopup {...popupProps} />
     });
@@ -278,17 +298,22 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if (this._dataManager.quizData?.allowDownload) {
       welcomeScreenProps['onDownload'] = handleDownload;
     }
+    const submissionDetails = this._questionsVisualManager.getSubmissionDetails();
     if (prePlaybackState) {
       this.eventManager.listenOnce(this._player, EventType.PLAY, () => {
         this._removeOverlay();
-        this._manageIvqBanner();
+        if (submissionDetails.showSubmitButton) {
+          this._manageIvqBanner();
+        }
       });
     } else {
       welcomeScreenProps['poster'] = this._player.poster || '';
       welcomeScreenProps['onClose'] = () => {
         this._player.play();
         this._removeOverlay();
-        this._manageIvqBanner();
+        if (submissionDetails.showSubmitButton) {
+          this._manageIvqBanner();
+        }
       };
     }
     this._setOverlay(

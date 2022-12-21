@@ -27,7 +27,8 @@ export class DataSyncManager {
     private _eventManager: KalturaPlayerTypes.EventManager,
     private _player: KalturaPlayerTypes.Player,
     private _logger: KalturaPlayerTypes.Logger,
-    private _dispatchIvqEvent: (event: string, payload: unknown) => void
+    private _dispatchIvqEvent: (event: string, payload: unknown) => void,
+    private _manageIvqBanner: () => void
   ) {}
 
   private _syncEvents = () => {
@@ -148,10 +149,10 @@ export class DataSyncManager {
     return this.quizUserEntry!.version + 1;
   };
 
-  public getAvailableAttempts = () =>{
+  public getAvailableAttempts = () => {
     let availableAttempts = (this.quizData?.attemptsAllowed || 0) - (this.quizUserEntry?.version || 0);
     return !this.isSubmitAllowed() ? availableAttempts - 1 : availableAttempts;
-  }
+  };
 
   public prepareQuizData = () => {
     this._quizCuePoints.forEach((cue, index) => {
@@ -185,6 +186,9 @@ export class DataSyncManager {
             });
             // update answer
             this.quizQuestionsMap.set(cue.id, {...this.quizQuestionsMap.get(cue.id)!, a: newAnswer});
+            if (!next) {
+              this._manageIvqBanner();
+            }
           })
           .catch((error: Error) => {
             this._logger.warn(error);

@@ -43,7 +43,13 @@
       "answer_number": "Answer number",
       "review_answer": "Click to view the question and your answer",
       "tip": "All questions must be answered. The quiz will be submitted at the end.",
-      "available_attempts_message": "Total attempts available for this quiz: {{availableAttempts}}"
+      "available_attempts_message": "Total attempts available for this quiz: {{availableAttempts}}",
+      "close_button": "Close",
+      "almost_done": "You’re Almost Done",
+      "almost_done_description": "It appears that some questions remained unanswered. Please complete the quiz to submit.",
+      "quiz_completed_title": "Quiz Completed",
+      "quiz_submit_description": "Take a moment to review your answers or go ahead to submit your answers.",
+      "quiz_completed_description": "Watch the video until the end to submit."
     }
   }
 }
