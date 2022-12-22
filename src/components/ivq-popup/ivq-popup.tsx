@@ -91,7 +91,7 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
   return (
     <div className={popupClasses.join(' ')} data-testid="ivqPopupRoot">
       <A11yWrapper onClick={onClose}>
-        <div role="button" tabIndex={0} className={styles.closeButton} aria-label={otherProps.closeButton}>
+        <div role="button" tabIndex={0} className={styles.closeButton} aria-label={otherProps.closeButton} data-testid="ivqPopupCloseButton">
           <Icon
             id="ivq-close"
             data-testid="closeIvqPopup"
@@ -102,17 +102,32 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
           />
         </div>
       </A11yWrapper>
-      <div className={styles.title}>{otherProps.title}</div>
-      <div className={styles.description}>{otherProps.description}</div>
+      <div className={styles.title} data-testid="ivqPopupTitle">
+        {otherProps.title}
+      </div>
+      <div className={styles.description} data-testid="ivqPopupDescription">
+        {otherProps.description}
+      </div>
       {type === IvqPupupTypes.submit && (
         <div className={styles.buttonsWrapper}>
           <A11yWrapper onClick={onReview}>
-            <div role="button" tabIndex={0} className={styles.secondaryButton} aria-label={otherProps.reviewButtonAriaLabel}>
+            <div
+              role="button"
+              tabIndex={0}
+              className={styles.secondaryButton}
+              aria-label={otherProps.reviewButtonAriaLabel}
+              data-testid="ivqPopupReviewButton">
               {otherProps.reviewButton}
             </div>
           </A11yWrapper>
           <A11yWrapper onClick={handleSubmitClick}>
-            <div role="button" tabIndex={0} className={styles.primaryButton} aria-label={otherProps.submitButtonAriaLabel} disabled={isLoading}>
+            <div
+              role="button"
+              tabIndex={0}
+              className={styles.primaryButton}
+              aria-label={otherProps.submitButtonAriaLabel}
+              disabled={isLoading}
+              data-testid="ivqPopupSubmitButton">
               {isLoading ? <Spinner /> : otherProps.submitButton}
             </div>
           </A11yWrapper>

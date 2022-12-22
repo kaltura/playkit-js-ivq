@@ -45,12 +45,16 @@ const mockQuiz = (quizFixture = 'quiz.json', cuesFixture = 'cues.json') => {
     if (checkRequest(req.body[2], 'cuepoint_cuepoint', 'list')) {
       return req.reply({fixture: cuesFixture});
     }
-    // if (checkRequest(req.body[1], 'userEntry', 'add')) {
-    //   return req.reply({fixture: 'quiz_entry.json'});
-    // }
+    if (checkRequest(req.body[2], 'userEntry', 'add')) {
+      return req.reply({fixture: 'quiz_entry.json'});
+    }
     if (checkRequest(req.body[2], 'quiz_quiz', 'getUrl')) {
       req.alias = 'download';
       return req.reply({fixture: 'quiz_download'});
+    }
+    if (checkRequest(req.body[2], 'userEntry', 'submitQuiz')) {
+      req.alias = 'submit';
+      return req.reply({fixture: 'submit.json'});
     }
   });
 };
@@ -87,6 +91,12 @@ describe('IVQ plugin', () => {
       cy.get('.playkit-pre-playback-play-button').click({force: true});
       cy.get('[data-testid="welcomeScreenRoot"]').should('not.exist');
     });
+    it('should show welcome screen if no-one attempts left', () => {
+      mockQuiz('quiz_welcome_page_enabled_no_attempts.json', 'cues_4_question.json');
+      preparePage();
+      cy.get('[data-testid="welcomeScreenRoot"]').should('exist');
+      cy.get('[data-testid="welcomeScreenAttempts"]').should('not.exist');
+    });
     it('should show welcome screen if auto-play enabled', () => {
       mockQuiz();
       preparePage({}, {playback: {autoplay: true}});
@@ -118,6 +128,73 @@ describe('IVQ plugin', () => {
       preparePage();
       cy.get('[data-testid="welcomeScreenRoot"]').should('exist');
       cy.get('[data-testid="downloadPreTestContainer"]').should('not.exist');
+    });
+  });
+
+  describe('quiz popup', () => {
+    it('should check close popup button', () => {
+      mockQuiz('quiz_welcome_page_disabled_no_attempts.json', 'cues_4_question.json');
+      preparePage({}, {playback: {autoplay: true}});
+      cy.get('[data-testid="ivqPopupRoot"]').should('exist');
+      cy.get('[data-testid="ivqPopupCloseButton"]').click({force: true});
+      cy.get('[data-testid="ivqPopupRoot"]').should('not.exist');
+    });
+    it('should not display popup if welcome screen disabled and quiz has attempts', () => {
+      mockQuiz('quiz_welcome_page_disabled.json');
+      preparePage();
+      cy.get('.playkit-pre-playback-play-button').click({force: true});
+      cy.get('[data-testid="cuePointContainer"]').first().should('exist');
+      cy.get('[data-testid="ivqPopupRoot"]').should('not.exist');
+    });
+    it('should check popup if welcome screen disabled and no-more quiz attempt left', () => {
+      mockQuiz('quiz_welcome_page_disabled_no_attempts.json', 'cues_4_question.json');
+      preparePage({}, {playback: {autoplay: true}});
+      cy.get('[data-testid="cuePointContainer"]').first().should('exist');
+      cy.get('[data-testid="ivqPopupTitle"]').should($div => {
+        expect($div.text()).to.eq('The quiz submitted.');
+      });
+      cy.get('[data-testid="ivqPopupDescription"]').should($div => {
+        expect($div.text()).to.eq('Your score is 67/100');
+      });
+    });
+    it('should not display popup if welcome screen enabled and no-more quiz attempt left', () => {
+      mockQuiz('quiz_welcome_page_enabled_no_attempts.json', 'cues_4_question.json');
+      preparePage();
+      cy.get('.playkit-pre-playback-play-button').click({force: true});
+      cy.get('[data-testid="cuePointContainer"]').first().should('exist');
+      cy.get('[data-testid="ivqPopupRoot"]').should('not.exist');
+    });
+    it('should not display popup if welcome screen enabled and quiz has attempts', () => {
+      mockQuiz();
+      preparePage();
+      cy.get('.playkit-pre-playback-play-button').click({force: true});
+      cy.get('[data-testid="cuePointContainer"]').first().should('exist');
+      cy.get('[data-testid="ivqPopupRoot"]').should('not.exist');
+    });
+    it('should check popup with submit and review quiz', () => {
+      mockQuiz('quiz_welcome_page_disabled_with_attempt.json', 'cues_4_question.json');
+      preparePage({}, {playback: {autoplay: true}});
+      cy.get('[data-testid="ivqPopupTitle"]').should($div => {
+        expect($div.text()).to.eq('Quiz Completed');
+      });
+      cy.get('[data-testid="ivqPopupDescription"]').should($div => {
+        expect($div.text()).to.eq('Take a moment to review your answers or go ahead to submit your answers.');
+      });
+      cy.get('[data-testid="ivqPopupReviewButton"]').should('exist');
+      cy.get('[data-testid="ivqPopupSubmitButton"]').should('exist');
+    });
+    it('should check reveiw quiz button', () => {
+      mockQuiz('quiz_welcome_page_disabled_with_attempt.json', 'cues_4_question.json');
+      preparePage({}, {playback: {autoplay: true}});
+      cy.get('[data-testid="ivqPopupReviewButton"]').click({force: true});
+      cy.get('[data-testid="ivqQuestionContainer"]').should('exist');
+    });
+    it('should check submit quiz button', () => {
+      mockQuiz('quiz_welcome_page_disabled_with_attempt.json', 'cues_4_question.json');
+      preparePage({}, {playback: {autoplay: true}});
+      cy.get('[data-testid="ivqPopupSubmitButton"]').click({force: true});
+      cy.get('[data-testid="ivqPopupSubmitButton"] [data-testid="ivqSpinner"]').should('exist');
+      cy.wait('@submit');
     });
   });
 });

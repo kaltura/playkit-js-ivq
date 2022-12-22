@@ -1,0 +1,100 @@
+[
+  {
+    "partnerId": 1091,
+    "ks": "",
+    "userId": 0,
+    "objectType": "KalturaStartWidgetSessionResponse"
+  },
+  {
+    "objects": [
+      {
+        "optionalAnswers": [
+          {"key": "1", "text": "one", "weight": 1, "isCorrect": true, "objectType": "KalturaOptionalAnswer"},
+          {"key": "2", "text": "two", "weight": 1, "isCorrect": false, "objectType": "KalturaOptionalAnswer"}
+        ],
+        "question": "quiz question",
+        "questionType": 1,
+        "excludeFromScore": false,
+        "id": "1_w5e00j3k",
+        "intId": 4425459083,
+        "cuePointType": "quiz.QUIZ_QUESTION",
+        "status": 1,
+        "entryId": "1_zlx0te6w",
+        "partnerId": 27017,
+        "createdAt": 1652696500,
+        "updatedAt": 1652696500,
+        "startTime": 2000,
+        "userId": "aaa",
+        "isMomentary": true,
+        "objectType": "KalturaQuestionCuePoint"
+      },
+      {
+        "optionalAnswers": [
+          {"key": "1", "text": "1", "weight": 1, "isCorrect": true, "objectType": "KalturaOptionalAnswer"},
+          {"key": "2", "text": "2", "weight": 1, "isCorrect": false, "objectType": "KalturaOptionalAnswer"},
+          {"key": "3", "text": "3", "weight": 1, "isCorrect": false, "objectType": "KalturaOptionalAnswer"},
+          {"key": "4", "text": "4", "weight": 1, "isCorrect": false, "objectType": "KalturaOptionalAnswer"}
+        ],
+        "question": "12345",
+        "questionType": 1,
+        "excludeFromScore": false,
+        "id": "1_w9gg8tp2",
+        "intId": 4462871662,
+        "cuePointType": "quiz.QUIZ_QUESTION",
+        "status": 1,
+        "entryId": "1_zlx0te6w",
+        "partnerId": 27017,
+        "createdAt": 1656493339,
+        "updatedAt": 1656493339,
+        "startTime": 10000,
+        "userId": "aaa",
+        "isMomentary": true,
+        "objectType": "KalturaQuestionCuePoint"
+      },
+      {
+        "optionalAnswers": [
+          {"key": "1", "weight": 1, "isCorrect": true, "objectType": "KalturaOptionalAnswer"},
+          {"key": "2", "weight": 1, "isCorrect": false, "objectType": "KalturaOptionalAnswer"}
+        ],
+        "question": "ref",
+        "questionType": 3,
+        "excludeFromScore": true,
+        "id": "1_t5ws0i8a",
+        "intId": 4462871672,
+        "cuePointType": "quiz.QUIZ_QUESTION",
+        "status": 1,
+        "entryId": "1_zlx0te6w",
+        "partnerId": 27017,
+        "createdAt": 1656493349,
+        "updatedAt": 1656493349,
+        "startTime": 20000,
+        "userId": "aaa",
+        "isMomentary": true,
+        "objectType": "KalturaQuestionCuePoint"
+      },
+      {
+        "optionalAnswers": [
+          {"key": "1", "text": "True", "weight": 1, "isCorrect": true, "objectType": "KalturaOptionalAnswer"},
+          {"key": "2", "text": "False", "weight": 1, "isCorrect": false, "objectType": "KalturaOptionalAnswer"}
+        ],
+        "question": "t/f",
+        "questionType": 2,
+        "excludeFromScore": false,
+        "id": "1_4tf1wzhu",
+        "intId": 4462871692,
+        "cuePointType": "quiz.QUIZ_QUESTION",
+        "status": 1,
+        "entryId": "1_zlx0te6w",
+        "partnerId": 27017,
+        "createdAt": 1656493356,
+        "updatedAt": 1656493356,
+        "startTime": 30000,
+        "userId": "aaa",
+        "isMomentary": true,
+        "objectType": "KalturaQuestionCuePoint"
+      }
+    ],
+    "totalCount": 4,
+    "objectType": "KalturaCuePointListResponse"
+  }
+]
