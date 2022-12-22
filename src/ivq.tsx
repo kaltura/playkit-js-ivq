@@ -64,6 +64,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     );
     this._questionsVisualManager = new QuestionsVisualManager(
       () => this._dataManager.quizQuestionsMap,
+      this._dataManager.getUnansweredQuestions,
       this._player,
       this.eventManager,
       this._setOverlay,
@@ -219,10 +220,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   }
 
   private _handleEndEvent = () => {
-    if (this._dataManager.isSubmitAllowed()) {
-      this._displayQuizSubmit();
-    } else {
+    if (this._dataManager.isQuizSubmitted()) {
       this._displayQuizReview();
+    } else {
+      this._displayQuizSubmit();
     }
   };
 
@@ -231,7 +232,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this._removeIvqBanner();
     const submissionDetails = this._questionsVisualManager.getSubmissionDetails();
     let type: IvqPupupTypes = IvqPupupTypes.almostDone;
-    if (submissionDetails.showSubmitButton) {
+    if (submissionDetails.submitAllowed) {
       if (this._dataManager.quizData?.preventSeek) {
         type = IvqPupupTypes.completed;
       } else {
@@ -298,11 +299,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if (this._dataManager.quizData?.allowDownload) {
       welcomeScreenProps['onDownload'] = handleDownload;
     }
-    const submissionDetails = this._questionsVisualManager.getSubmissionDetails();
     if (prePlaybackState) {
       this.eventManager.listenOnce(this._player, EventType.PLAY, () => {
         this._removeOverlay();
-        if (submissionDetails.showSubmitButton) {
+        if (this._dataManager.isSubmitAllowed()) {
           this._manageIvqBanner();
         }
       });
@@ -311,7 +311,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       welcomeScreenProps['onClose'] = () => {
         this._player.play();
         this._removeOverlay();
-        if (submissionDetails.showSubmitButton) {
+        if (this._dataManager.isSubmitAllowed()) {
           this._manageIvqBanner();
         }
       };
@@ -385,7 +385,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
                 submissionDetails.onReview();
               }
             };
-            if (submissionDetails.showSubmitButton) {
+            if (submissionDetails.submitAllowed) {
               params.onSubmit = () => {
                 return this._dataManager
                   .submitQuiz()
@@ -447,7 +447,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             this.logger.warn('quiz data absent');
             return;
           }
-          const {setQuizUserEntry, setQuizAnswers, setQuizData, isSubmitAllowed, isRetakeAllowed} = this._dataManager;
+          const {setQuizUserEntry, setQuizAnswers, setQuizData, isQuizSubmitted, isRetakeAllowed} = this._dataManager;
           // set main quiz data
           setQuizData(quizData);
           if (lastQuizUserEntry) {
@@ -455,7 +455,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             setQuizUserEntry(lastQuizUserEntry);
           }
           this._manageWelcomeScreen();
-          if (!lastQuizUserEntry || (!isSubmitAllowed() && isRetakeAllowed())) {
+          if (!lastQuizUserEntry || (isQuizSubmitted() && isRetakeAllowed())) {
             // in case if quiz attempt doesn't exist
             // OR user has more attempts and latest attempt submitted - create new quiz attempt.
             return this._dataManager.createNewQuizUserEntry().then((quizNewUserEntry: KalturaUserEntry) => {

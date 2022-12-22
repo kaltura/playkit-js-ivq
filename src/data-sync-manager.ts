@@ -103,6 +103,16 @@ export class DataSyncManager {
     });
   };
 
+  public getUnansweredQuestions = (): Array<QuizQuestion> => {
+    const unansweredQuestions: Array<QuizQuestion> = [];
+    this.quizQuestionsMap.forEach(qq => {
+      if (!qq.a) {
+        unansweredQuestions.push(qq);
+      }
+    });
+    return unansweredQuestions;
+  };
+
   public getQuizAnswers = (): Promise<KalturaQuizAnswer[]> => {
     return this._player.provider
       .doRequest([{loader: QuizAnswerLoader, params: {entryId: this._player.sources.id, quizUserEntryId: this.quizUserEntry?.id}}])
@@ -133,8 +143,12 @@ export class DataSyncManager {
       });
   };
 
+  public isQuizSubmitted = () => {
+    return isNumber(this.quizUserEntry?.score);
+  };
+
   public isSubmitAllowed = () => {
-    return !isNumber(this.quizUserEntry?.score);
+    return !this.getUnansweredQuestions().length;
   };
 
   public isRetakeAllowed = () => {
@@ -143,7 +157,7 @@ export class DataSyncManager {
   };
 
   private _getSubmittedAttempts = () => {
-    if (this.isSubmitAllowed() || !isNumber(this.quizUserEntry!.version)) {
+    if (!this.isQuizSubmitted() || !isNumber(this.quizUserEntry!.version)) {
       return 0;
     }
     return this.quizUserEntry!.version + 1;
@@ -151,7 +165,7 @@ export class DataSyncManager {
 
   public getAvailableAttempts = () => {
     let availableAttempts = (this.quizData?.attemptsAllowed || 0) - (this.quizUserEntry?.version || 0);
-    return !this.isSubmitAllowed() ? availableAttempts - 1 : availableAttempts;
+    return this.isQuizSubmitted() ? availableAttempts - 1 : availableAttempts;
   };
 
   public prepareQuizData = () => {
@@ -186,7 +200,7 @@ export class DataSyncManager {
             });
             // update answer
             this.quizQuestionsMap.set(cue.id, {...this.quizQuestionsMap.get(cue.id)!, a: newAnswer});
-            if (!next) {
+            if (!next || this.isSubmitAllowed()) {
               this._manageIvqBanner();
             }
           })
@@ -195,7 +209,7 @@ export class DataSyncManager {
             throw error;
           });
       };
-      const quizDone = !this.isSubmitAllowed();
+      const quizDone = this.isQuizSubmitted();
       const quizQuestion: QuizQuestion = {
         id: cue.id,
         index,
