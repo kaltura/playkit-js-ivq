@@ -59,7 +59,6 @@ export class QuestionsVisualManager {
 
   public preparePlayer = (qq: QuizQuestion, manualChange = false, showQuestion = true) => {
     const {startTime} = qq;
-    this._player.pause();
     const isNotCurrentTime = this._player.currentTime < startTime - SEEK_DELTA || this._player.currentTime > startTime + SEEK_DELTA;
     if (manualChange && isNotCurrentTime) {
       this.quizQuestionJumping = true;

@@ -151,21 +151,23 @@ export class DataSyncManager {
     return !this.getUnansweredQuestions().length;
   };
 
-  public isRetakeAllowed = () => {
-    const submittedAttempts = this._getSubmittedAttempts();
-    return submittedAttempts < (this.quizData?.attemptsAllowed || 0);
+  private _getSubmittedAttempts = () => {
+    if (isNumber(this.quizUserEntry?.version)) {
+      return this.isQuizSubmitted() ? this.quizUserEntry!.version + 1 : this.quizUserEntry!.version;
+    }
+    return 0;
   };
 
-  private _getSubmittedAttempts = () => {
-    if (!this.isQuizSubmitted() || !isNumber(this.quizUserEntry!.version)) {
-      return 0;
-    }
-    return this.quizUserEntry!.version + 1;
+  public getQuizScore = () => {
+    return this.isQuizSubmitted() ? (this.quizUserEntry!.score * 100).toFixed(0) : '0';
   };
 
   public getAvailableAttempts = () => {
-    let availableAttempts = (this.quizData?.attemptsAllowed || 0) - (this.quizUserEntry?.version || 0);
-    return this.isQuizSubmitted() ? availableAttempts - 1 : availableAttempts;
+    return (this.quizData?.attemptsAllowed || 0) - this._getSubmittedAttempts();
+  };
+
+  public isRetakeAllowed = () => {
+    return this.getAvailableAttempts() > 0;
   };
 
   public prepareQuizData = () => {
