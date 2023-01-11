@@ -44,7 +44,7 @@ export interface ThumbnailInfo {
 
 export interface SubmissionDetails {
   onReview: () => void;
-  showSubmitButton: boolean;
+  submitAllowed: boolean;
 }
 
 export type OnClick = (e: KeyboardEvent | MouseEvent, byKeyboard?: boolean) => void;

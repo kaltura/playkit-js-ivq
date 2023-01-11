@@ -11,7 +11,7 @@ const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
 export interface QuestionListReviewProps {
   onRetake?: () => Promise<void>;
-  score: number;
+  score: string;
   onClose: () => void;
   showAnswers: boolean;
   showScores: boolean;
@@ -19,9 +19,17 @@ export interface QuestionListReviewProps {
   onQuestionClick: (qq: QuizQuestion, index: number) => () => void;
 }
 
-const translates = (): QuizTranslates => {
+const translates = ({score}: QuestionListReviewProps): QuizTranslates => {
   return {
-    quizScore: <Text id="ivq.quiz_score">Your score is</Text>,
+    quizScore: (
+      <Text
+        id="ivq.quiz_score"
+        fields={{
+          quizScore: `${score}/100`
+        }}>
+        {`Your score is ${score}/100`}
+      </Text>
+    ),
     retakeButton: <Text id="ivq.retake_button">Retake</Text>,
     retakeButtonAreaLabel: <Text id="ivq.retake_button_area_label">Click to retake the quiz</Text>,
     doneButton: <Text id="ivq.done_button">Done</Text>,
@@ -63,13 +71,6 @@ export const QuestionListReview = withText(translates)(
       }`;
     };
 
-    const renderScore = useMemo(() => {
-      return (
-        <legend data-testid="quizScoreTitle" className={styles.quizScore} tabIndex={0} role="text">
-          {`${otherProps.quizScore} ${(score * 100).toFixed(0)}/100`}
-        </legend>
-      );
-    }, [score]);
     const renderAnswers = useMemo(() => {
       return (
         <div className={styles.questionsContainer} data-testid="reviewQuestionsContainer" role="listbox">
@@ -93,9 +94,11 @@ export const QuestionListReview = withText(translates)(
       );
     }, [reviewDetails]);
     return (
-      <div className={['ivq', styles.quizReviewWrapper].join(' ')} role="dialog" aria-live="polite">
+      <div className={['ivq', styles.quizReviewWrapper].join(' ')} role="dialog" aria-live="polite" data-testid="quizReviewWrapper">
         {showScores ? (
-          renderScore
+          <legend data-testid="quizScoreTitle" className={styles.quizScore} tabIndex={0} role="text">
+            {otherProps.quizScore}
+          </legend>
         ) : (
           <div className={styles.quizScore} data-testid="quizScoreTitle" tabIndex={0} role="text">
             {otherProps.quizCompleted}

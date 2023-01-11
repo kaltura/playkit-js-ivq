@@ -9,7 +9,7 @@ export interface QuizReviewProps {
   preparePlayer: (qq: QuizQuestion, manualChange: boolean, showQuestion: false) => void;
   reviewDetails: Array<QuizQuestion>;
   onRetake?: () => Promise<void>;
-  score: number;
+  score: string;
   onClose: () => void;
   showAnswers: boolean;
   showScores: boolean;

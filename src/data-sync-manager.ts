@@ -27,7 +27,8 @@ export class DataSyncManager {
     private _eventManager: KalturaPlayerTypes.EventManager,
     private _player: KalturaPlayerTypes.Player,
     private _logger: KalturaPlayerTypes.Logger,
-    private _dispatchIvqEvent: (event: string, payload: unknown) => void
+    private _dispatchIvqEvent: (event: string, payload: unknown) => void,
+    private _manageIvqBanner: () => void
   ) {}
 
   private _syncEvents = () => {
@@ -102,6 +103,16 @@ export class DataSyncManager {
     });
   };
 
+  public getUnansweredQuestions = (): Array<QuizQuestion> => {
+    const unansweredQuestions: Array<QuizQuestion> = [];
+    this.quizQuestionsMap.forEach(qq => {
+      if (!qq.a) {
+        unansweredQuestions.push(qq);
+      }
+    });
+    return unansweredQuestions;
+  };
+
   public getQuizAnswers = (): Promise<KalturaQuizAnswer[]> => {
     return this._player.provider
       .doRequest([{loader: QuizAnswerLoader, params: {entryId: this._player.sources.id, quizUserEntryId: this.quizUserEntry?.id}}])
@@ -132,26 +143,32 @@ export class DataSyncManager {
       });
   };
 
-  public isSubmitAllowed = () => {
-    return !isNumber(this.quizUserEntry?.score);
+  public isQuizSubmitted = () => {
+    return isNumber(this.quizUserEntry?.score);
   };
 
-  public isRetakeAllowed = () => {
-    const submittedAttempts = this._getSubmittedAttempts();
-    return submittedAttempts < (this.quizData?.attemptsAllowed || 0);
+  public isSubmitAllowed = () => {
+    return !this.getUnansweredQuestions().length;
   };
 
   private _getSubmittedAttempts = () => {
-    if (this.isSubmitAllowed() || !isNumber(this.quizUserEntry!.version)) {
-      return 0;
+    if (isNumber(this.quizUserEntry?.version)) {
+      return this.isQuizSubmitted() ? this.quizUserEntry!.version + 1 : this.quizUserEntry!.version;
     }
-    return this.quizUserEntry!.version + 1;
+    return 0;
   };
 
-  public getAvailableAttempts = () =>{
-    let availableAttempts = (this.quizData?.attemptsAllowed || 0) - (this.quizUserEntry?.version || 0);
-    return !this.isSubmitAllowed() ? availableAttempts - 1 : availableAttempts;
-  }
+  public getQuizScore = () => {
+    return this.isQuizSubmitted() ? (this.quizUserEntry!.score * 100).toFixed(0) : '0';
+  };
+
+  public getAvailableAttempts = () => {
+    return (this.quizData?.attemptsAllowed || 0) - this._getSubmittedAttempts();
+  };
+
+  public isRetakeAllowed = () => {
+    return this.getAvailableAttempts() > 0;
+  };
 
   public prepareQuizData = () => {
     this._quizCuePoints.forEach((cue, index) => {
@@ -185,13 +202,16 @@ export class DataSyncManager {
             });
             // update answer
             this.quizQuestionsMap.set(cue.id, {...this.quizQuestionsMap.get(cue.id)!, a: newAnswer});
+            if (!next || this.isSubmitAllowed()) {
+              this._manageIvqBanner();
+            }
           })
           .catch((error: Error) => {
             this._logger.warn(error);
             throw error;
           });
       };
-      const quizDone = !this.isSubmitAllowed();
+      const quizDone = this.isQuizSubmitted();
       const quizQuestion: QuizQuestion = {
         id: cue.id,
         index,
