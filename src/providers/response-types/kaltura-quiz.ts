@@ -1,20 +1,20 @@
 export interface KalturaKeyValue {
-  key? : string;
-  value? : string;
+  key?: string;
+  value?: string;
 }
 
 export enum KalturaNullableBoolean {
-  falseValue=0,
-  nullValue=-1,
-  trueValue=1
+  falseValue = 0,
+  nullValue = -1,
+  trueValue = 1
 }
 
 export enum KalturaScoreType {
-  average=5,
-  first=4,
-  highest=1,
-  latest=3,
-  lowest=2
+  average = 5,
+  first = 4,
+  highest = 1,
+  latest = 3,
+  lowest = 2
 }
 
 export interface KalturaQuizArgs {
@@ -31,18 +31,18 @@ export interface KalturaQuizArgs {
 }
 
 export class KalturaQuiz {
-  version : number;
-  uiAttributes : KalturaKeyValue[];
-  showResultOnAnswer : KalturaNullableBoolean;
-  showCorrectKeyOnAnswer : KalturaNullableBoolean;
-  allowAnswerUpdate : boolean;
-  showCorrectAfterSubmission : boolean;
-  allowDownload : KalturaNullableBoolean;
-  showGradeAfterSubmission : boolean;
-  attemptsAllowed : number;
-  scoreType : KalturaScoreType;
+  version: number;
+  uiAttributes: KalturaKeyValue[];
+  showResultOnAnswer: KalturaNullableBoolean;
+  showCorrectKeyOnAnswer: KalturaNullableBoolean;
+  allowAnswerUpdate: boolean;
+  showCorrectAfterSubmission: boolean;
+  allowDownload: KalturaNullableBoolean;
+  showGradeAfterSubmission: boolean;
+  attemptsAllowed: number;
+  scoreType: KalturaScoreType;
 
-  constructor(data : KalturaQuizArgs) {
+  constructor(data: KalturaQuizArgs) {
     this.version = data.version;
     this.uiAttributes = data.uiAttributes;
     this.showResultOnAnswer = data.showResultOnAnswer;

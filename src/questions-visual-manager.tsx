@@ -24,6 +24,7 @@ export class QuestionsVisualManager {
   public quizQuestionJumping = false;
   constructor(
     private _getQuizQuestionMap: () => QuizQuestionMap,
+    private _getUnansweredQuestions: () => Array<QuizQuestion>,
     private _player: KalturaPlayerTypes.Player,
     private _eventManager: KalturaPlayerTypes.EventManager,
     private _setOverlay: (overlay: Function) => void,
@@ -43,16 +44,11 @@ export class QuestionsVisualManager {
   }
 
   public getSubmissionDetails = (): SubmissionDetails => {
-    const unansweredQuestions: Array<QuizQuestion> = [];
-    this._getQuizQuestionMap().forEach(qq => {
-      if (!qq.a) {
-        unansweredQuestions.push(qq);
-      }
-    });
+    const unansweredQuestions = this._getUnansweredQuestions();
     const reviewQuestion = unansweredQuestions[0] || this._getQuizQuestionMap().values().next().value;
     const submissionDetails: SubmissionDetails = {
       onReview: () => this.preparePlayer(reviewQuestion, true),
-      showSubmitButton: !unansweredQuestions.length
+      submitAllowed: !unansweredQuestions.length
     };
     return submissionDetails;
   };
@@ -63,7 +59,6 @@ export class QuestionsVisualManager {
 
   public preparePlayer = (qq: QuizQuestion, manualChange = false, showQuestion = true) => {
     const {startTime} = qq;
-    this._player.pause();
     const isNotCurrentTime = this._player.currentTime < startTime - SEEK_DELTA || this._player.currentTime > startTime + SEEK_DELTA;
     if (manualChange && isNotCurrentTime) {
       this.quizQuestionJumping = true;

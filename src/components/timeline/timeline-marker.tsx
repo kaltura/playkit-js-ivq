@@ -25,20 +25,27 @@ const translates = ({questionIndex}: TimelineMarkerProps): QuizTranslates => {
 export const TimelineMarker = withText(translates)(({isDisabled, onClick, getSeekBarNode, ...otherProps}: TimelineMarkerProps & QuizTranslates) => {
   const hoverActive = useSelector((state: any) => state.seekbar.hoverActive);
   useSelector((state: any) => state.seekbar); // trigger update of marker component
-  const handleFocus = useCallback(() => {
-    const seekBarNode = getSeekBarNode();
-    if (seekBarNode) {
-      // change slider valuetext attribute to force screen-reader read question marker
-      // once playback continue - valuetext changed by seekbar component to playback-time value
-      seekBarNode.setAttribute('aria-valuetext', otherProps.markerAriaLabel as string);
-    }
-  }, []);
   const disabled = isDisabled();
   const renderMarker = useMemo(() => {
+    const handleFocus = () => {
+      const seekBarNode = getSeekBarNode();
+      if (seekBarNode) {
+        // change slider role to prevent interrupts reading marker content by screen-readers
+        seekBarNode.setAttribute('role', 'none');
+      }
+    };
+    const handleBlur = () => {
+      const seekBarNode = getSeekBarNode();
+      if (seekBarNode) {
+        // restore slider role
+        seekBarNode.setAttribute('role', 'slider');
+      }
+    };
     return (
       <A11yWrapper onClick={onClick}>
         <div
           onFocus={handleFocus}
+          onBlur={handleBlur}
           role="button"
           title={otherProps.markerAriaLabel as string}
           tabIndex={disabled ? -1 : 0}

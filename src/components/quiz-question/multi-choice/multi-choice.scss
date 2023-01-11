@@ -10,6 +10,9 @@
     @include ivq-text;
     @include ivq-question-content;
     overflow: initial;
+    .visuallyHidden {
+      @include visually-hidden;
+    }
   }
 
   .optionalAnswersWrapper {

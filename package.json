@@ -1,6 +1,6 @@
 {
   "name": "@playkit-js/playkit-js-ivq",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "main": "dist/playkit-ivq.js",
   "scripts": {
     "clean": "rm -rf ./dist",
@@ -8,36 +8,29 @@
     "build": "webpack --mode production",
     "dev": "webpack-dev-server --mode development",
     "watch": "webpack --progress --color --watch --mode development",
-    "test": "jest",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:prepare": "yarn run build && yes | cp -i ./dist/playkit-ivq.js ./cypress/public/plugin.js",
+    "test:watch": "yarn run test:prepare && cypress open",
+    "test": "yarn run test:prepare && cypress run",
     "release": "standard-version",
     "pushTaggedRelease": "git push --follow-tags --no-verify origin master",
-    "eslint": "eslint . --color",
-    "commit:dist": "git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)",
-    "docs:generate": "documentation build flow-typed/** src/** -f md -o docs/configuration.md",
-    "docs:serve": "documentation serve flow-typed/** src/** --watch",
-    "precommit": "lint-staged",
     "prettier:fix": "prettier --write ."
   },
   "devDependencies": {
     "@types/node": "^15.0.1",
-    "@typescript-eslint/eslint-plugin": "2.34.0",
-    "@typescript-eslint/parser": "2.34.0",
     "conventional-github-releaser": "3.1.3",
     "cross-env": "^7.0.2",
     "css-loader": "^6.5.1",
-    "documentation": "latest",
-    "husky": "^4.2.5",
-    "jest": "^27.4.7",
+    "cypress": "^12.1.0",
     "kaltura-player-js": "https://github.com/kaltura/kaltura-player-js.git#master",
-    "lint-staged": "^10.2.11",
     "prettier": "^2.5.1",
     "sass": "^1.53.0",
     "sass-loader": "^12.4.0",
     "standard-version": "^6.0.1",
     "style-loader": "^1.3.0",
     "ts-loader": "^9.2.6",
-    "tslint": "^6.1.3",
-    "typescript": "^4.5.4",
+    "typescript": "^4.9.4",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^5.66.0",
     "webpack-cli": "^4.9.1",
@@ -61,11 +54,11 @@
   "kaltura": {
     "name": "ivq",
     "dependencies": {
-      "playkit-kaltura-cuepoints": "3.0.0",
+      "playkit-kaltura-cuepoints": "3.0.2",
       "playkit-timeline": "3.0.0"
     }
   },
   "dependencies": {
-    "@playkit-js/common": "^1.0.8"
+    "@playkit-js/common": "^1.0.16"
   }
 }

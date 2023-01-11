@@ -1,6 +1,7 @@
 import {h} from 'preact';
 // @ts-ignore
 import {core} from 'kaltura-player-js';
+import {ContribServices, FloatingUIModes, FloatingPositions, FloatingItem} from '@playkit-js/common';
 import {QuizLoader} from './providers';
 import {
   IvqConfig,
@@ -20,6 +21,7 @@ import {KalturaUserEntry} from './providers/response-types';
 import {WelcomeScreen, WelcomeScreenProps} from './components/welcome-screen';
 import {QuizSubmit, QuizSubmitProps} from './components/quiz-submit';
 import {QuizReview, QuizReviewProps} from './components/quiz-review';
+import {IvqPopup, IvqPopupProps, IvqPupupTypes} from './components/ivq-popup';
 import {TimelinePreview, TimelineMarker} from './components/timeline';
 import {QuizDownloadLoader} from './providers/quiz-download-loader';
 import {KalturaIvqMiddleware} from './quiz-middleware';
@@ -39,7 +41,9 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _maxCurrentTime = 0;
   private _seekControlEnabled = false;
   private _removeActiveOverlay: null | Function = null;
+  private _ivqPopup: null | FloatingItem = null;
   private _playlistOptions: null | KalturaPlayerTypes.Playlist['options'] = null;
+  private _contribServices: ContribServices;
 
   static defaultConfig: IvqConfig = {};
 
@@ -55,10 +59,12 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this.eventManager,
       this.player,
       this.logger,
-      (event: string, payload: unknown) => this.dispatchEvent(event, payload)
+      (event: string, payload: unknown) => this.dispatchEvent(event, payload),
+      this._manageIvqBanner
     );
     this._questionsVisualManager = new QuestionsVisualManager(
       () => this._dataManager.quizQuestionsMap,
+      this._dataManager.getUnansweredQuestions,
       this._player,
       this.eventManager,
       this._setOverlay,
@@ -66,10 +72,16 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       () => Boolean(this._removeActiveOverlay),
       this._getSeekBarNode
     );
+    this._contribServices = ContribServices.get({kalturaPlayer: this._player});
   }
 
   get ready() {
     return this._quizDataPromise;
+  }
+
+  // TODO: remove once contribServices migrated to BasePlugin
+  getUIComponents(): any[] {
+    return this._contribServices.register();
   }
 
   getMiddlewareImpl(): KalturaIvqMiddleware {
@@ -107,6 +119,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       if (seekBarNode) {
         // move player seek bar from IvqBottomBar to Kaltura player bottom bar
         seekBarParentNode.append(seekBarNode);
+        seekBarNode.setAttribute('role', 'slider');
       }
     }
   };
@@ -126,6 +139,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if (!timelineService) {
       this.logger.warn('No timeline service available');
     } else {
+      const isMarkerDisabled = () => Boolean(this._removeActiveOverlay);
       const questionBunchMap = new Map<string, Array<number>>();
       let questionBunch: Array<number> = [];
       qqm.forEach((qq: QuizQuestion) => {
@@ -153,9 +167,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
                   getSeekBarNode={this._getSeekBarNode}
                   onClick={handleOnQuestionClick}
                   questionIndex={qq.index}
-                  isDisabled={() => {
-                    return Boolean(this._removeActiveOverlay);
-                  }}
+                  isDisabled={isMarkerDisabled}
                 />
               );
             }
@@ -208,14 +220,53 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   }
 
   private _handleEndEvent = () => {
-    if (this._dataManager.isSubmitAllowed()) {
-      this._displayQuizSubmit();
-    } else {
+    if (this._dataManager.isQuizSubmitted()) {
       this._displayQuizReview();
+    } else {
+      this._displayQuizSubmit();
+    }
+  };
+
+  private _manageIvqBanner = () => {
+    this.logger.debug("show 'IVQ Banner'");
+    this._removeIvqBanner();
+    const submissionDetails = this._questionsVisualManager.getSubmissionDetails();
+    let type: IvqPupupTypes = IvqPupupTypes.almostDone;
+    if (!this._dataManager.isRetakeAllowed()) {
+      type = IvqPupupTypes.submitted;
+    } else if (submissionDetails.submitAllowed) {
+      if (this._dataManager.quizData?.preventSeek) {
+        type = IvqPupupTypes.completed;
+      } else {
+        type = IvqPupupTypes.submit;
+      }
+    }
+    const popupProps: IvqPopupProps = {
+      score: this._dataManager.getQuizScore(),
+      type,
+      onClose: this._removeIvqBanner,
+      onReview: submissionDetails.onReview,
+      onSubmit: () => {
+        this._player.pause();
+        return this._submitQuiz();
+      }
+    };
+    this._ivqPopup = this._contribServices.floatingManager.add({
+      label: 'IVQ popup',
+      mode: FloatingUIModes.Immediate,
+      position: FloatingPositions.InteractiveArea,
+      renderContent: () => <IvqPopup {...popupProps} />
+    });
+  };
+
+  private _removeIvqBanner = () => {
+    if (this._ivqPopup) {
+      this._contribServices.floatingManager.remove(this._ivqPopup);
     }
   };
 
   private _setOverlay = (fn: Function) => {
+    this._player.pause();
     this._removeOverlay();
     this._removeActiveOverlay = fn;
     this._player.ui.store?.dispatch(KalturaPlayer.ui.reducers.shell.actions.addPlayerClass(HAS_IVQ_OVERLAY_CLASSNAME));
@@ -242,16 +293,28 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         });
     };
     const welcomeScreenProps: WelcomeScreenProps = {
-      welcomeMessage: this._dataManager.quizData?.welcomeMessage
+      welcomeMessage: this._dataManager.quizData?.welcomeMessage,
+      inVideoTip: this._dataManager.quizData?.inVideoTip
     };
+    welcomeScreenProps['availableAttempts'] = this._dataManager.getAvailableAttempts();
     if (this._dataManager.quizData?.allowDownload) {
       welcomeScreenProps['onDownload'] = handleDownload;
     }
-    if (!prePlaybackState) {
+    if (prePlaybackState) {
+      this.eventManager.listenOnce(this._player, EventType.PLAY, () => {
+        this._removeOverlay();
+        if (this._dataManager.isSubmitAllowed() && this._dataManager.isRetakeAllowed()) {
+          this._manageIvqBanner();
+        }
+      });
+    } else {
       welcomeScreenProps['poster'] = this._player.poster || '';
       welcomeScreenProps['onClose'] = () => {
         this._player.play();
         this._removeOverlay();
+        if (this._dataManager.isSubmitAllowed() && this._dataManager.isRetakeAllowed()) {
+          this._manageIvqBanner();
+        }
       };
     }
     this._setOverlay(
@@ -262,9 +325,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         get: () => <WelcomeScreen {...welcomeScreenProps} />
       })
     );
-    this.eventManager.listenOnce(this._player, EventType.PLAY, () => {
-      this._removeOverlay();
-    });
   };
 
   private _displayQuizReview = () => {
@@ -279,7 +339,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           replaceComponent: 'PrePlaybackPlayOverlay',
           get: () => {
             const params: QuizReviewProps = {
-              score: this._dataManager.quizUserEntry?.score || 0,
+              score: this._dataManager.getQuizScore(),
               onClose: () => {
                 this._removeOverlay();
                 const {playlist} = this._player;
@@ -310,6 +370,21 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     }
   };
 
+  private _submitQuiz = (): Promise<void> => {
+    return this._dataManager
+      .submitQuiz()
+      .then(() => {
+        this._removeIvqBanner();
+        this._removeOverlay();
+        if (this._dataManager.quizData?.showGradeAfterSubmission) {
+          this._displayQuizReview();
+        }
+      })
+      .catch((e: any) => {
+        this.logger.warn(e);
+      });
+  };
+
   private _displayQuizSubmit = () => {
     const submissionDetails = this._questionsVisualManager.getSubmissionDetails();
     if (submissionDetails) {
@@ -326,20 +401,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
                 submissionDetails.onReview();
               }
             };
-            if (submissionDetails.showSubmitButton) {
-              params.onSubmit = () => {
-                return this._dataManager
-                  .submitQuiz()
-                  .then(() => {
-                    this._removeOverlay();
-                    if (this._dataManager.quizData?.showGradeAfterSubmission) {
-                      this._displayQuizReview();
-                    }
-                  })
-                  .catch((e: any) => {
-                    this.logger.warn(e);
-                  });
-              };
+            if (submissionDetails.submitAllowed) {
+              params.onSubmit = this._submitQuiz;
             }
             return <QuizSubmit {...params} />;
           }
@@ -388,15 +451,15 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             this.logger.warn('quiz data absent');
             return;
           }
-          const {setQuizUserEntry, setQuizAnswers, setQuizData, isSubmitAllowed, isRetakeAllowed} = this._dataManager;
+          const {setQuizUserEntry, setQuizAnswers, setQuizData, isQuizSubmitted, isRetakeAllowed} = this._dataManager;
           // set main quiz data
           setQuizData(quizData);
-          this._manageWelcomeScreen();
           if (lastQuizUserEntry) {
             // set lastQuizUserEntry to define if submit and retake allowed
             setQuizUserEntry(lastQuizUserEntry);
           }
-          if (!lastQuizUserEntry || (!isSubmitAllowed() && isRetakeAllowed())) {
+          this._manageWelcomeScreen();
+          if (!lastQuizUserEntry || (isQuizSubmitted() && isRetakeAllowed())) {
             // in case if quiz attempt doesn't exist
             // OR user has more attempts and latest attempt submitted - create new quiz attempt.
             return this._dataManager.createNewQuizUserEntry().then((quizNewUserEntry: KalturaUserEntry) => {
@@ -429,12 +492,17 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if (this._dataManager.quizData?.showWelcomePage) {
       if (this._player.config.playback.autoplay || retake) {
         this.eventManager.listenOnce(this.player, this.player.Event.PLAY, () => {
-          this._player.pause();
           this._showWelcomeScreen();
         });
       } else {
         this._showWelcomeScreen(this._isFirstPlay());
       }
+    } else {
+      this.eventManager.listenOnce(this.player, this.player.Event.PLAY, () => {
+        if (!this._dataManager.isRetakeAllowed() || this._dataManager.isSubmitAllowed()) {
+          this._manageIvqBanner();
+        }
+      });
     }
   };
 
@@ -459,6 +527,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._player.playlist.options.loop = loop;
       this._playlistOptions = null;
     }
+    this._removeIvqBanner();
+    this._contribServices.reset();
   }
 
   destroy(): void {

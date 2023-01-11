@@ -66,6 +66,9 @@
           white-space: nowrap;
           text-overflow: ellipsis;
         }
+        .visuallyHidden {
+          @include visually-hidden;
+        }
       }
     }
   }

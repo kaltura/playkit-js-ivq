@@ -1,5 +1,6 @@
 import {h, VNode} from 'preact';
 import {useMemo, useEffect, useRef} from 'preact/hooks';
+import {A11yWrapper, OnClick} from '@playkit-js/common';
 import {icons} from '../icons';
 import {QuizTranslates} from '../../types';
 import * as styles from './ivq-bottom-bar.scss';
@@ -8,8 +9,8 @@ const {Icon} = KalturaPlayer.ui.components;
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
 interface IvqBottomBarProps {
-  onPrev?: () => void;
-  onNext?: () => void;
+  onPrev?: OnClick;
+  onNext?: OnClick;
   questionCounter: string | VNode<{}>;
   getSeekBarNode: () => Element | null;
 }
@@ -33,21 +34,27 @@ export const IvqBottomBar = withText(translates)(
     const renderIvqNavigation = useMemo(() => {
       return (
         <div className={styles.ivqNavigationWrapper}>
-          <button
-            disabled={!onPrev}
-            onClick={onPrev}
-            className={[styles.navigationButton, !onPrev ? styles.disabled : ''].join(' ')}
-            aria-label={otherProps.prevQuestionButtonAriaLabel}>
-            <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
-          </button>
+          <A11yWrapper onClick={onPrev ? onPrev : () => {}}>
+            <div
+              role="button"
+              tabIndex={0}
+              disabled={!onPrev}
+              className={[styles.navigationButton, !onPrev ? styles.disabled : ''].join(' ')}
+              aria-label={otherProps.prevQuestionButtonAriaLabel}>
+              <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
+            </div>
+          </A11yWrapper>
           <div className={styles.questionIndex}>{questionCounter}</div>
-          <button
-            disabled={!onNext}
-            onClick={onNext}
-            className={[styles.navigationButton, !onNext ? styles.disabled : ''].join(' ')}
-            aria-label={otherProps.nextQuestionButtonAriaLabel}>
-            <Icon id="ivq-chevron-right" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_RIGHT} />
-          </button>
+          <A11yWrapper onClick={onNext ? onNext : () => {}}>
+            <div
+              role="button"
+              tabIndex={0}
+              disabled={!onNext}
+              className={[styles.navigationButton, !onNext ? styles.disabled : ''].join(' ')}
+              aria-label={otherProps.nextQuestionButtonAriaLabel}>
+              <Icon id="ivq-chevron-right" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_RIGHT} />
+            </div>
+          </A11yWrapper>
         </div>
       );
     }, [onNext, onPrev, questionCounter]);

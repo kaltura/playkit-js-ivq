@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/kaltura/playkit-js-ivq/compare/v3.0.1...v3.0.2) (2022-12-13)
+
+
+### Bug Fixes
+
+* **FEV-1247:** safari button issues ([#66](https://github.com/kaltura/playkit-js-ivq/issues/66)) ([6b2365a](https://github.com/kaltura/playkit-js-ivq/commit/6b2365a))
+* **FEV-1590:** fix hooks issue ([#65](https://github.com/kaltura/playkit-js-ivq/issues/65)) ([b90b376](https://github.com/kaltura/playkit-js-ivq/commit/b90b376))
+* **FEV-1590:** Mac voice over issues ([#64](https://github.com/kaltura/playkit-js-ivq/issues/64)) ([c4f5af8](https://github.com/kaltura/playkit-js-ivq/commit/c4f5af8))
+* **FEV-1607:** on chrome browser only, there is a scroll bar inside the quiz questions ([#67](https://github.com/kaltura/playkit-js-ivq/issues/67)) ([175b11b](https://github.com/kaltura/playkit-js-ivq/commit/175b11b))
+* **FEV-1609:** ivq plugin cause player slowness ([#69](https://github.com/kaltura/playkit-js-ivq/issues/69)) ([1c62fe5](https://github.com/kaltura/playkit-js-ivq/commit/1c62fe5))
+
+
+
 ### [3.0.1](https://github.com/kaltura/playkit-js-ivq/compare/v0.5.4...v3.0.1) (2022-10-26)
 
 

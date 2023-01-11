@@ -18,6 +18,7 @@ export interface QuizQuestionUI {
 export interface QuestionProps {
   question: string;
   optionalAnswers: Array<KalturaQuizOptionalAnswer>;
+  questionIndex: number;
   hint?: string;
   onSelect?: (data: Selected, byKeyboard?: boolean) => void;
   selected: Selected;
@@ -43,7 +44,7 @@ export interface ThumbnailInfo {
 
 export interface SubmissionDetails {
   onReview: () => void;
-  showSubmitButton: boolean;
+  submitAllowed: boolean;
 }
 
 export type OnClick = (e: KeyboardEvent | MouseEvent, byKeyboard?: boolean) => void;
