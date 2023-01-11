@@ -128,7 +128,7 @@
           .questionLabel,
           .questionContent,
           .iconPlaceholder {
-            background: map-get($theme-colors, 'semi-gray');
+            background: $button-background;
           }
           .questionLabel {
             display: flex;

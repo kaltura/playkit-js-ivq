@@ -1,27 +1,15 @@
-$theme-colors: (
-  'primary': #ffffff,
-  'secondary': #888888,
-  'semi-gray': rgba(255, 255, 255, 0.16),
-  'active': rgba(255, 255, 255, 0.2)
-);
+@import '~@playkit-js/playkit-js-ui';
 
-$primary-button-colors: (
-  'default': #006efa,
-  'hover': #004cad,
-  'focus': #4798ff
-);
+$roundness-1: 4px;
 
-$secondary-button-colors: (
-  'default': transparent,
-  'hover': map-get($theme-colors, 'secondary'),
-  'focus': #444444
-);
+$button-background: rgba(255, 255, 255, 0.12);
+$button-background-active: rgba(255, 255, 255, 0.2);
 
 @mixin ivq-text {
   font-style: normal;
   line-height: normal;
   font-size: 18px;
-  color: map-get($theme-colors, 'primary');
+  color: #ffffff;
   overflow: auto;
 }
 
@@ -41,7 +29,7 @@ $secondary-button-colors: (
   align-items: center;
   padding: 4px 8px;
   height: 32px;
-  border-radius: 4px;
+  border-radius: $roundness-1;
   border-width: 1px;
   border-color: transparent;
   font-style: normal;
@@ -49,7 +37,7 @@ $secondary-button-colors: (
   font-size: 14px;
   line-height: 17px;
   text-align: left;
-  color: map-get($theme-colors, 'primary');
+  color: #ffffff;
   box-sizing: border-box;
   &:hover:not(.disabled) {
     cursor: pointer;
@@ -58,33 +46,35 @@ $secondary-button-colors: (
 
 @mixin ivq-primary-button {
   @include ivq-button;
-  background: map-get($primary-button-colors, 'default');
+  color: $primary-text-contrast-color;
+  background: $primary-color;
   &:hover:not(.disabled) {
-    background: map-get($primary-button-colors, 'hover');
+    background: $primary-darker-color;
   }
   &:focus:not(.disabled) {
-    background: map-get($primary-button-colors, 'focus');
+    background: $primary-brighter-color;
   }
   &.disabled {
     border-width: 1px;
     border-style: solid;
-    border-color: map-get($theme-colors, 'secondary');
-    color: map-get($theme-colors, 'secondary');
+    border-color: $tone-4-color;
+    color: $tone-4-color;
     background: transparent;
   }
 }
 
 @mixin ivq-secondary-button {
   @include ivq-button;
-  background: map-get($secondary-button-colors, 'default');
+  color: $tone-1-color;
+  background: transparent;
   &:hover:not(.disabled) {
-    background: map-get($secondary-button-colors, 'hover');
+    background: $tone-4-color;
   }
   &:focus:not(.disabled) {
-    background: map-get($secondary-button-colors, 'focus');
+    background: $tone-6-color;
   }
   &.disabled {
-    color: map-get($theme-colors, 'secondary');
+    color: $tone-4-color;
   }
 }
 
@@ -95,23 +85,23 @@ $secondary-button-colors: (
   align-items: center;
   padding: 5px 16px;
 
-  background: map-get($theme-colors, 'semi-gray');
+  background: $button-background;
   border-style: solid;
   border-width: 1px;
-  border-radius: 4px;
+  border-radius: $roundness-1;
   border-color: transparent;
   font-size: 16px;
   line-height: normal;
-  color: map-get($theme-colors, 'primary');
+  color: #ffffff;
   cursor: pointer;
   box-sizing: border-box;
   outline-offset: -1px;
   &:hover:not(.disabled) {
-    background: map-get($theme-colors, 'active');
+    background: $button-background-active;
   }
   &.active {
-    border-color: map-get($theme-colors, 'primary');
-    background: map-get($theme-colors, 'active');
+    border-color: $tone-1-color;
+    background: $button-background-active;
   }
   &.disabled {
     cursor: default;
