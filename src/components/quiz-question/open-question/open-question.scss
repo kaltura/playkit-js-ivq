@@ -24,11 +24,11 @@
       padding: 8px;
       border-width: 1px;
       border-style: solid;
-      border-color: $tone-4;
+      border-color: $tone-4-color;
       border-radius: $roundness-1;
       box-sizing: border-box;
       background: rgba(0, 0, 0, 0.3);
-      color: $tone-1;
+      color: $tone-1-color;
       font-family: inherit;
       min-height: 80px;
       max-height: 120px;
@@ -45,7 +45,7 @@
       font-size: 14px;
     }
     ::selection {
-      background-color: $text-selected-color;
+      background-color: $primary-brighter-color;
     }
   }
 }

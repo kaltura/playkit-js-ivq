@@ -1,20 +1,4 @@
-$brand-color: var(--playkit-primary-color);
-$brand-color-dark: var(--playkit-primary-darker-color);
-$brand-color-light: var(--playkit-primary-brighter-color);
-$text-selected-color: var(--playkit-primary-brighter-color);
-
-$secondary-color: var(--playkit-secondary-color);
-
-$primary-text-contrast: var(--playkit-primary-text-contrast-color);
-$secondary-text-contrast: var(--playkit-secondary-text-contrast-color);
-
-$tone-1: var(--playkit-tone-1-color);
-$tone-2: var(--playkit-tone-2-color);
-$tone-3: var(--playkit-tone-3-color);
-$tone-4: var(--playkit-tone-4-color);
-$tone-6: var(--playkit-tone-6-color);
-$tone-7: var(--playkit-tone-7-color);
-$tone-8: var(--playkit-tone-8-color);
+@import '~@playkit-js/playkit-js-ui';
 
 $roundness-1: 4px;
 
@@ -62,35 +46,35 @@ $button-background-active: rgba(255, 255, 255, 0.2);
 
 @mixin ivq-primary-button {
   @include ivq-button;
-  color: $primary-text-contrast;
-  background: $brand-color;
+  color: $primary-text-contrast-color;
+  background: $primary-color;
   &:hover:not(.disabled) {
-    background: $brand-color-dark;
+    background: $primary-darker-color;
   }
   &:focus:not(.disabled) {
-    background: $brand-color-light;
+    background: $primary-brighter-color;
   }
   &.disabled {
     border-width: 1px;
     border-style: solid;
-    border-color: $tone-4;
-    color: $tone-4;
+    border-color: $tone-4-color;
+    color: $tone-4-color;
     background: transparent;
   }
 }
 
 @mixin ivq-secondary-button {
   @include ivq-button;
-  color: $tone-1;
+  color: $tone-1-color;
   background: transparent;
   &:hover:not(.disabled) {
-    background: $tone-4;
+    background: $tone-4-color;
   }
   &:focus:not(.disabled) {
-    background: $tone-6;
+    background: $tone-6-color;
   }
   &.disabled {
-    color: $tone-4;
+    color: $tone-4-color;
   }
 }
 
@@ -116,7 +100,7 @@ $button-background-active: rgba(255, 255, 255, 0.2);
     background: $button-background-active;
   }
   &.active {
-    border-color: $tone-1;
+    border-color: $tone-1-color;
     background: $button-background-active;
   }
   &.disabled {

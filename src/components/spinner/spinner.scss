@@ -4,7 +4,7 @@ div.ivqLoader {
   margin: auto;
   border: 3px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  border-top: 3px solid $tone-1;
+  border-top: 3px solid $tone-1-color;
   animation: spinner 1s linear infinite;
 }
 @keyframes spinner {
