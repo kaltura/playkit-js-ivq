@@ -22,6 +22,8 @@ const SEEK_DELTA = 0.3;
 export class QuestionsVisualManager {
   private _updateQuestionComponent = (qui: QuizQuestionUI) => {};
   public quizQuestionJumping = false;
+  private _lastQuizCuePointId: string | null = null;
+
   constructor(
     private _getQuizQuestionMap: () => QuizQuestionMap,
     private _getUnansweredQuestions: () => Array<QuizQuestion>,
@@ -31,10 +33,12 @@ export class QuestionsVisualManager {
     private _removeOverlay: () => void,
     private _isOverlayExist: () => boolean,
     private _getSeekBarNode: () => Element | null
-  ) {}
+  ) {
+    this._eventManager.listen(this._player, EventType.SEEKING, this._resetLastQuizCuePointId);
+  }
 
   public onQuestionCuepointActive({id}: KalturaQuizQuestion) {
-    if (this.quizQuestionJumping || this._player.paused) {
+    if (this.quizQuestionJumping || this._player.paused || id === this._lastQuizCuePointId) {
       return;
     }
     const quizQuestion = this._getQuizQuestionMap().get(id);
@@ -58,6 +62,7 @@ export class QuestionsVisualManager {
   };
 
   public preparePlayer = (qq: QuizQuestion, manualChange = false, showQuestion = true) => {
+    this._lastQuizCuePointId = qq.id;
     const {startTime} = qq;
     const isNotCurrentTime = this._player.currentTime < startTime - SEEK_DELTA || this._player.currentTime > startTime + SEEK_DELTA;
     if (manualChange && isNotCurrentTime) {
@@ -69,6 +74,12 @@ export class QuestionsVisualManager {
     }
     if (showQuestion) {
       this._showQuestion(qq, manualChange);
+    }
+  };
+
+  private _resetLastQuizCuePointId = () => {
+    if (!this._isOverlayExist()) {
+      this._lastQuizCuePointId = null;
     }
   };
 
@@ -158,5 +169,6 @@ export class QuestionsVisualManager {
 
   public reset = () => {
     this.quizQuestionJumping = false;
+    this._lastQuizCuePointId = null;
   };
 }
