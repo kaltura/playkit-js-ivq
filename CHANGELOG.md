@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/kaltura/playkit-js-ivq/compare/v3.0.2...v3.1.0) (2023-01-18)
+
+
+### Bug Fixes
+
+* **FEV-1603:** when navigating to an answer option, screen reader guides to use the arrow keys ([#68](https://github.com/kaltura/playkit-js-ivq/issues/68)) ([4bdb53b](https://github.com/kaltura/playkit-js-ivq/commit/4bdb53b))
+* **FEV-1643:** prevent duplication of quiz question ([#72](https://github.com/kaltura/playkit-js-ivq/issues/72)) ([9aed849](https://github.com/kaltura/playkit-js-ivq/commit/9aed849))
+* **FEV-1644:** quiz popup fixes ([#74](https://github.com/kaltura/playkit-js-ivq/issues/74)) ([3b9dfab](https://github.com/kaltura/playkit-js-ivq/commit/3b9dfab))
+* **FEV-1648:** add z-index to quiz popup ([#73](https://github.com/kaltura/playkit-js-ivq/issues/73)) ([27114af](https://github.com/kaltura/playkit-js-ivq/commit/27114af))
+
+
+### Features
+
+* **FEV-1571:** migrate style of plugin ivq ([#63](https://github.com/kaltura/playkit-js-ivq/issues/63)) ([3764606](https://github.com/kaltura/playkit-js-ivq/commit/3764606))
+* **FEV-1617:** timeline popup and Cypress tests ([#71](https://github.com/kaltura/playkit-js-ivq/issues/71)) ([bf6d373](https://github.com/kaltura/playkit-js-ivq/commit/bf6d373))
+
+
+
 ### [3.0.2](https://github.com/kaltura/playkit-js-ivq/compare/v3.0.1...v3.0.2) (2022-12-13)
 
 
