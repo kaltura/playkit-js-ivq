@@ -10,6 +10,7 @@
   backdrop-filter: blur(8px);
   border-radius: 4px;
   @include ivq-text;
+  z-index: 2;
   &.submit {
     width: 282px;
     height: 148px;
