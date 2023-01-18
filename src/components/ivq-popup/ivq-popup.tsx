@@ -35,7 +35,7 @@ const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
   if (type === IvqPupupTypes.almostDone) {
     return {
       ...ivqTranslates,
-      title: <Text id="ivq.quiz_almost_done_title">You’re Almost Done</Text>,
+      title: <Text id="ivq.quiz_almost_done_title">You’re almost done</Text>,
       description: (
         <Text id="ivq.quiz_almost_done_description">It appears that some questions remained unanswered. Please complete the quiz to submit.</Text>
       )
@@ -43,7 +43,7 @@ const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
   } else if (type === IvqPupupTypes.submit) {
     return {
       ...ivqTranslates,
-      title: <Text id="ivq.submit_title">Quiz Completed</Text>,
+      title: <Text id="ivq.submit_title">Quiz completed</Text>,
       description: <Text id="ivq.quiz_submit_description">Take a moment to review your answers or go ahead to submit your answers.</Text>
     };
   } else if (type === IvqPupupTypes.completed) {
