@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.2](https://github.com/kaltura/playkit-js-ivq/compare/v3.1.1...v3.1.2) (2023-01-19)
+
+
+### Bug Fixes
+
+* **FEV-1652:** "Quiz submitted" popup (with scores) doesn't match the design. ([#75](https://github.com/kaltura/playkit-js-ivq/issues/75)) ([2fdbd55](https://github.com/kaltura/playkit-js-ivq/commit/2fdbd55))
+
+
+
 ### [3.1.1](https://github.com/kaltura/playkit-js-ivq/compare/v3.1.0...v3.1.1) (2023-01-18)
 
 
