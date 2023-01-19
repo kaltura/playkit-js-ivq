@@ -151,7 +151,7 @@ describe('IVQ plugin', () => {
       preparePage({}, {playback: {autoplay: true}});
       cy.get('[data-testid="cuePointContainer"]').first().should('exist');
       cy.get('[data-testid="ivqPopupTitle"]').should($div => {
-        expect($div.text()).to.eq('The quiz submitted.');
+        expect($div.text()).to.eq('Quiz submitted');
       });
       cy.get('[data-testid="ivqPopupDescription"]').should($div => {
         expect($div.text()).to.eq('Your score is 67/100');
@@ -175,7 +175,7 @@ describe('IVQ plugin', () => {
       mockQuiz('quiz_welcome_page_disabled_with_attempt.json', 'cues_4_question.json');
       preparePage({}, {playback: {autoplay: true}});
       cy.get('[data-testid="ivqPopupTitle"]').should($div => {
-        expect($div.text()).to.eq('Quiz Completed');
+        expect($div.text()).to.eq('Quiz completed');
       });
       cy.get('[data-testid="ivqPopupDescription"]').should($div => {
         expect($div.text()).to.eq('Take a moment to review your answers or go ahead to submit your answers.');

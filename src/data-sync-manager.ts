@@ -28,7 +28,7 @@ export class DataSyncManager {
     private _player: KalturaPlayerTypes.Player,
     private _logger: KalturaPlayerTypes.Logger,
     private _dispatchIvqEvent: (event: string, payload: unknown) => void,
-    private _manageIvqBanner: () => void
+    private _manageIvqPopup: () => void
   ) {}
 
   private _syncEvents = () => {
@@ -203,7 +203,7 @@ export class DataSyncManager {
             // update answer
             this.quizQuestionsMap.set(cue.id, {...this.quizQuestionsMap.get(cue.id)!, a: newAnswer});
             if (!next || this.isSubmitAllowed()) {
-              this._manageIvqBanner();
+              this._manageIvqPopup();
             }
           })
           .catch((error: Error) => {
