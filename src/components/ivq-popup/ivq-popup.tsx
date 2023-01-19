@@ -9,7 +9,8 @@ import * as styles from './ivq-pupup.scss';
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 const {Icon} = KalturaPlayer.ui.components;
 
-export enum IvqPupupTypes {
+export enum IvqPopupTypes {
+  none,
   almostDone,
   submit,
   completed,
@@ -17,7 +18,7 @@ export enum IvqPupupTypes {
 }
 
 export interface IvqPopupProps {
-  type: IvqPupupTypes;
+  type: IvqPopupTypes;
   score: string;
   onClose: () => void;
   onSubmit: () => Promise<void>;
@@ -32,7 +33,7 @@ const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
     reviewButton: <Text id="ivq.review_button">Review</Text>,
     reviewButtonAriaLabel: <Text id="ivq.review_button_area_label">Click to review quiz</Text>
   };
-  if (type === IvqPupupTypes.almostDone) {
+  if (type === IvqPopupTypes.almostDone) {
     return {
       ...ivqTranslates,
       title: <Text id="ivq.quiz_almost_done_title">You’re almost done</Text>,
@@ -40,13 +41,13 @@ const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
         <Text id="ivq.quiz_almost_done_description">It appears that some questions remained unanswered. Please complete the quiz to submit.</Text>
       )
     };
-  } else if (type === IvqPupupTypes.submit) {
+  } else if (type === IvqPopupTypes.submit) {
     return {
       ...ivqTranslates,
       title: <Text id="ivq.submit_title">Quiz completed</Text>,
       description: <Text id="ivq.quiz_submit_description">Take a moment to review your answers or go ahead to submit your answers.</Text>
     };
-  } else if (type === IvqPupupTypes.completed) {
+  } else if (type === IvqPopupTypes.completed) {
     return {
       ...ivqTranslates,
       title: <Text id="ivq.submit_title">Quiz completed</Text>,
@@ -81,9 +82,9 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
   }, []);
 
   const popupClasses = [styles.popupRoot];
-  if (type === IvqPupupTypes.submit) {
+  if (type === IvqPopupTypes.submit) {
     popupClasses.push(styles.submit);
-  } else if (type === IvqPupupTypes.almostDone) {
+  } else if (type === IvqPopupTypes.almostDone) {
     popupClasses.push(styles.almostDone);
   } else {
     popupClasses.push(styles.completed);
@@ -108,7 +109,7 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
       <div className={styles.description} data-testid="ivqPopupDescription">
         {otherProps.description}
       </div>
-      {type === IvqPupupTypes.submit && (
+      {type === IvqPopupTypes.submit && (
         <div className={styles.buttonsWrapper}>
           <A11yWrapper onClick={onReview}>
             <div

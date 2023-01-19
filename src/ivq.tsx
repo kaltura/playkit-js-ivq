@@ -21,7 +21,7 @@ import {KalturaUserEntry} from './providers/response-types';
 import {WelcomeScreen, WelcomeScreenProps} from './components/welcome-screen';
 import {QuizSubmit, QuizSubmitProps} from './components/quiz-submit';
 import {QuizReview, QuizReviewProps} from './components/quiz-review';
-import {IvqPopup, IvqPopupProps, IvqPupupTypes} from './components/ivq-popup';
+import {IvqPopup, IvqPopupProps, IvqPopupTypes} from './components/ivq-popup';
 import {TimelinePreview, TimelineMarker} from './components/timeline';
 import {QuizDownloadLoader} from './providers/quiz-download-loader';
 import {KalturaIvqMiddleware} from './quiz-middleware';
@@ -60,7 +60,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this.player,
       this.logger,
       (event: string, payload: unknown) => this.dispatchEvent(event, payload),
-      this._manageIvqBanner
+      () => this._manageIvqPopup(false)
     );
     this._questionsVisualManager = new QuestionsVisualManager(
       () => this._dataManager.quizQuestionsMap,
@@ -227,19 +227,24 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     }
   };
 
-  private _manageIvqBanner = () => {
+  private _manageIvqPopup = (onInit = true) => {
     this.logger.debug("show 'IVQ Banner'");
     this._removeIvqBanner();
     const submissionDetails = this._questionsVisualManager.getSubmissionDetails();
-    let type: IvqPupupTypes = IvqPupupTypes.almostDone;
-    if (!this._dataManager.isRetakeAllowed()) {
-      type = IvqPupupTypes.submitted;
-    } else if (submissionDetails.submitAllowed) {
-      if (this._dataManager.quizData?.preventSeek) {
-        type = IvqPupupTypes.completed;
-      } else {
-        type = IvqPupupTypes.submit;
-      }
+    let type: IvqPopupTypes = IvqPopupTypes.none;
+
+    if (onInit && this._dataManager.isQuizSubmitted() && !this._dataManager.isRetakeAllowed()) {
+      type = IvqPopupTypes.submitted;
+    } else if (!onInit && !submissionDetails.submitAllowed) {
+      type = IvqPopupTypes.almostDone;
+    } else if (submissionDetails.submitAllowed && this._dataManager.quizData?.preventSeek) {
+      type = IvqPopupTypes.completed;
+    } else if (submissionDetails.submitAllowed && !this._dataManager.quizData?.preventSeek) {
+      type = IvqPopupTypes.submit;
+    }
+    
+    if (type === IvqPopupTypes.none) {
+      return;
     }
     const popupProps: IvqPopupProps = {
       score: this._dataManager.getQuizScore(),
@@ -303,18 +308,14 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if (prePlaybackState) {
       this.eventManager.listenOnce(this._player, EventType.PLAY, () => {
         this._removeOverlay();
-        if (this._dataManager.isSubmitAllowed() && this._dataManager.isRetakeAllowed()) {
-          this._manageIvqBanner();
-        }
+        this._manageIvqPopup();
       });
     } else {
       welcomeScreenProps['poster'] = this._player.poster || '';
       welcomeScreenProps['onClose'] = () => {
         this._player.play();
         this._removeOverlay();
-        if (this._dataManager.isSubmitAllowed() && this._dataManager.isRetakeAllowed()) {
-          this._manageIvqBanner();
-        }
+        this._manageIvqPopup();
       };
     }
     this._setOverlay(
@@ -499,9 +500,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       }
     } else {
       this.eventManager.listenOnce(this.player, this.player.Event.PLAY, () => {
-        if (!this._dataManager.isRetakeAllowed() || this._dataManager.isSubmitAllowed()) {
-          this._manageIvqBanner();
-        }
+        this._manageIvqPopup();
       });
     }
   };
