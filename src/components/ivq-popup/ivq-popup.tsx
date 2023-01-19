@@ -55,7 +55,7 @@ const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
   }
   return {
     ...ivqTranslates,
-    title: <Text id="ivq.quiz_submitted_title">The quiz submitted.</Text>,
+    title: <Text id="ivq.quiz_submitted_title">Quiz submitted</Text>,
     description: (
       <Text
         id="ivq.quiz_score"
