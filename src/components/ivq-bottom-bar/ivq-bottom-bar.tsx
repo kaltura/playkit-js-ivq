@@ -36,7 +36,6 @@ export const IvqBottomBar = withText(translates)(
         <div className={styles.ivqNavigationWrapper}>
           <A11yWrapper onClick={onPrev ? onPrev : () => {}}>
             <div
-              role="button"
               tabIndex={0}
               disabled={!onPrev}
               className={[styles.navigationButton, !onPrev ? styles.disabled : ''].join(' ')}
@@ -47,7 +46,6 @@ export const IvqBottomBar = withText(translates)(
           <div className={styles.questionIndex}>{questionCounter}</div>
           <A11yWrapper onClick={onNext ? onNext : () => {}}>
             <div
-              role="button"
               tabIndex={0}
               disabled={!onNext}
               className={[styles.navigationButton, !onNext ? styles.disabled : ''].join(' ')}

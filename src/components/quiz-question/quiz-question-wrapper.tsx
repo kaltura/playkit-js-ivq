@@ -149,7 +149,6 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       <div className={styles.ivqButtonsWrapper}>
         <A11yWrapper onClick={handleContinue}>
           <div
-            role="button"
             tabIndex={0}
             ref={continueButtonRef}
             data-testid="continueButton"
@@ -163,7 +162,6 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
         {qui.onSkip && (
           <A11yWrapper onClick={handleSkip}>
             <div
-              role="button"
               tabIndex={0}
               data-testid="skipButton"
               aria-label={props.skipButtonAriaLabel}

@@ -85,11 +85,12 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.3.tgz#0300943770e04231041a51bd39f0439b5c7ab4f0"
   integrity sha512-nkalE/f1RvRGChwBnEIoBfSEYOXnCRdleKuv6+lePbMDrMZXeDQnqak5XDOeBgrPPyPfAdcCu/B5z+v3VhplGg==
 
-"@playkit-js/common@^1.0.16":
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.0.16.tgz#cee57df0909bcbc1ab85e97b222ce93d05c1104a"
-  integrity sha512-40QWemEF8QQd23kpFsU20WycVt9A8oRN1wQPq66ORaKMtgXANkTk6V83UNlifa9eNw6K9ovugRnHd9mxCE6Y2w==
+"@playkit-js/common@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.1.1.tgz#b0c21e96794dd66622c1bbcfdf0373aad2b9f5dc"
+  integrity sha512-75l2CogQtpLggXp/FxjNsPbV+FKZ1MxhhLJolBwJYsKV/tyd61aKcbU81EzcyyVefkxYEcLdt2YrkFW64isTKw==
   dependencies:
+    "@playkit-js/playkit-js-ui" "^0.74.0"
     linkify-it "^4.0.1"
 
 "@playkit-js/playkit-js-dash@1.31.0":
@@ -116,6 +117,16 @@
   version "0.73.0"
   resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-ui/-/playkit-js-ui-0.73.0.tgz#3948415346bd0d7fe3a2e3cf558fa51616266c37"
   integrity sha512-d0Mlt0q6ypAJgK52+y2pH4kpSmxxkpajCXGsR91cHidHRD7F0Ytn6h88LZ4rh9sLSsgXOhfZxH8A5Pc9BtAtvw==
+  dependencies:
+    preact "^10.3.4"
+    preact-i18n "^2.0.0-preactx.2"
+    react-redux "^7.2.0"
+    redux "^4.0.5"
+
+"@playkit-js/playkit-js-ui@^0.74.0":
+  version "0.74.0"
+  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-ui/-/playkit-js-ui-0.74.0.tgz#22d0b0f8443cb77352f3ba877b3efc2188bde4ae"
+  integrity sha512-my/6/HIGGRmP3vJC3vBs0jYwJA2bKyIQlAxH/ZAZccW+xW7iztVskxvkCoAdyFKn1rlddNaq9V962oYKxKtc3Q==
   dependencies:
     preact "^10.3.4"
     preact-i18n "^2.0.0-preactx.2"

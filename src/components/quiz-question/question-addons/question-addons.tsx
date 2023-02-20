@@ -50,7 +50,7 @@ export const QuestionAddons = withText(translates)(({hint, explanation, feedback
   return (
     <div className={styles.questionAddonsWrapper}>
       <A11yWrapper onClick={handleClick}>
-        <div role="button" tabIndex={0} className={styles.questionAddonsButton} data-testid="showHintButton">
+        <div tabIndex={0} className={styles.questionAddonsButton} data-testid="showHintButton">
           {isOpen ? otherProps.hide : otherProps.show}
           <div className={[styles.iconWrapper, isOpen ? styles.active : ''].join(' ')} aria-hidden="true">
             <Icon

@@ -97,13 +97,13 @@ export const MultiChoice = withText(translates)(
                     onClick={handleSelect(key, isActive)}
                     onUpKeyPressed={() => handleUpKeyPressed(index)}
                     onDownKeyPressed={() => handleDownKeyPressed(index)}
+                    role="option"
                 >
                   <div
                     ref={node => {
                         setAnswerOptionRef(index, node);
                     }}
                     key={key}
-                    role="option"
                     tabIndex={0}
                     data-testid="multipleChoiceSelectAnswer"
                     aria-selected={isActive}

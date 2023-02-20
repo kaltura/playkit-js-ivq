@@ -92,7 +92,7 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
   return (
     <div className={popupClasses.join(' ')} data-testid="ivqPopupRoot">
       <A11yWrapper onClick={onClose}>
-        <div role="button" tabIndex={0} className={styles.closeButton} aria-label={otherProps.closeButton} data-testid="ivqPopupCloseButton">
+        <div tabIndex={0} className={styles.closeButton} aria-label={otherProps.closeButton} data-testid="ivqPopupCloseButton">
           <Icon
             id="ivq-close"
             data-testid="closeIvqPopup"
@@ -113,7 +113,6 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
         <div className={styles.buttonsWrapper}>
           <A11yWrapper onClick={onReview}>
             <div
-              role="button"
               tabIndex={0}
               className={styles.secondaryButton}
               aria-label={otherProps.reviewButtonAriaLabel}
@@ -123,7 +122,6 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
           </A11yWrapper>
           <A11yWrapper onClick={handleSubmitClick}>
             <div
-              role="button"
               tabIndex={0}
               className={styles.primaryButton}
               aria-label={otherProps.submitButtonAriaLabel}

@@ -76,8 +76,8 @@ export const QuestionListReview = withText(translates)(
         <div className={styles.questionsContainer} data-testid="reviewQuestionsContainer" role="listbox">
           {reviewDetails.map((qq, index) => {
             return (
-              <A11yWrapper onClick={onQuestionClick(qq, index)}>
-                <div key={qq.id} tabIndex={0} className={styles.reviewAnswer} role="listitem" data-testid="reviewAnswer">
+              <A11yWrapper onClick={onQuestionClick(qq, index)} role="listitem">
+                <div key={qq.id} tabIndex={0} className={styles.reviewAnswer} data-testid="reviewAnswer">
                   <div className={styles.questionLabel} data-testid="reviewQuestionLabel" aria-hidden="true">
                     {qq.index + 1}
                   </div>
@@ -109,7 +109,6 @@ export const QuestionListReview = withText(translates)(
           {onRetake && (
             <A11yWrapper onClick={handleRetake}>
               <div
-                role="button"
                 tabIndex={0}
                 className={styles.primaryButton}
                 aria-label={otherProps.retakeButtonAreaLabel}
@@ -121,7 +120,6 @@ export const QuestionListReview = withText(translates)(
           )}
           <A11yWrapper onClick={onClose}>
             <div
-              role="button"
               tabIndex={0}
               data-testid="reviewDoneButton"
               className={[onRetake ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
