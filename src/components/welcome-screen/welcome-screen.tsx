@@ -75,7 +75,7 @@ export const WelcomeScreen = withText(translates)(
             <div className={styles.buttonWrapper}>
               {onClose && (
                 <A11yWrapper onClick={onClose}>
-                  <div role="button" data-testid="startQuiz" aria-label={otherProps.startQuiz} className={styles.startQuizButton} tabIndex={0}>
+                  <div data-testid="startQuiz" aria-label={otherProps.startQuiz} className={styles.startQuizButton} tabIndex={0}>
                     {otherProps.startQuiz}
                   </div>
                 </A11yWrapper>
@@ -84,7 +84,6 @@ export const WelcomeScreen = withText(translates)(
                 <A11yWrapper onClick={handleDownload}>
                   <div
                     tabIndex={0}
-                    role="button"
                     aria-label={otherProps.welcomeDownload}
                     data-testid="downloadPreTestContainer"
                     className={[styles.download, isLoading ? styles.disabled : ''].join(' ')}>

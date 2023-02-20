@@ -69,7 +69,6 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...otherPro
           {onSubmit && (
             <A11yWrapper onClick={handleSubmitClick}>
               <div
-                role="button"
                 tabIndex={0}
                 className={styles.primaryButton}
                 aria-label={otherProps.submitButtonAriaLabel}
@@ -81,7 +80,6 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...otherPro
           )}
           <A11yWrapper onClick={handleReviewClick}>
             <div
-              role="button"
               tabIndex={0}
               disabled={isLoading}
               className={[onSubmit ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}

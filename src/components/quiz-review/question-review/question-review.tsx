@@ -151,7 +151,7 @@ export const QuestionReview = withText(translates)(
         <div className={['ivq', styles.questionReviewWrapper].join(' ')} role="dialog" aria-live="polite">
           <div className={styles.backButtonContainer}>
             <A11yWrapper onClick={onBack}>
-              <div role="button" tabIndex={0} className={styles.backButton} ref={backButtonRef}>
+              <div tabIndex={0} className={styles.backButton} ref={backButtonRef}>
                 <div className={styles.iconContainer} aria-hidden="true">
                   <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
                 </div>

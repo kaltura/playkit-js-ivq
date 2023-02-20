@@ -46,7 +46,6 @@ export const TimelineMarker = withText(translates)(({isDisabled, onClick, getSee
         <div
           onFocus={handleFocus}
           onBlur={handleBlur}
-          role="button"
           title={otherProps.markerAriaLabel as string}
           tabIndex={disabled ? -1 : 0}
           data-testid="cuePointContainer"

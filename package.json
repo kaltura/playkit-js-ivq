@@ -59,7 +59,7 @@
     }
   },
   "dependencies": {
-    "@playkit-js/common": "^1.0.16",
+    "@playkit-js/common": "^1.1.1",
     "@playkit-js/playkit-js-ui": "^0.73.0"
   }
 }

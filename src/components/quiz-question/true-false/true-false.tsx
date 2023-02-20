@@ -72,6 +72,7 @@ export const TrueFalse = withText(translates)(
                   onDownKeyPressed={() => {}}
                   onLeftKeyPressed={() => handleLeftKeyPressed(index)}
                   onRightKeyPressed={() => handleRightKeyPressed(index)}
+                  role="option"
               >
                 <div
                   ref={node => {
@@ -83,8 +84,7 @@ export const TrueFalse = withText(translates)(
                   aria-selected={isActive}
                   aria-disabled={disabled}
                   className={classes}
-                  aria-label={`${otherProps.answerNumber} ${index + 1}, ${text}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
-                  role="option">
+                  aria-label={`${otherProps.answerNumber} ${index + 1}, ${text}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}>
                   {text}
                 </div>
               </A11yWrapper>
