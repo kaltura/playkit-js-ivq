@@ -1,7 +1,7 @@
 import {h} from 'preact';
 // @ts-ignore
 import {core} from 'kaltura-player-js';
-import {ContribServices, FloatingUIModes, FloatingPositions, FloatingItem} from '@playkit-js/common';
+import {ContribServices, FloatingUIModes, FloatingPositions, FloatingItem} from '@playkit-js/common/dist/ui-common';
 import {QuizLoader} from './providers';
 import {
   IvqConfig,
@@ -242,7 +242,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     } else if (submissionDetails.submitAllowed && !this._dataManager.quizData?.preventSeek) {
       type = IvqPopupTypes.submit;
     }
-    
+
     if (type === IvqPopupTypes.none) {
       return;
     }

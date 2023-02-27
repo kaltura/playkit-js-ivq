@@ -3,7 +3,7 @@ import {useCallback, useEffect, useRef} from 'preact/hooks';
 import {makeQuestionLabels} from '../../../utils';
 import {QuestionProps, QuizTranslates} from '../../../types';
 import {QuestionAddons} from '../question-addons';
-import {A11yWrapper} from '@playkit-js/common';
+import {A11yWrapper} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import * as styles from './multi-choice.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -45,9 +45,9 @@ export const MultiChoice = withText(translates)(
     }, [question]);
 
     useEffect(() => {
-        return () => {
-            answersOptionsRefMap = new Map();
-        }
+      return () => {
+        answersOptionsRefMap = new Map();
+      };
     }, []);
 
     const handleSelect = useCallback(
@@ -66,19 +66,19 @@ export const MultiChoice = withText(translates)(
     );
 
     const setAnswerOptionRef = (index: number, ref: HTMLElement | null) => {
-        return answersOptionsRefMap.set(index, ref);
+      return answersOptionsRefMap.set(index, ref);
     };
 
     const getAnswerOptionRef = (index: number) => {
-        return answersOptionsRefMap.get(index);
+      return answersOptionsRefMap.get(index);
     };
 
     const handleUpKeyPressed = (currentIndex: number) => {
-        getAnswerOptionRef(currentIndex - 1)?.focus();
+      getAnswerOptionRef(currentIndex - 1)?.focus();
     };
 
     const handleDownKeyPressed = (currentIndex: number) => {
-        getAnswerOptionRef(currentIndex + 1)?.focus();
+      getAnswerOptionRef(currentIndex + 1)?.focus();
     };
 
     return (
@@ -94,14 +94,13 @@ export const MultiChoice = withText(translates)(
               const isActive = selectedArray.includes(key);
               return (
                 <A11yWrapper
-                    onClick={handleSelect(key, isActive)}
-                    onUpKeyPressed={() => handleUpKeyPressed(index)}
-                    onDownKeyPressed={() => handleDownKeyPressed(index)}
-                    role="option"
-                >
+                  onClick={handleSelect(key, isActive)}
+                  onUpKeyPressed={() => handleUpKeyPressed(index)}
+                  onDownKeyPressed={() => handleDownKeyPressed(index)}
+                  role="option">
                   <div
                     ref={node => {
-                        setAnswerOptionRef(index, node);
+                      setAnswerOptionRef(index, node);
                     }}
                     key={key}
                     tabIndex={0}

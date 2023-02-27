@@ -193,8 +193,8 @@ describe('IVQ plugin', () => {
       mockQuiz('quiz_welcome_page_disabled_with_attempt.json', 'cues_4_question.json');
       preparePage({}, {playback: {autoplay: true}});
       cy.get('[data-testid="ivqPopupSubmitButton"]').click({force: true});
-      cy.get('[data-testid="ivqPopupSubmitButton"] [data-testid="ivqSpinner"]').should('exist');
       cy.wait('@submit');
+      cy.get('[data-testid="quizScoreTitle"]').should('exist');
     });
   });
 });
