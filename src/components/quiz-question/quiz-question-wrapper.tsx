@@ -153,6 +153,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
             ref={continueButtonRef}
             data-testid="continueButton"
             disabled={continueDisabled}
+            aria-disabled={continueDisabled}
             aria-label={continueButtonAriaLabel}
             className={[styles.continueButton, continueDisabled ? styles.disabled : ''].join(' ')}>
             {isLoading ? <Spinner /> : props.continueButton}

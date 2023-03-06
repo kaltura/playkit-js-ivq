@@ -38,6 +38,7 @@ export const IvqBottomBar = withText(translates)(
             <div
               tabIndex={0}
               disabled={!onPrev}
+              aria-disabled={!onPrev}
               className={[styles.navigationButton, !onPrev ? styles.disabled : ''].join(' ')}
               aria-label={otherProps.prevQuestionButtonAriaLabel}>
               <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
@@ -48,6 +49,7 @@ export const IvqBottomBar = withText(translates)(
             <div
               tabIndex={0}
               disabled={!onNext}
+              aria-disabled={!onNext}
               className={[styles.navigationButton, !onNext ? styles.disabled : ''].join(' ')}
               aria-label={otherProps.nextQuestionButtonAriaLabel}>
               <Icon id="ivq-chevron-right" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_RIGHT} />
