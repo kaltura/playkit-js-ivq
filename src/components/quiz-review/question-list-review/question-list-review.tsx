@@ -32,8 +32,8 @@ const translates = ({score}: QuestionListReviewProps): QuizTranslates => {
     ),
     retakeButton: <Text id="ivq.retake_button">Retake</Text>,
     retakeButtonAreaLabel: <Text id="ivq.retake_button_area_label">Click to retake the quiz</Text>,
-    doneButton: <Text id="ivq.done_button">Done</Text>,
-    doneButtonAreaLabel: <Text id="ivq.done_button_area_label">Click to close the review</Text>,
+    closeButton: <Text id="ivq.close_button">Close</Text>,
+    closeButtonAriaLabel: <Text id="ivq.close_button_aria_label">Click to close the review</Text>,
     quizCompleted: <Text id="ivq.quiz_completed">You completed the quiz</Text>,
     reviewAnswer: <Text id="ivq.review_answer">Click to view the question and your answer</Text>,
     correctAnswer: <Text id="ivq.correct_answer">The correct answer</Text>,
@@ -121,10 +121,10 @@ export const QuestionListReview = withText(translates)(
           <A11yWrapper onClick={onClose}>
             <div
               tabIndex={0}
-              data-testid="reviewDoneButton"
+              data-testid="reviewCloseButton"
               className={[onRetake ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
-              aria-label={otherProps.doneButtonAreaLabel}>
-              {otherProps.doneButton}
+              aria-label={otherProps.closeButtonAriaLabel}>
+              {otherProps.closeButton}
             </div>
           </A11yWrapper>
         </div>
