@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.4](https://github.com/kaltura/playkit-js-ivq/compare/v3.1.3...v3.1.4) (2023-03-23)
+
+
+### Bug Fixes
+
+* **FEV-1433:** Ensure the visible text label for a control is included in the control's accessible name ([#79](https://github.com/kaltura/playkit-js-ivq/issues/79)) ([af6cce7](https://github.com/kaltura/playkit-js-ivq/commit/af6cce7))
+* **FEV-1603:** fix a11y issues ([#77](https://github.com/kaltura/playkit-js-ivq/issues/77)) ([7a43062](https://github.com/kaltura/playkit-js-ivq/commit/7a43062))
+* **FEV-1661:** add translation ([#81](https://github.com/kaltura/playkit-js-ivq/issues/81)) ([fb5a53f](https://github.com/kaltura/playkit-js-ivq/commit/fb5a53f))
+
+
+
 ### [3.1.3](https://github.com/kaltura/playkit-js-ivq/compare/v3.1.2...v3.1.3) (2023-02-23)
 
 
