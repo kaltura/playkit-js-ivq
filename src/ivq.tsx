@@ -60,7 +60,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this.player,
       this.logger,
       (event: string, payload: unknown) => this.dispatchEvent(event, payload),
-      () => this._manageIvqPopup(false)
+      () => this._manageIvqPopup(false),
+      (qqm: Map<string,QuizQuestion>) => this._filterQuestionChanged(qqm)
     );
     this._questionsVisualManager = new QuestionsVisualManager(
       () => this._dataManager.quizQuestionsMap,
@@ -242,7 +243,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     } else if (submissionDetails.submitAllowed && !this._dataManager.quizData?.preventSeek) {
       type = IvqPopupTypes.submit;
     }
-    
+
     if (type === IvqPopupTypes.none) {
       return;
     }
@@ -430,6 +431,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         throw 'QuizRetake: quizNewUserEntry absent';
       } else {
         this.dispatchEvent(IvqEventTypes.QUIZ_RETAKE);
+        this._maxCurrentTime = 0;
         this._dataManager.retakeQuiz(quizNewUserEntry);
         this._player.currentTime = 0;
         this._manageWelcomeScreen(true);
@@ -508,6 +510,20 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _isFirstPlay = () => {
     // before first play event happened the player duration eq: NaN
     return Number.isNaN(this._player.duration);
+  };
+
+  private _filterQuestionChanged = (quizQuestionsMap: Map<string, QuizQuestion>): Array<QuizQuestion> => {
+    if (this._seekControlEnabled) {
+      // preventSeek configuration is enabled - need to filter only the relevant cuepoints
+      const quizQuestions: Array<QuizQuestion> = [];
+      quizQuestionsMap.forEach(qq => {
+        if (qq.startTime <= this._maxCurrentTime) {
+          quizQuestions.push(qq);
+        }
+      });
+      return quizQuestions;
+    }
+    return Array.from(quizQuestionsMap.values());
   };
 
   reset(): void {

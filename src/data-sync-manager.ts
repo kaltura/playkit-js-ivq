@@ -2,8 +2,17 @@
 import {core} from 'kaltura-player-js';
 import {getKeyValue, stringToBoolean, isNumber} from './utils';
 import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry} from './providers/response-types';
-import {KalturaQuizQuestion, QuizData, QuizQuestionMap, Selected, KalturaQuizQuestionTypes, QuizQuestion, IvqEventTypes} from './types';
-import {QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader, QuizAnswerLoader} from './providers';
+import {
+  IvqEventTypes,
+  KalturaQuizQuestion,
+  KalturaQuizQuestionTypes,
+  QuizData,
+  QuizQuestion,
+  QuizQuestionMap,
+  Selected
+} from './types';
+import {QuizAnswerLoader, QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader} from './providers';
+import {QuestionStateTypes} from "./types/questionStateTypes";
 
 const {TimedMetadata} = core;
 
@@ -28,7 +37,8 @@ export class DataSyncManager {
     private _player: KalturaPlayerTypes.Player,
     private _logger: KalturaPlayerTypes.Logger,
     private _dispatchIvqEvent: (event: string, payload: unknown) => void,
-    private _manageIvqPopup: () => void
+    private _manageIvqPopup: () => void,
+    private _filterQuestionChanged: (qqm: QuizQuestionMap) => Array<QuizQuestion>
   ) {}
 
   private _syncEvents = () => {
@@ -73,6 +83,36 @@ export class DataSyncManager {
       allowSeekForward: !this.quizData.preventSeek,
       scoreType: this.quizData.scoreType,
       allowAnswerUpdate: this.quizData?.allowAnswerUpdate
+    });
+  };
+
+  public dispatchQuestionChanged = () => {
+    const isQuizSubmitted = this.isQuizSubmitted();
+    const qqa: Array<any> = [];
+    const quizQuestions = this._filterQuestionChanged(this.quizQuestionsMap);
+    quizQuestions.forEach(qq => {
+      let questionState = QuestionStateTypes.UNANSWERED;
+      if (isQuizSubmitted && this.quizData!.showCorrectAfterSubmission) {
+        if (qq.a?.isCorrect) {
+          questionState = QuestionStateTypes.CORRECT;
+        } else {
+          questionState = QuestionStateTypes.INCORRECT;
+        }
+      } else if (qq.a) {
+        questionState = QuestionStateTypes.ANSWERED;
+      }
+      const dataToPush = {
+        id: qq.id,
+        index: qq.index,
+        type: qq.q.questionType,
+        question: qq.q.question,
+        startTime: qq.startTime,
+        state: questionState
+      };
+      qqa.push(dataToPush);
+    });
+    this._dispatchIvqEvent(IvqEventTypes.QUIZ_QUESTION_CHANGED, {
+      qqa: qqa
     });
   };
 
@@ -202,6 +242,7 @@ export class DataSyncManager {
             });
             // update answer
             this.quizQuestionsMap.set(cue.id, {...this.quizQuestionsMap.get(cue.id)!, a: newAnswer});
+            this.dispatchQuestionChanged();
             if (!next || this.isSubmitAllowed()) {
               this._manageIvqPopup();
             }
@@ -228,6 +269,7 @@ export class DataSyncManager {
       };
       this.quizQuestionsMap.set(cue.id, quizQuestion);
     });
+    this.dispatchQuestionChanged();
   };
 
   public retakeQuiz = (quizNewUserEntry: KalturaUserEntry) => {
