@@ -1,0 +1,36 @@
+[
+  {
+    "partnerId": 1091,
+    "ks": "",
+    "userId": 0,
+    "objectType": "KalturaStartWidgetSessionResponse"
+  },
+  {
+    "objects": [
+      {
+        "optionalAnswers": [
+          {"key": "1", "weight": 1, "isCorrect": true, "objectType": "KalturaOptionalAnswer"},
+          {"key": "2", "weight": 1, "isCorrect": false, "objectType": "KalturaOptionalAnswer"}
+        ],
+        "question": "Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.",
+        "questionType": 3,
+        "excludeFromScore": true,
+        "id": "1_6zqqj2e6",
+        "intId": 4799603282,
+        "cuePointType": "quiz.QUIZ_QUESTION",
+        "status": 1,
+        "entryId": "1_5q6uf02d",
+        "partnerId": 3188353,
+        "createdAt": 1679985724,
+        "updatedAt": 1679985724,
+        "startTime": 1000,
+        "userId": "lian.binyamin@kaltura.com",
+        "isMomentary": true,
+        "objectType": "KalturaQuestionCuePoint"
+      }
+    ],
+    "totalCount": 1,
+    "objectType": "KalturaCuePointListResponse"
+  },
+  {"objects": [], "totalCount": 0, "objectType": "KalturaCuePointListResponse"}
+]
