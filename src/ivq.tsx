@@ -71,7 +71,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._setOverlay,
       this._removeOverlay,
       () => Boolean(this._removeActiveOverlay),
-      this._getSeekBarNode
+      this._getSeekBarNode,
+      this._dataManager.dispatchQuestionChanged
     );
     this._contribServices = ContribServices.get({kalturaPlayer: this._player});
   }

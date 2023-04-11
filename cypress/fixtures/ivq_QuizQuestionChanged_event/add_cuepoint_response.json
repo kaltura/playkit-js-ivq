@@ -1,0 +1,32 @@
+[
+  {
+    "partnerId": 1091,
+    "ks": "",
+    "userId": 0,
+    "objectType": "KalturaStartWidgetSessionResponse"
+  },
+  {
+    "parentId": "1_6zqqj2e6",
+    "quizUserEntryId": "3445745162",
+    "answerKey": "1",
+    "isCorrect": true,
+    "correctAnswerKeys": [
+      {
+        "value": "1",
+        "objectType": "KalturaString"
+      }
+    ],
+    "id": "1_666",
+    "intId": 4808573692,
+    "cuePointType": "quiz.QUIZ_ANSWER",
+    "status": 1,
+    "entryId": "1_5q6uf02d",
+    "partnerId": 3188353,
+    "createdAt": 1680509431,
+    "updatedAt": 1680509431,
+    "startTime": 1100,
+    "userId": "lian.binyamin@kaltura.com",
+    "isMomentary": true,
+    "objectType": "KalturaAnswerCuePoint"
+  }
+]
