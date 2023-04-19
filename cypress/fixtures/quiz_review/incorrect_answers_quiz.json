@@ -28,36 +28,12 @@
   {
     "version": 3,
     "uiAttributes": [
-      {
-        "key": "welcomeMessage",
-        "value": "In this video, you will be given a Quiz. Good Luck!",
-        "objectType": "KalturaKeyValue"
-      },
-      {
-        "key": "noSeekAlertText",
-        "value": "",
-        "objectType": "KalturaKeyValue"
-      },
-      {
-        "key": "inVideoTip",
-        "value": "true",
-        "objectType": "KalturaKeyValue"
-      },
-      {
-        "key": "showWelcomePage",
-        "value": "true",
-        "objectType": "KalturaKeyValue"
-      },
-      {
-        "key": "canSkip",
-        "value": "true",
-        "objectType": "KalturaKeyValue"
-      },
-      {
-        "key": "banSeek",
-        "value": "false",
-        "objectType": "KalturaKeyValue"
-      }
+      {"key": "welcomeMessage", "value": "In this video, you will be given a Quiz. Good Luck!", "objectType": "KalturaKeyValue"},
+      {"key": "noSeekAlertText", "value": "", "objectType": "KalturaKeyValue"},
+      {"key": "inVideoTip", "value": "true", "objectType": "KalturaKeyValue"},
+      {"key": "showWelcomePage", "value": "false", "objectType": "KalturaKeyValue"},
+      {"key": "canSkip", "value": "true", "objectType": "KalturaKeyValue"},
+      {"key": "banSeek", "value": "false", "objectType": "KalturaKeyValue"}
     ],
     "allowAnswerUpdate": true,
     "showCorrectAfterSubmission": true,

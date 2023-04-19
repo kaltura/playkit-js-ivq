@@ -76,7 +76,7 @@ export const mockKalturaBe = (quizFixture = 'quiz.json', cuesFixture = 'cues.jso
     }
     if (checkRequest(req.body[2], 'userEntry', 'submitQuiz')) {
       req.alias = 'submit';
-      return req.reply({fixture: 'submit.json'});
+      return req.reply({delayMs: 400, fixture: 'submit.json'});
     }
   });
 };

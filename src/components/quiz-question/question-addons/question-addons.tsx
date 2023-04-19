@@ -73,7 +73,7 @@ export const QuestionAddons = withText(translates)(({hint, explanation, feedback
         </div>
       </A11yWrapper>
       {isOpen && (
-        <div className={styles.questionAddonsContent} aria-live="polite" role="text">
+        <div className={styles.questionAddonsContent} data-testid="questionAddonsContent" aria-live="polite" role="text">
           {getContent}
         </div>
       )}
