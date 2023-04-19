@@ -32,7 +32,8 @@ export class QuestionsVisualManager {
     private _setOverlay: (overlay: Function) => void,
     private _removeOverlay: () => void,
     private _isOverlayExist: () => boolean,
-    private _getSeekBarNode: () => Element | null
+    private _getSeekBarNode: () => Element | null,
+    private _dispatchQuestionChanged: () => void
   ) {
     this._eventManager.listen(this._player, EventType.SEEKING, this._resetLastQuizCuePointId);
   }
@@ -146,6 +147,7 @@ export class QuestionsVisualManager {
           });
       } else {
         onSkip();
+        this._dispatchQuestionChanged();
         return Promise.resolve();
       }
     };
