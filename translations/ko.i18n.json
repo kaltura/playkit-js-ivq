@@ -40,7 +40,7 @@
       "hide_feedback": "피드백 숨기기",
       "marker_area_label": "질문으로 건너뛰기 {{questionIndex}}",
       "answer_number": "질문",
-      "review_answer": "질문과 답변을 보려면 클릭하십시오.",
+      "review_question": "질문과 답변을 보려면 클릭하십시오.",
       "tip" : "모든 질문에 답변해야 합니다. </br>퀴즈는 마지막에 제출됩니다.",
       "available_attempts_message": "이 퀴즈 총 시도 횟수: {{availableAttempts}}"
     }
