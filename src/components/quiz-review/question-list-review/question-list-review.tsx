@@ -35,9 +35,9 @@ const translates = ({score}: QuestionListReviewProps): QuizTranslates => {
     closeButton: <Text id="ivq.close_button">Close</Text>,
     closeButtonAriaLabel: <Text id="ivq.close_button_aria_label">Click to close the review</Text>,
     quizCompleted: <Text id="ivq.quiz_completed">You completed the quiz</Text>,
-    reviewAnswer: <Text id="ivq.review_answer">Click to view the question and your answer</Text>,
-    correctAnswer: <Text id="ivq.correct_answer">The correct answer</Text>,
-    incorrectAnswer: <Text id="ivq.incorrect_answer">The incorrect answer</Text>,
+    reviewQuestion: <Text id="ivq.review_question">Click to review the question</Text>,
+    correctAnswer: <Text id="ivq.correct_answer">Correct answer</Text>,
+    wrongAnswer: <Text id="ivq.wrong_answer">Wrong answer</Text>,
     reflectionPointTranslate: <Text id="ivq.reflection_point">Reflection Point</Text>,
     questionLabel: <Text id="ivq.question">Question</Text>
   };
@@ -64,10 +64,10 @@ export const QuestionListReview = withText(translates)(
         return `${getQuestionIndex(qq)}, ${otherProps.reflectionPointTranslate}: ${qq.q.question}`;
       }
       if (qq.q.questionType === KalturaQuizQuestionTypes.OpenQuestion) {
-        return `${getQuestionIndex(qq)}, ${qq.q.question}. ${otherProps.reviewAnswer}`;
+        return `${getQuestionIndex(qq)}, ${qq.q.question}. ${otherProps.reviewQuestion}`;
       }
-      return `${getQuestionIndex(qq)}, ${qq.q.question}. ${qq.a?.isCorrect ? otherProps.correctAnswer : otherProps.incorrectAnswer}, ${
-        otherProps.reviewAnswer
+      return `${getQuestionIndex(qq)}: ${qq.a?.isCorrect ? otherProps.correctAnswer : otherProps.wrongAnswer}, ${qq.q.question}. ${
+        otherProps.reviewQuestion
       }`;
     };
 

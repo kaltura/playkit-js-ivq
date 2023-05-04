@@ -40,8 +40,6 @@ const translates = ({questionsAmount, reviewQuestion}: QuestionReviewProps): Qui
     ),
     correctAnswerIs: <Text id="ivq.correct_answer_is">The correct answer is:</Text>,
     yourAnswer: <Text id="ivq.your_answer">Your answer</Text>,
-    correctAnswer: <Text id="ivq.correct_answer">The correct answer</Text>,
-    incorrectAnswer: <Text id="ivq.incorrect_answer">The incorrect answer</Text>,
     questionLabel: <Text id="ivq.question">Question</Text>
   };
 };
