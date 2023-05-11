@@ -1,5 +1,5 @@
 // @ts-ignore
-import {core} from 'kaltura-player-js';
+import {core} from '@playkit-js/kaltura-player-js';
 import {h} from 'preact';
 import {useState} from 'preact/hooks';
 import {

@@ -1,11 +1,15 @@
 // @ts-ignore
-import {core, KalturaPlayer} from 'kaltura-player-js';
+import {core} from '@playkit-js/kaltura-player-js';
 
 const {EventManager} = core;
 const MANIFEST = `#EXTM3U
 #EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio",LANGUAGE="en",NAME="English",AUTOSELECT=YES,DEFAULT=YES,URI="${location.origin}/media/index_1.m3u8",SUBTITLES="subs"
-
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=509496,RESOLUTION=480x272,AUDIO="audio",SUBTITLES="subs"
+${location.origin}/media/index.m3u8`;
+
+const MANIFEST_SAFARI = `#EXTM3U
+#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",NAME="English",DEFAULT=NO,AUTOSELECT=YES,FORCED=NO,LANGUAGE="en",URI="${location.origin}/media/index_1.m3u8"
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=504265,RESOLUTION=480x272,AUDIO="audio",SUBTITLES="subs"
 ${location.origin}/media/index.m3u8`;
 
 const preparePage = (ivqConf = {}, playerConf = {}) => {
@@ -74,7 +78,7 @@ const eventManager: any = new EventManager();
 describe('IVQ plugin', () => {
   beforeEach(() => {
     // manifest
-    cy.intercept('GET', '**/a.m3u8*', MANIFEST);
+    cy.intercept('GET', '**/a.m3u8*', Cypress.browser.name === 'webkit' ? MANIFEST_SAFARI : MANIFEST);
     // thumbnails
     cy.intercept('GET', '**/width/164/vid_slices/100', {fixture: '100.jpeg'});
     cy.intercept('GET', '**/height/360/width/640', {fixture: '640.jpeg'});
