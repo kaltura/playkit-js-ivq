@@ -8,12 +8,12 @@ export const MANIFEST_SAFARI = `#EXTM3U
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=504265,RESOLUTION=480x272,AUDIO="audio",SUBTITLES="subs"
 ${location.origin}/media/index.m3u8`;
 
-const getPlayer = () => {
+export const getPlayer = () => {
   // @ts-ignore
   return cy.window().then($win => $win.KalturaPlayer.getPlayers()['player-placeholder']);
 };
 
-const preparePage = (puginConf = {}, playbackConf = {}) => {
+export const preparePage = (puginConf = {}, playbackConf = {}) => {
   cy.visit('index.html');
   return cy.window().then(win => {
     try {
@@ -65,6 +65,9 @@ export const mockKalturaBe = (quizFixture = 'quiz.json', cuesFixture = 'cues.jso
       return req.reply({fixture: quizFixture});
     }
     if (checkRequest(req.body[2], 'cuepoint_cuepoint', 'list')) {
+      if (req.body[2].filter.objectType === 'KalturaAnswerCuePointFilter') {
+        return req.reply({fixture: 'ivq_QuizQuestionChanged_event/quiz_answers.json'});
+      }
       return req.reply({fixture: cuesFixture});
     }
     if (checkRequest(req.body[2], 'userEntry', 'add')) {
@@ -77,6 +80,9 @@ export const mockKalturaBe = (quizFixture = 'quiz.json', cuesFixture = 'cues.jso
     if (checkRequest(req.body[2], 'userEntry', 'submitQuiz')) {
       req.alias = 'submit';
       return req.reply({delayMs: 400, fixture: 'submit.json'});
+    }
+    if (checkRequest(req.body[2], 'cuepoint_cuepoint', 'add')) {
+      return req.reply({fixture: 'ivq_QuizQuestionChanged_event/add_cuepoint_response.json'});
     }
   });
 };
