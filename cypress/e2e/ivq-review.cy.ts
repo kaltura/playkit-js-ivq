@@ -23,6 +23,7 @@ describe('IVQ review', () => {
         });
       });
     });
+
     it('should display question list review with correct answers', () => {
       mockKalturaBe('quiz_review/correct_answers_quiz.json', 'quiz_review/correct_answers_cues.json');
       loadPlayer({}, {autoplay: true}).then(kalturaPlayer => {
@@ -73,7 +74,7 @@ describe('IVQ review', () => {
           cy.get('[data-testid="reviewAnswer"]').eq(0).click({force: true});
           cy.get('[data-testid="backButton"]').should('have.text', 'Back');
           cy.get('[data-testid="backButton"]').within(() => {
-            cy.get('i').should('have.class', 'playkit-icon-ivq-chevron-left')
+            cy.get('i').should('have.class', 'playkit-icon-ivq-chevron-left');
           });
           cy.get('[data-testid="backButton"]').click({force: true});
           cy.get('[data-testid="quizReviewWrapper"]').should('be.visible');
@@ -92,6 +93,7 @@ describe('IVQ review', () => {
         });
       });
     });
+
     it('should display question list review with incorrect answers', () => {
       mockKalturaBe('quiz_review/incorrect_answers_quiz.json', 'quiz_review/incorrect_answers_cues.json');
       loadPlayer({}, {autoplay: true}).then(kalturaPlayer => {
@@ -117,7 +119,7 @@ describe('IVQ review', () => {
         });
       });
     });
-    
+
     it('should display the correct first answer details', () => {
       mockKalturaBe('quiz_review/correct_answers_quiz.json', 'quiz_review/correct_answers_cues.json');
       loadPlayer({}, {autoplay: true}).then(kalturaPlayer => {
@@ -150,27 +152,34 @@ describe('IVQ review', () => {
           cy.get('[data-testid="reviewYourMultiChoiceAnswer"]').should('contain', 'Your answer');
           cy.get('[data-testid="multiSelectAnswer"]').should('have.length', 4);
 
-          cy.get('[data-testid="multiSelectAnswer"]').eq(0).within(() => {
-            cy.get('[data-testid="questionLabel"]').should('have.text', 'A');
-            cy.get('[data-testid="questionContent"]').should('have.text', 'answer one');
-          });
+          cy.get('[data-testid="multiSelectAnswer"]')
+            .eq(0)
+            .within(() => {
+              cy.get('[data-testid="questionLabel"]').should('have.text', 'A');
+              cy.get('[data-testid="questionContent"]').should('have.text', 'answer one');
+            });
 
-          cy.get('[data-testid="multiSelectAnswer"]').eq(1).within(() => {
-            cy.get('[data-testid="questionLabel"]').should('have.text', 'B');
-            cy.get('[data-testid="questionContent"]').should('have.text', 'answer two');
-            cy.get('i').should('have.class', 'playkit-icon-ivq-question-correct-answer');
+          cy.get('[data-testid="multiSelectAnswer"]')
+            .eq(1)
+            .within(() => {
+              cy.get('[data-testid="questionLabel"]').should('have.text', 'B');
+              cy.get('[data-testid="questionContent"]').should('have.text', 'answer two');
+              cy.get('i').should('have.class', 'playkit-icon-ivq-question-correct-answer');
+            });
 
-          });
+          cy.get('[data-testid="multiSelectAnswer"]')
+            .eq(2)
+            .within(() => {
+              cy.get('[data-testid="questionLabel"]').should('have.text', 'C');
+              cy.get('[data-testid="questionContent"]').should('have.text', 'answer three');
+            });
 
-          cy.get('[data-testid="multiSelectAnswer"]').eq(2).within(() => {
-            cy.get('[data-testid="questionLabel"]').should('have.text', 'C');
-            cy.get('[data-testid="questionContent"]').should('have.text', 'answer three');
-          });
-
-          cy.get('[data-testid="multiSelectAnswer"]').eq(3).within(() => {
-            cy.get('[data-testid="questionLabel"]').should('have.text', 'D');
-            cy.get('[data-testid="questionContent"]').should('have.text', 'answer four');
-          });
+          cy.get('[data-testid="multiSelectAnswer"]')
+            .eq(3)
+            .within(() => {
+              cy.get('[data-testid="questionLabel"]').should('have.text', 'D');
+              cy.get('[data-testid="questionContent"]').should('have.text', 'answer four');
+            });
         });
       });
     });
@@ -200,7 +209,7 @@ describe('IVQ review', () => {
           });
           cy.get('[data-testid="showHintButton"]').click({force: true});
           cy.get('[data-testid="showHintButton"]').should('have.text', 'Hide why');
-          cy.get('[data-testid="questionAddonsContent"]').should('have.text', 'It\'\s explanations');
+          cy.get('[data-testid="questionAddonsContent"]').should('have.text', "It's explanations");
         });
       });
     });
@@ -212,8 +221,8 @@ describe('IVQ review', () => {
           kalturaPlayer.currentTime = 61;
           cy.get('[data-testid="reviewAnswer"]').eq(0).click({force: true});
           cy.get('[data-testid="reviewQuestionIcon"]').within(() => {
-              cy.get('i').should('have.class', 'playkit-icon-ivq-question-incorrect-answer');
-            });
+            cy.get('i').should('have.class', 'playkit-icon-ivq-question-incorrect-answer');
+          });
         });
       });
     });
@@ -225,9 +234,11 @@ describe('IVQ review', () => {
           kalturaPlayer.currentTime = 61;
           cy.get('[data-testid="reviewAnswer"]').eq(1).click({force: true});
 
-          cy.get('[data-testid="multiSelectAnswer"]').eq(0).within(() => {
-            cy.get('i').should('have.class', 'playkit-icon-ivq-question-incorrect-answer');
-          });
+          cy.get('[data-testid="multiSelectAnswer"]')
+            .eq(0)
+            .within(() => {
+              cy.get('i').should('have.class', 'playkit-icon-ivq-question-incorrect-answer');
+            });
         });
       });
     });
