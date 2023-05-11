@@ -1,0 +1,150 @@
+[
+  {
+    "partnerId": 1091,
+    "ks": "",
+    "userId": 0,
+    "objectType": "KalturaStartWidgetSessionResponse"
+  },
+  {
+    "objects": [
+      {
+        "score": 0,
+        "calculatedScore": 0,
+        "version": 0,
+        "id": 3480155042,
+        "entryId": "1_dj89uja1",
+        "userId": "aaa",
+        "partnerId": 27017,
+        "status": "quiz.3",
+        "createdAt": 1681205431,
+        "updatedAt": 1681205470,
+        "type": "quiz.QUIZ",
+        "objectType": "KalturaQuizUserEntry"
+      }
+    ],
+    "totalCount": 1,
+    "objectType": "KalturaUserEntryListResponse"
+  },
+  {
+    "version": 3,
+    "uiAttributes": [
+      {"key": "welcomeMessage", "value": "In this video, you will be given a Quiz. Good Luck!", "objectType": "KalturaKeyValue"},
+      {"key": "noSeekAlertText", "value": "", "objectType": "KalturaKeyValue"},
+      {"key": "inVideoTip", "value": "true", "objectType": "KalturaKeyValue"},
+      {"key": "showWelcomePage", "value": "false", "objectType": "KalturaKeyValue"},
+      {"key": "canSkip", "value": "true", "objectType": "KalturaKeyValue"},
+      {"key": "banSeek", "value": "false", "objectType": "KalturaKeyValue"}
+    ],
+    "allowAnswerUpdate": true,
+    "showCorrectAfterSubmission": true,
+    "allowDownload": true,
+    "showGradeAfterSubmission": true,
+    "attemptsAllowed": 0,
+    "scoreType": 3,
+    "objectType": "KalturaQuiz"
+  },
+  {
+    "objects": [
+      {
+        "parentId": "1_86cayqj2",
+        "quizUserEntryId": "3480155042",
+        "answerKey": "2",
+        "isCorrect": false,
+        "correctAnswerKeys": [
+          {
+            "value": "1",
+            "objectType": "KalturaString"
+          }
+        ],
+        "id": "1_9hsq89n4",
+        "intId": 4819684812,
+        "cuePointType": "quiz.QUIZ_ANSWER",
+        "status": 1,
+        "entryId": "1_dj89uja1",
+        "partnerId": 27017,
+        "createdAt": 1681205445,
+        "updatedAt": 1681205445,
+        "startTime": 0,
+        "userId": "aaa",
+        "isMomentary": true,
+        "objectType": "KalturaAnswerCuePoint"
+      },
+      {
+        "parentId": "1_wxi7d4af",
+        "quizUserEntryId": "3480155042",
+        "answerKey": "1",
+        "isCorrect": true,
+        "correctAnswerKeys": [
+          {
+            "value": "1",
+            "objectType": "KalturaString"
+          }
+        ],
+        "id": "1_gvzw7b3u",
+        "intId": 4819684912,
+        "cuePointType": "quiz.QUIZ_ANSWER",
+        "status": 1,
+        "entryId": "1_dj89uja1",
+        "partnerId": 27017,
+        "createdAt": 1681205458,
+        "updatedAt": 1681205458,
+        "startTime": 0,
+        "userId": "aaa",
+        "isMomentary": true,
+        "objectType": "KalturaAnswerCuePoint"
+      },
+      {
+        "parentId": "1_9anr3391",
+        "quizUserEntryId": "3480155042",
+        "answerKey": "1",
+        "openAnswer": "my answer",
+        "isCorrect": true,
+        "correctAnswerKeys": [
+          {
+            "value": "1",
+            "objectType": "KalturaString"
+          }
+        ],
+        "explanation": "It's explanations",
+        "id": "1_kyomgqtp",
+        "intId": 4819684972,
+        "cuePointType": "quiz.QUIZ_ANSWER",
+        "status": 1,
+        "entryId": "1_dj89uja1",
+        "partnerId": 27017,
+        "createdAt": 1681205466,
+        "updatedAt": 1681205466,
+        "startTime": 0,
+        "userId": "aaa",
+        "isMomentary": true,
+        "objectType": "KalturaAnswerCuePoint"
+      },
+      {
+        "parentId": "1_b940otaa",
+        "quizUserEntryId": "3480155042",
+        "answerKey": "1",
+        "isCorrect": false,
+        "correctAnswerKeys": [
+          {
+            "value": "2",
+            "objectType": "KalturaString"
+          }
+        ],
+        "id": "1_wneeatak",
+        "intId": 4819684842,
+        "cuePointType": "quiz.QUIZ_ANSWER",
+        "status": 1,
+        "entryId": "1_dj89uja1",
+        "partnerId": 27017,
+        "createdAt": 1681205453,
+        "updatedAt": 1681205453,
+        "startTime": 0,
+        "userId": "aaa",
+        "isMomentary": true,
+        "objectType": "KalturaAnswerCuePoint"
+      }
+    ],
+    "totalCount": 4,
+    "objectType": "KalturaCuePointListResponse"
+  }
+]

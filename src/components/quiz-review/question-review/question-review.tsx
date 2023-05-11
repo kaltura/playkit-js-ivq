@@ -62,16 +62,16 @@ export const QuestionReview = withText(translates)(
         const userAnswer = q?.optionalAnswers.find(val => val.key === a?.answerKey);
         return (
           <Fragment>
-            <div className={styles.correctAnswerIs}>{`${otherProps.correctAnswerIs} ${correctAnswer?.text}`}</div>
+            <div className={styles.correctAnswerIs} data-testid="reviewCorrectAnswerIs">{`${otherProps.correctAnswerIs} ${correctAnswer?.text}`}</div>
             {a?.explanation && <QuestionAddons explanation={a.explanation} />}
-            <div className={styles.yourAnswer}>
+            <div className={styles.yourAnswer} data-testid="reviewYourAnswer">
               {otherProps.yourAnswer}
               <span className={styles.visuallyHidden}>{`: ${userAnswer?.text}`}</span>
             </div>
             <div className={styles.trueFalseAnswerWrapper} role="listbox" aria-hidden="true">
               {q.optionalAnswers.map(({key, text}) => {
                 return (
-                  <div key={key} className={[styles.trueFalseAnswer, styles.disabled].join(' ')} role="option">
+                  <div key={key} className={[styles.trueFalseAnswer, styles.disabled].join(' ')} data-testid="reviewTrueFalseAnswer" role="option">
                     {text}
                     {a?.answerKey === key && <QuestionIcon questionType={q.questionType} isCorrect={key === correctAnswer?.key} />}
                   </div>
@@ -106,9 +106,11 @@ export const QuestionReview = withText(translates)(
         });
         return (
           <Fragment>
-            <div className={styles.correctAnswerIs}>{`${otherProps.correctAnswerIs} ${correctAnswers.join(',')}`}</div>
+            <div className={styles.correctAnswerIs} data-testid="reviewCorrectMultiChoiceAnswer">{`${
+              otherProps.correctAnswerIs
+            } ${correctAnswers.join(',')}`}</div>
             {a?.explanation && <QuestionAddons explanation={a.explanation} />}
-            <div className={styles.yourAnswer}>
+            <div className={styles.yourAnswer} data-testid="reviewYourMultiChoiceAnswer">
               {otherProps.yourAnswer}
               <span className={styles.visuallyHidden}>{`: ${userAnswerKeysLabels.join(',')}`}</span>
             </div>
@@ -118,9 +120,13 @@ export const QuestionReview = withText(translates)(
                   const renderIncorrectIcon = userIncorrectAnswerKeys.includes(key);
                   const renderCorrectIcon = userCorrectAnswerKeys.includes(key);
                   return (
-                    <div key={key} className={[styles.multiSelectAnswer, styles.disabled].join(' ')} role="option">
-                      <div className={styles.questionLabel}>{questionLabels[index]}</div>
-                      <div className={styles.questionContent}>{text}</div>
+                    <div key={key} className={[styles.multiSelectAnswer, styles.disabled].join(' ')} data-testid="multiSelectAnswer" role="option">
+                      <div className={styles.questionLabel} data-testid="questionLabel">
+                        {questionLabels[index]}
+                      </div>
+                      <div className={styles.questionContent} data-testid="questionContent">
+                        {text}
+                      </div>
                       {renderCorrectIcon && <QuestionIcon questionType={q.questionType} isCorrect={true} />}
                       {renderIncorrectIcon && <QuestionIcon questionType={q.questionType} isCorrect={false} />}
                       {!(renderCorrectIcon || renderIncorrectIcon) && <div className={styles.iconPlaceholder} />}
@@ -136,7 +142,9 @@ export const QuestionReview = withText(translates)(
       if (q.questionType === KalturaQuizQuestionTypes.OpenQuestion) {
         return (
           <Fragment>
-            <div className={styles.openQuestionAnswer}>{a?.openAnswer}</div>
+            <div className={styles.openQuestionAnswer} data-testid="openQuestionAnswer">
+              {a?.openAnswer}
+            </div>
             {a?.explanation && <QuestionAddons explanation={a.explanation} />}
             {a?.feedback && <QuestionAddons feedback={a?.feedback} />}
           </Fragment>
@@ -146,10 +154,10 @@ export const QuestionReview = withText(translates)(
     }, [reviewQuestion]);
     return (
       <Fragment>
-        <div className={['ivq', styles.questionReviewWrapper].join(' ')} role="dialog" aria-live="polite">
+        <div className={['ivq', styles.questionReviewWrapper].join(' ')} role="dialog" aria-live="polite" data-testid="questionReviewWrapper">
           <div className={styles.backButtonContainer}>
             <A11yWrapper onClick={onBack}>
-              <div tabIndex={0} className={styles.backButton} ref={backButtonRef}>
+              <div tabIndex={0} className={styles.backButton} ref={backButtonRef} data-testid="backButton">
                 <div className={styles.iconContainer} aria-hidden="true">
                   <Icon id="ivq-chevron-left" height={14} width={9} viewBox={`0 0 ${icons.SmallSize} ${icons.SmallSize}`} path={icons.CHEVRON_LEFT} />
                 </div>
@@ -158,7 +166,7 @@ export const QuestionReview = withText(translates)(
             </A11yWrapper>
           </div>
           <div className={styles.quizQuestionContainer}>
-            <legend className={styles.questionText}>
+            <legend className={styles.questionText} data-testid="reviewQuestionText">
               <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${reviewQuestion.index + 1}:`}</span>
               {q.question}
             </legend>

@@ -1,6 +1,6 @@
 import {h} from 'preact';
 // @ts-ignore
-import {core} from 'kaltura-player-js';
+import {core} from '@playkit-js/kaltura-player-js';
 import {ContribServices, FloatingUIModes, FloatingPositions, FloatingItem} from '@playkit-js/common/dist/ui-common';
 import {QuizLoader} from './providers';
 import {
