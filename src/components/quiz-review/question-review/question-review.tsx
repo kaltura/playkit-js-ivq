@@ -1,6 +1,6 @@
 import {h, Fragment} from 'preact';
 import {useMemo, useRef, useEffect} from 'preact/hooks';
-import {A11yWrapper} from '@playkit-js/common';
+import {A11yWrapper} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import {QuizTranslates, QuizQuestion, KalturaQuizQuestionTypes} from '../../../types';
 import {makeQuestionLabels} from '../../../utils';
 import {icons} from '../../icons';
@@ -40,8 +40,6 @@ const translates = ({questionsAmount, reviewQuestion}: QuestionReviewProps): Qui
     ),
     correctAnswerIs: <Text id="ivq.correct_answer_is">The correct answer is:</Text>,
     yourAnswer: <Text id="ivq.your_answer">Your answer</Text>,
-    correctAnswer: <Text id="ivq.correct_answer">The correct answer</Text>,
-    incorrectAnswer: <Text id="ivq.incorrect_answer">The incorrect answer</Text>,
     questionLabel: <Text id="ivq.question">Question</Text>
   };
 };

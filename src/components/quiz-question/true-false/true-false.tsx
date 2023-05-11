@@ -2,7 +2,7 @@ import {h} from 'preact';
 import {useCallback, useEffect, useRef} from 'preact/hooks';
 import {QuestionProps, QuizTranslates} from '../../../types';
 import {QuestionAddons} from '../question-addons';
-import {A11yWrapper} from '@playkit-js/common';
+import {A11yWrapper} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import * as styles from './true-false.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -33,26 +33,26 @@ export const TrueFalse = withText(translates)(
 
     let answersOptionsRefMap: Map<number, HTMLElement | null> = new Map();
     useEffect(() => {
-        return () => {
-            answersOptionsRefMap = new Map();
-        }
+      return () => {
+        answersOptionsRefMap = new Map();
+      };
     }, []);
 
-      const setAnswerOptionRef = (index: number, ref: HTMLElement | null) => {
-          return answersOptionsRefMap.set(index, ref);
-      };
+    const setAnswerOptionRef = (index: number, ref: HTMLElement | null) => {
+      return answersOptionsRefMap.set(index, ref);
+    };
 
-      const getAnswerOptionRef = (index: number) => {
-          return answersOptionsRefMap.get(index);
-      };
+    const getAnswerOptionRef = (index: number) => {
+      return answersOptionsRefMap.get(index);
+    };
 
-      const handleLeftKeyPressed = (currentIndex: number) => {
-          getAnswerOptionRef(currentIndex - 1)?.focus();
-      };
+    const handleLeftKeyPressed = (currentIndex: number) => {
+      getAnswerOptionRef(currentIndex - 1)?.focus();
+    };
 
-      const handleRightKeyPressed = (currentIndex: number) => {
-          getAnswerOptionRef(currentIndex + 1)?.focus();
-      };
+    const handleRightKeyPressed = (currentIndex: number) => {
+      getAnswerOptionRef(currentIndex + 1)?.focus();
+    };
 
     return (
       <div className={styles.trueFalseWrapper} data-testid="trueFalseContainer">
@@ -67,16 +67,15 @@ export const TrueFalse = withText(translates)(
             const classes = [styles.trueFalseAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ');
             return (
               <A11yWrapper
-                  onClick={handleSelect(key)}
-                  onUpKeyPressed={() => {}}
-                  onDownKeyPressed={() => {}}
-                  onLeftKeyPressed={() => handleLeftKeyPressed(index)}
-                  onRightKeyPressed={() => handleRightKeyPressed(index)}
-                  role="option"
-              >
+                onClick={handleSelect(key)}
+                onUpKeyPressed={() => {}}
+                onDownKeyPressed={() => {}}
+                onLeftKeyPressed={() => handleLeftKeyPressed(index)}
+                onRightKeyPressed={() => handleRightKeyPressed(index)}
+                role="option">
                 <div
                   ref={node => {
-                      setAnswerOptionRef(index, node);
+                    setAnswerOptionRef(index, node);
                   }}
                   key={key}
                   tabIndex={0}

@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/kaltura/playkit-js-ivq/compare/v3.1.5...v3.2.0) (2023-04-19)
+
+
+### Bug Fixes
+
+* **FEC-13089:** dispatch QuestionChanged event in onContinue flow when answer is the same ([#84](https://github.com/kaltura/playkit-js-ivq/issues/84)) ([0f03831](https://github.com/kaltura/playkit-js-ivq/commit/0f03831))
+
+
+### Features
+
+* **FEC-13057:** add Quiz to navigation ([#82](https://github.com/kaltura/playkit-js-ivq/issues/82)) ([e5aeceb](https://github.com/kaltura/playkit-js-ivq/commit/e5aeceb))
+
+
+
 ### [3.1.5](https://github.com/kaltura/playkit-js-ivq/compare/v3.1.4...v3.1.5) (2023-03-23)
 
 

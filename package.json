@@ -1,6 +1,6 @@
 {
   "name": "@playkit-js/playkit-js-ivq",
-  "version": "3.1.5",
+  "version": "3.2.0",
   "main": "dist/playkit-ivq.js",
   "scripts": {
     "clean": "rm -rf ./dist",
@@ -59,7 +59,7 @@
     }
   },
   "dependencies": {
-    "@playkit-js/common": "^1.1.1",
+    "@playkit-js/common": "^1.1.2",
     "@playkit-js/playkit-js-ui": "^0.73.0"
   }
 }

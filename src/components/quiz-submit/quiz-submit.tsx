@@ -1,6 +1,6 @@
 import {h} from 'preact';
 import {useCallback, useState, useRef, useEffect} from 'preact/hooks';
-import {A11yWrapper} from '@playkit-js/common';
+import {A11yWrapper} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import {QuizTranslates} from '../../types';
 import {IvqOverlay} from '../ivq-overlay';
 import {Spinner} from '../spinner';
