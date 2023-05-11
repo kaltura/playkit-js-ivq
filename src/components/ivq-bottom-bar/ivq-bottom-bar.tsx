@@ -1,6 +1,6 @@
 import {h, VNode} from 'preact';
 import {useMemo, useEffect, useRef} from 'preact/hooks';
-import {A11yWrapper, OnClick} from '@playkit-js/common';
+import {A11yWrapper, OnClick} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import {icons} from '../icons';
 import {QuizTranslates} from '../../types';
 import * as styles from './ivq-bottom-bar.scss';

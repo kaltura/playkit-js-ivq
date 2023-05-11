@@ -4,7 +4,7 @@ import {Spinner} from '../../spinner';
 import {QuizQuestion} from '../../../types';
 import {QuizTranslates, KalturaQuizQuestionTypes} from '../../../types';
 import {QuestionIcon} from '../question-icon';
-import {A11yWrapper} from '@playkit-js/common';
+import {A11yWrapper} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import * as styles from './question-list-review.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;

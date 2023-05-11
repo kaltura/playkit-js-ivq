@@ -1,4 +1,4 @@
-import {A11yWrapper, OnClick} from '@playkit-js/common';
+import {A11yWrapper, OnClick} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import {useState, useCallback} from 'preact/hooks';
 import {h} from 'preact';
 import {icons} from '../icons';
@@ -112,11 +112,7 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
       {type === IvqPopupTypes.submit && (
         <div className={styles.buttonsWrapper}>
           <A11yWrapper onClick={onReview}>
-            <div
-              tabIndex={0}
-              className={styles.secondaryButton}
-              aria-label={otherProps.reviewButtonAriaLabel}
-              data-testid="ivqPopupReviewButton">
+            <div tabIndex={0} className={styles.secondaryButton} aria-label={otherProps.reviewButtonAriaLabel} data-testid="ivqPopupReviewButton">
               {otherProps.reviewButton}
             </div>
           </A11yWrapper>
