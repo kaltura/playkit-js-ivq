@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/kaltura/playkit-js-ivq/compare/v3.2.0...v3.3.0) (2023-05-17)
+
+
+### Bug Fixes
+
+* **FEC-13132:** change the structure of the spans content in question list review ([#87](https://github.com/kaltura/playkit-js-ivq/issues/87)) ([4d340ed](https://github.com/kaltura/playkit-js-ivq/commit/4d340ed)), closes [#3](https://github.com/kaltura/playkit-js-ivq/issues/3) [#3](https://github.com/kaltura/playkit-js-ivq/issues/3)
+* **FEC-13145:** upgrade dependancies for common and ui-managers etc ([#88](https://github.com/kaltura/playkit-js-ivq/issues/88)) ([5b88e7e](https://github.com/kaltura/playkit-js-ivq/commit/5b88e7e))
+
+
+### Features
+
+* **SUP-37014:** Translation into Spanish for IVQ v7 ([d5fc6d3](https://github.com/kaltura/playkit-js-ivq/commit/d5fc6d3))
+
+
+
 ## [3.2.0](https://github.com/kaltura/playkit-js-ivq/compare/v3.1.5...v3.2.0) (2023-04-19)
 
 
