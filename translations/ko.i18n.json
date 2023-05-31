@@ -42,7 +42,12 @@
       "answer_number": "질문",
       "review_question": "질문과 답변을 보려면 클릭하십시오.",
       "tip" : "모든 질문에 답변해야 합니다. </br>퀴즈는 마지막에 제출됩니다.",
-      "available_attempts_message": "이 퀴즈 총 시도 횟수: {{availableAttempts}}"
+      "available_attempts_message": "이 퀴즈 총 시도 횟수: {{availableAttempts}}",
+      "quiz_almost_done_title": "거의 완료되었습니다",
+      "quiz_almost_done_description": "몇 가지 질문에 답하지 않은 것으로 보입니다. 제출할 퀴즈를 완료하십시오.",
+      "quiz_submit_description": "잠시 시간을 내어 답변을 검토하거나 계속해서 답변을 제출하세요.",
+      "quiz_completed_description": "퀴즈 동영상을 끝까지 시청하여 제출하시기 바랍니다.",
+      "quiz_submitted_title": "퀴즈 답변 제출"
     }
   }
 }
