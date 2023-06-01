@@ -23,7 +23,7 @@
         "partnerId": 3188353,
         "createdAt": 1679985724,
         "updatedAt": 1679985724,
-        "startTime": 1000,
+        "startTime": 3000,
         "userId": "lian.binyamin@kaltura.com",
         "isMomentary": true,
         "objectType": "KalturaQuestionCuePoint"
