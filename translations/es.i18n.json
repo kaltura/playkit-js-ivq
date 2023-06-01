@@ -43,7 +43,12 @@
       "answer_number": "Número de respuesta",
       "review_question": "Haga clic para ver la pregunta y su respuesta",
       "tip": "Es obligatorio responder a todas las preguntas. El cuestionario se enviará al final.",
-      "available_attempts_message": "Número total de intentos disponibles para este cuestionario: {{avanceAttempts}}"
+      "available_attempts_message": "Número total de intentos disponibles para este cuestionario: {{avanceAttempts}}",
+      "quiz_almost_done_title": "You’re almost done",
+      "quiz_almost_done_description": "It appears that some questions remained unanswered. Please complete the quiz to submit.",
+      "quiz_submit_description": "Take a moment to review your answers or go ahead to submit your answers.",
+      "quiz_completed_description": "Watch the video until the end to submit.",
+      "quiz_submitted_title": "Quiz submitted"
     }
   }
 }
