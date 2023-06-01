@@ -61,7 +61,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this.logger,
       (event: string, payload: unknown) => this.dispatchEvent(event, payload),
       () => this._manageIvqPopup(false),
-      (qqm: Map<string,QuizQuestion>) => this._filterQuestionChanged(qqm)
+      (qqm: Map<string, QuizQuestion>) => this._filterQuestionChanged(qqm),
+      this._makeOnClickHandler
     );
     this._questionsVisualManager = new QuestionsVisualManager(
       () => this._dataManager.quizQuestionsMap,
@@ -136,6 +137,13 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     }
   }
 
+  private _makeOnClickHandler = (id: string) => () => {
+    const quizQuestion = this._dataManager.quizQuestionsMap.get(id);
+    if (quizQuestion) {
+      this._questionsVisualManager.preparePlayer(quizQuestion, true);
+    }
+  };
+
   private _handleTimeline(qqm: QuizQuestionMap) {
     const timelineService: any = this._player.getService('timeline');
     if (!timelineService) {
@@ -148,13 +156,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         if (qq.startTime === qq.prev?.startTime) {
           return;
         }
-        const handleOnQuestionClick = () => {
-          // get updated Quiz Question
-          const quizQuestion = this._dataManager.quizQuestionsMap.get(qq.id);
-          if (quizQuestion) {
-            this._questionsVisualManager.preparePlayer(quizQuestion, true);
-          }
-        };
+        const handleOnQuestionClick = this._makeOnClickHandler(qq.id);
         questionBunch.push(qq.index);
         questionBunchMap.set(qq.id, questionBunch);
         const timeLineMarker: TimeLineMarker = {
