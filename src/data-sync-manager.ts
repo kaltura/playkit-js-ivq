@@ -2,17 +2,9 @@
 import {core} from '@playkit-js/kaltura-player-js';
 import {getKeyValue, stringToBoolean, isNumber} from './utils';
 import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry} from './providers/response-types';
-import {
-  IvqEventTypes,
-  KalturaQuizQuestion,
-  KalturaQuizQuestionTypes,
-  QuizData,
-  QuizQuestion,
-  QuizQuestionMap,
-  Selected
-} from './types';
+import {IvqEventTypes, KalturaQuizQuestion, KalturaQuizQuestionTypes, QuizData, QuizQuestion, QuizQuestionMap, Selected} from './types';
 import {QuizAnswerLoader, QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader} from './providers';
-import {QuestionStateTypes} from "./types/questionStateTypes";
+import {QuestionStateTypes} from './types/questionStateTypes';
 
 const {TimedMetadata} = core;
 
@@ -38,7 +30,8 @@ export class DataSyncManager {
     private _logger: KalturaPlayerTypes.Logger,
     private _dispatchIvqEvent: (event: string, payload: unknown) => void,
     private _manageIvqPopup: () => void,
-    private _filterQuestionChanged: (qqm: QuizQuestionMap) => Array<QuizQuestion>
+    private _filterQuestionChanged: (qqm: QuizQuestionMap) => Array<QuizQuestion>,
+    private _makeOnClickHandler: (id: string) => void
   ) {}
 
   private _syncEvents = () => {
@@ -107,7 +100,8 @@ export class DataSyncManager {
         type: qq.q.questionType,
         question: qq.q.question,
         startTime: qq.startTime,
-        state: questionState
+        state: questionState,
+        onClick: this._makeOnClickHandler(qq.id)
       };
       qqa.push(dataToPush);
     });

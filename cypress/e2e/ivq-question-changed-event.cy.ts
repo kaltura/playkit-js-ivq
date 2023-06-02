@@ -99,5 +99,18 @@ describe('IVQ plugin', () => {
         cy.get('[data-testid="reviewRetakeButton"]').should('exist').click({force: true});
       });
     });
+    it('should dispatch QuizQuestionChanged event with ques that has onClick handler', done => {
+      mockKalturaBe('quiz_welcome_page_disabled_with_attempt.json', 'ivq_QuizQuestionChanged_event/cues_1_question.json');
+      loadPlayer().then(player => {
+        player.addEventListener('QuizQuestionChanged', ({payload}: any) => {
+          const {onClick} = payload.qqa[0];
+          expect(typeof onClick === 'function').to.eq(true);
+          onClick();
+          cy.get('[data-testid="reflectionPointTitle"]').should('be.visible');
+          done();
+        });
+        cy.get('.playkit-pre-playback-play-button').click({force: true});
+      });
+    });
   });
 });
