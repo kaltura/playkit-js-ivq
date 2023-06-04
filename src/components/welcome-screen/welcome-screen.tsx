@@ -24,7 +24,7 @@ const translates = ({availableAttempts}: WelcomeScreenProps): QuizTranslates => 
     tip: <Text id="ivq.tip">All questions must be answered. The quiz will be submitted at the end.</Text>,
     availableAttemptsMessage: (
       <Text
-        id="ivq.available_attempts"
+        id="ivq.available_attempts_message"
         fields={{
           availableAttempts: availableAttempts
         }}>{`Total attempts available for this quiz: ${availableAttempts}`}</Text>
