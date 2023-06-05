@@ -45,6 +45,7 @@
       "tip": "Alle Fragen müssen beantwortet werden. Das Quiz wird am Ende eingereicht.",
       "available_attempts_message": "Gesamtzahl der für dieses Quiz verfügbaren Versuche: {{availableAttempts}}",
       "close_button": "Schließen",
+      "close_button_aria_label": "Klicken Sie hier, um die Rezension zu schließen",
       "quiz_almost_done_title": "Sie sind fast fertig",
       "quiz_almost_done_description": "Es scheint, dass einige Fragen unbeantwortet blieben. Bitte füllen Sie das Quiz aus, um es abzusenden.",
       "quiz_submit_description": "Nehmen Sie sich einen Moment Zeit, um Ihre Antworten zu überprüfen, oder reichen Sie Ihre Antworten ein.",
