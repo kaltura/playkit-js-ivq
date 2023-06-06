@@ -61,12 +61,12 @@
   "kaltura": {
     "name": "ivq",
     "dependencies": {
-      "playkit-kaltura-cuepoints": "3.0.5",
+      "playkit-kaltura-cuepoints": "3.0.6",
       "playkit-timeline": "3.0.2"
     }
   },
   "dependencies": {
-    "@playkit-js/common": "^1.2.4",
-    "@playkit-js/playkit-js-ui": "^0.77.1"
+    "@playkit-js/common": "^1.2.9",
+    "@playkit-js/playkit-js-ui": "^0.77.2"
   }
 }
