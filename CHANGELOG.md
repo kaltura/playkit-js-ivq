@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.3.2 (2023-06-27)
+
+
+### Bug Fixes
+
+* **SUP-37655:** missing spanish translations for ivq ([#96](https://github.com/kaltura/playkit-js-ivq/issues/96)) ([dcbdf62](https://github.com/kaltura/playkit-js-ivq/commit/dcbdf62))
+
+
+
 ### 3.3.1 (2023-06-07)
 
 
