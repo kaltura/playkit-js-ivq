@@ -33,6 +33,7 @@
       "your_answer": "Su respuesta",
       "correct_answer": "La respuesta correcta",
       "incorrect_answer": "La respuesta incorrecta",
+      "wrong_answer": "La respuesta incorrecta",
       "show_hint": "Mostrar pista",
       "hide_hint": "Ocultar pista",
       "show_why": "Mostrar por qué",
@@ -43,12 +44,12 @@
       "answer_number": "Número de respuesta",
       "review_question": "Haga clic para ver la pregunta y su respuesta",
       "tip": "Es obligatorio responder a todas las preguntas. El cuestionario se enviará al final.",
-      "available_attempts_message": "Número total de intentos disponibles para este cuestionario: {{avanceAttempts}}",
-      "quiz_almost_done_title": "You’re almost done",
-      "quiz_almost_done_description": "It appears that some questions remained unanswered. Please complete the quiz to submit.",
-      "quiz_submit_description": "Take a moment to review your answers or go ahead to submit your answers.",
-      "quiz_completed_description": "Watch the video until the end to submit.",
-      "quiz_submitted_title": "Quiz submitted"
+      "available_attempts_message": "Número total de intentos disponibles para este cuestionario: {{availableAttempts}}",
+      "quiz_almost_done_title": "Ya casi has terminado",
+      "quiz_almost_done_description": "Parece que algunas preguntas se han quedado sin respuesta. Por favor, complete el cuestionario para poder enviarlo.",
+      "quiz_submit_description": "Tómese un momento para revisar sus respuestas o continúe para enviarlas.",
+      "quiz_completed_description": "Mire el video hasta el final para poder enviarlo.",
+      "quiz_submitted_title": "Cuestionario presentado"
     }
   }
 }
