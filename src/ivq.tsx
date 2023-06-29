@@ -1,19 +1,18 @@
 import {h} from 'preact';
 // @ts-ignore
 import {core} from '@playkit-js/kaltura-player-js';
-import {ContribServices, FloatingUIModes, FloatingPositions, FloatingItem} from '@playkit-js/common/dist/ui-common';
+import {ContribServices, FloatingItem, FloatingPositions, FloatingUIModes} from '@playkit-js/common/dist/ui-common';
 import {QuizLoader} from './providers';
 import {
   IvqConfig,
-  QuizQuestion,
-  QuizQuestionMap,
+  IvqEventTypes,
+  KalturaPlayerBottomBarSelector,
+  KalturaPlayerSeekBarSelector,
   KalturaQuizQuestion,
   PresetAreas,
-  IvqEventTypes,
-  TimeLineMarker,
-  UiComponentArea,
-  KalturaPlayerSeekBarSelector,
-  KalturaPlayerBottomBarSelector
+  QuizQuestion,
+  QuizQuestionMap,
+  UiComponentArea
 } from './types';
 import {DataSyncManager} from './data-sync-manager';
 import {QuestionsVisualManager} from './questions-visual-manager';
@@ -22,7 +21,6 @@ import {WelcomeScreen, WelcomeScreenProps} from './components/welcome-screen';
 import {QuizSubmit, QuizSubmitProps} from './components/quiz-submit';
 import {QuizReview, QuizReviewProps} from './components/quiz-review';
 import {IvqPopup, IvqPopupProps, IvqPopupTypes} from './components/ivq-popup';
-import {TimelinePreview, TimelineMarker} from './components/timeline';
 import {QuizDownloadLoader} from './providers/quiz-download-loader';
 import {KalturaIvqMiddleware} from './quiz-middleware';
 
@@ -150,56 +148,18 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this.logger.warn('No timeline service available');
     } else {
       const isMarkerDisabled = () => Boolean(this._removeActiveOverlay);
-      const questionBunchMap = new Map<string, Array<number>>();
-      let questionBunch: Array<number> = [];
       qqm.forEach((qq: QuizQuestion) => {
         if (qq.startTime === qq.prev?.startTime) {
           return;
         }
         const handleOnQuestionClick = this._makeOnClickHandler(qq.id);
-        questionBunch.push(qq.index);
-        questionBunchMap.set(qq.id, questionBunch);
-        const timeLineMarker: TimeLineMarker = {
-          time: qq.startTime,
-          marker: {
-            width: 124,
-            height: 32,
-            get: props => {
-              return (
-                <TimelineMarker
-                  {...props}
-                  getSeekBarNode={this._getSeekBarNode}
-                  onClick={handleOnQuestionClick}
-                  questionIndex={qq.index}
-                  isDisabled={isMarkerDisabled}
-                />
-              );
-            }
-          }
+        const qqData = {
+          onClick: handleOnQuestionClick,
+          isMarkerDisabled: isMarkerDisabled,
+          index: qq.index,
+          type: qq.q.questionType
         };
-        if (this._player.sources?.type !== core.MediaType.AUDIO) {
-          timeLineMarker.preview = {
-            get: ({defaultPreviewProps}) => {
-              return (
-                <TimelinePreview
-                  onQuestionLinkClick={handleOnQuestionClick}
-                  thumbnailInfo={this.player.getThumbnail(defaultPreviewProps.virtualTime)}
-                  questionBunch={questionBunchMap.get(qq.id)!}
-                  questionType={qq.q.questionType}
-                />
-              );
-            },
-            props: {
-              style: {paddingTop: '33%'}
-            },
-            className: 'preview',
-            width: this._player.getThumbnail(0)?.width,
-            hideTime: false,
-            sticky: true
-          };
-        }
-        timelineService.addCuePoint(timeLineMarker);
-        questionBunch = [];
+        timelineService.addKalturaCuePoint(qq.startTime, 'QuizQuestion', qq.id, '', qqData);
       });
     }
   }
