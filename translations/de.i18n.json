@@ -3,7 +3,7 @@
     "ivq": {
       "continue_button": "Fortsetzen",
       "continue_button_area_label": "Quiz mit der ausgewählten Antwort fortsetzen",
-      "skip_button": "Hüpfen",
+      "skip_button": "Überspringen",
       "skip_button_area_label": "Vorerst überspringen",
       "question_counter": "Frage {{current}} von {{total}}",
       "next_question_area_label": "Nächste Frage",
