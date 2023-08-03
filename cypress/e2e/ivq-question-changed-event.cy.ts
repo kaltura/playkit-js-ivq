@@ -20,7 +20,7 @@ describe('IVQ plugin', () => {
           done();
         });
         player.pause();
-        cy.get('[data-testid="cuePointContainer"]').click({force: true});
+        cy.get('[data-testid="cuePointMarkerContainer"]').click({force: true});
         cy.get('[data-testid="continueButton"]').click({force: true});
       });
     });
@@ -32,7 +32,7 @@ describe('IVQ plugin', () => {
           done();
         });
         player.pause();
-        cy.get('[data-testid="cuePointContainer"]').click({force: true});
+        cy.get('[data-testid="cuePointMarkerContainer"]').click({force: true});
         cy.get('[data-testid="continueButton"]').should('exist').click({force: true});
         cy.get('[data-testid="ivqPopupSubmitButton"]').click({force: true});
       });
@@ -57,7 +57,7 @@ describe('IVQ plugin', () => {
             done();
           });
           kalturaPlayer.pause();
-          cy.get('[data-testid="cuePointContainer"]').click({force: true});
+          cy.get('[data-testid="cuePointMarkerContainer"]').click({force: true});
           cy.get('[data-testid="continueButton"]').should('exist').click({force: true});
         })
       );
@@ -75,7 +75,7 @@ describe('IVQ plugin', () => {
           }
         });
         player.pause();
-        cy.get('[data-testid="cuePointContainer"]').click({force: true});
+        cy.get('[data-testid="cuePointMarkerContainer"]').click({force: true});
         cy.get('[data-testid="continueButton"]').should('exist').click({force: true});
         cy.get('[data-testid="ivqPopupSubmitButton"]').should('exist').click({force: true});
       });
@@ -93,7 +93,7 @@ describe('IVQ plugin', () => {
           counter++;
         });
         player.pause();
-        cy.get('[data-testid="cuePointContainer"]').click({force: true});
+        cy.get('[data-testid="cuePointMarkerContainer"]').click({force: true});
         cy.get('[data-testid="continueButton"]').should('exist').click({force: true});
         cy.get('[data-testid="ivqPopupSubmitButton"]').should('exist').click({force: true});
         cy.get('[data-testid="reviewRetakeButton"]').should('exist').click({force: true});

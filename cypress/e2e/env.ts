@@ -13,7 +13,7 @@ export const getPlayer = () => {
   return cy.window().then($win => $win.KalturaPlayer.getPlayers()['player-placeholder']);
 };
 
-export const preparePage = (puginConf = {}, playbackConf = {}) => {
+export const preparePage = (pluginConf = {}, playbackConf = {}) => {
   cy.visit('index.html');
   return cy.window().then(win => {
     try {
@@ -28,9 +28,10 @@ export const preparePage = (puginConf = {}, playbackConf = {}) => {
           }
         },
         plugins: {
-          ivq: puginConf,
+          ivq: pluginConf,
           uiManagers: {},
-          kalturaCuepoints: {}
+          kalturaCuepoints: {},
+          timeline: {}
         },
         playback: {muted: true, ...playbackConf}
       });

@@ -58,7 +58,7 @@ Finally, add the bundle as a script tag in your page, and initialize the player
 <script type="text/javascript" src="/PATH/TO/FILE/kaltura-player.js"></script>
 <!--Kaltura player-->
 <script type="text/javascript" src="/PATH/TO/FILE/playkit-js-timeline.js"></script>
-<!--PlayKit cuepoints plugin-->
+<!--PlayKit timeline plugin-->
 <script type="text/javascript" src="/PATH/TO/FILE/playkit-kaltura-cuepoints.js"></script>
 <!--PlayKit cuepoints plugin-->
 <script type="text/javascript" src="/PATH/TO/FILE/playkit-ivq.js"></script>
