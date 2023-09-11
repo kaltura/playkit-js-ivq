@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 3.4.0 (2023-09-11)
+
+
+### Features
+
+* **FEC-13110:** remove logic related to markers and use new api of timeline manager ([#97](https://github.com/kaltura/playkit-js-ivq/issues/97)) ([e96b130](https://github.com/kaltura/playkit-js-ivq/commit/e96b130))
+
+
+
 ### 3.3.3 (2023-07-26)
 
 
