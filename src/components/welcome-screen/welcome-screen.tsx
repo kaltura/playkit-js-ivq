@@ -57,7 +57,6 @@ export const WelcomeScreen = withText(translates)(
             <div
               title={`${otherProps.welcomeTitle}. ${welcomeMessage}. ${otherProps.tip} ${otherProps.availableAttemptsMessage}`}
               tabIndex={0}
-              role="text"
               aria-live="polite">
               <div className={styles.title} data-testid="welcomeScreenTitle">
                 {otherProps.welcomeTitle}

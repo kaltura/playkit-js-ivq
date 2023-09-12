@@ -96,11 +96,11 @@ export const QuestionListReview = withText(translates)(
     return (
       <div className={['ivq', styles.quizReviewWrapper].join(' ')} role="dialog" aria-live="polite" data-testid="quizReviewWrapper">
         {showScores ? (
-          <legend data-testid="quizScoreTitle" className={styles.quizScore} tabIndex={0} role="text">
+          <legend data-testid="quizScoreTitle" className={styles.quizScore} tabIndex={0}>
             {otherProps.quizScore}
           </legend>
         ) : (
-          <div className={styles.quizScore} data-testid="quizScoreTitle" tabIndex={0} role="text">
+          <div className={styles.quizScore} data-testid="quizScoreTitle" tabIndex={0}>
             {otherProps.quizCompleted}
           </div>
         )}
