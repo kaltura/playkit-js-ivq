@@ -5,6 +5,10 @@
 }
 
 .ivqOverlay {
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
   > :global(.playkit-overlay .playkit-overlay-contents) {
     display: flex;
     flex-direction: column;
