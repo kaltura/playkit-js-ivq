@@ -138,7 +138,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _makeOnClickHandler = (id: string) => () => {
     const quizQuestion = this._dataManager.quizQuestionsMap.get(id);
     if (quizQuestion) {
-      this._questionsVisualManager.preparePlayer(quizQuestion, true);
+      const {startTime} = quizQuestion;
+      if (!this._shouldPreventSeek(startTime)){
+        this._questionsVisualManager.preparePlayer(quizQuestion, true);
+      }
     }
   };
 
