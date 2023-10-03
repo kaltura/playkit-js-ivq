@@ -8,9 +8,9 @@ on:
       - master
 
 jobs:
-  #test:
-  #uses: kaltura/playkit-js-common/.github/workflows/cypress.yml@master
-  #secrets: inherit
+  test:
+    uses: kaltura/playkit-js-common/.github/workflows/cypress.yml@master
+    secrets: inherit
 
   canary-full-flow:
     if: ${{ github.actor != 'PlaykitJs-Bot' }}
