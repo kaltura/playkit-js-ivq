@@ -3,12 +3,9 @@ name: Canary Full Flow
 run-name: Canary Full Flow
 
 on:
-  pull_request:
+  push:
     branches:
-      - "*"
-  #push:
-    #branches:
-      #- master
+      - master
 
 jobs:
   test:
