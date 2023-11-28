@@ -83,7 +83,7 @@ export const MultiChoice = withText(translates)(
 
     return (
       <div className={styles.multiChoiceWrapper} data-testid="multipleChoiceContainer">
-        <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle" tabIndex={0} role="text" ref={quizQuestionRef}>
+        <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle" tabIndex={0} ref={quizQuestionRef}>
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
           {question}
         </legend>
@@ -110,10 +110,10 @@ export const MultiChoice = withText(translates)(
                     aria-multiselectable={Boolean(multiAnswer)}
                     aria-label={`${otherProps.answerNumber} ${index + 1}, ${text}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
                     className={[styles.multiSelectAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ')}>
-                    <div className={styles.questionLabel} data-testid="multipleChoiceQuestionLabel" role="text">
+                    <div className={styles.questionLabel} data-testid="multipleChoiceQuestionLabel">
                       {questionLabels[index]}
                     </div>
-                    <div className={styles.questionContent} data-testid="multipleChoiceQuestionContent" role="text">
+                    <div className={styles.questionContent} data-testid="multipleChoiceQuestionContent">
                       {text}
                     </div>
                   </div>
