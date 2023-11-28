@@ -78,10 +78,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     return this._quizDataPromise;
   }
 
-  getUIComponents() {
-    return this.floatingManager.registerUIComponents();
-  }
-
   private get floatingManager(): FloatingManager {
     return (this._player.getService('floatingManager') as FloatingManager) || {};
   }
