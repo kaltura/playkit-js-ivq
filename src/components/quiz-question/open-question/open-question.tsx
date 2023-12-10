@@ -35,7 +35,7 @@ export const OpenQuestion = withText(translates)(
 
     return (
       <div className={styles.openQuestionWrapper} data-testid="openQuestionContainer">
-        <legend className={styles.questionText} data-testid="openQuestionTitle" tabIndex={0} role="text" ref={quizQuestionRef}>
+        <legend className={styles.questionText} data-testid="openQuestionTitle" tabIndex={0} ref={quizQuestionRef}>
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
           {question}
         </legend>

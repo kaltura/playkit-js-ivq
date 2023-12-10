@@ -1,6 +1,6 @@
 {
   "name": "@playkit-js/playkit-js-ivq",
-  "version": "3.4.4",
+  "version": "3.4.5",
   "main": "dist/playkit-ivq.js",
   "scripts": {
     "clean": "rm -rf ./dist",
@@ -64,7 +64,7 @@
     "dependencies": {
       "playkit-kaltura-cuepoints": "3.0.6",
       "playkit-ui-managers": "1.4.1",
-      "playkit-timeline": "3.0.8"
+      "playkit-timeline": "3.0.9"
     }
   },
   "dependencies": {
