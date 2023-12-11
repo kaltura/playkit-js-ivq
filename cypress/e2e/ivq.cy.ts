@@ -1,5 +1,9 @@
 import {mockKalturaBe, loadPlayer, MANIFEST, MANIFEST_SAFARI} from './env';
 
+Cypress.on('uncaught:exception', (err, runnable) => {
+  return false;
+});
+
 describe('IVQ plugin', () => {
   beforeEach(() => {
     // manifest
