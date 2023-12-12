@@ -85,6 +85,15 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.3.tgz#0300943770e04231041a51bd39f0439b5c7ab4f0"
   integrity sha512-nkalE/f1RvRGChwBnEIoBfSEYOXnCRdleKuv6+lePbMDrMZXeDQnqak5XDOeBgrPPyPfAdcCu/B5z+v3VhplGg==
 
+"@playkit-js/common@^1.2.10":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.5.1.tgz#14edd4f01ecd16ea22016bdb68f7dd3604eb39a0"
+  integrity sha512-YRJfhxZihOggy9tXOL1wm/pYChV+b+NuD9f7Y/JjVt5KIjVgeEPvPhSWSyKRv3LxbBJ4BcwYXtMe8Tg/gUmq3A==
+  dependencies:
+    "@playkit-js/playkit-js-ui" "^0.77.10"
+    classnames "^2.3.2"
+    linkify-it "^4.0.1"
+
 "@playkit-js/common@^1.2.9":
   version "1.2.9"
   resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.2.9.tgz#5b20a6c2e521490ca1e518c42a9167ab2d490859"
@@ -136,6 +145,16 @@
     react-redux "^7.2.0"
     redux "^4.0.5"
 
+"@playkit-js/playkit-js-ui@^0.77.10":
+  version "0.77.11"
+  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-ui/-/playkit-js-ui-0.77.11.tgz#36a3ba1e02eb7abd68df132db3bb91c13400455d"
+  integrity sha512-ZvcXOmlzcslzDKoeRt60tXdlJIPC62UoLcj1T49rwBQQncY1oAI+8uetOm33R8fculLIUKlQTKKCDKeqyaQV6Q==
+  dependencies:
+    preact "^10.3.4"
+    preact-i18n "^2.0.0-preactx.2"
+    react-redux "^7.2.0"
+    redux "^4.0.5"
+
 "@playkit-js/playkit-js-ui@^0.77.2":
   version "0.77.2"
   resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-ui/-/playkit-js-ui-0.77.2.tgz#5340ba529a0a0554c4a63d7720a0bf8b27c7a696"
@@ -163,6 +182,13 @@
   dependencies:
     js-logger "^1.6.0"
     ua-parser-js "1.0.2"
+
+"@playkit-js/ui-managers@1.4.3-canary.0-b33eab0":
+  version "1.4.3-canary.0-b33eab0"
+  resolved "https://registry.yarnpkg.com/@playkit-js/ui-managers/-/ui-managers-1.4.3-canary.0-b33eab0.tgz#973c6d6e0559d38143bfbdcdc490e37e5e8ca214"
+  integrity sha512-m60ap+X7KJpLjjJl8p0Vy2EkhoRkYVnW1s+zynLd4vWz6kP5P0HKEuZdWUhNKrjWd+vLYt77xEoCjCUVRDiE5A==
+  dependencies:
+    "@playkit-js/common" "^1.2.10"
 
 "@sindresorhus/is@^0.7.0":
   version "0.7.0"
