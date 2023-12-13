@@ -1,6 +1,8 @@
 import {h} from 'preact';
 // @ts-ignore
 import {core} from '@playkit-js/kaltura-player-js';
+// @ts-ignore
+import {Env} from '@playkit-js/playkit-js';
 import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
 import {QuizLoader} from './providers';
 import {
@@ -95,6 +97,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         this._handleTimeline(qqm);
         this._handlePlaylistConfiguration();
         this.eventManager.listen(this._player, this._player.Event.ENDED, this._handleEndEvent);
+        this._disableNativePip();
       });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered or entry Live');
@@ -487,6 +490,12 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       return quizQuestions;
     }
     return Array.from(quizQuestionsMap.values());
+  };
+
+  private _disableNativePip = () => {
+    if (this._seekControlEnabled && Env.browser.name === 'Firefox') {
+      this._player.getVideoElement().setAttribute('disablePictureInPicture', 'true');
+    }
   };
 
   reset(): void {
