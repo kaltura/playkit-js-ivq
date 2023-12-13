@@ -3,7 +3,7 @@ import {h} from 'preact';
 import {core} from '@playkit-js/kaltura-player-js';
 // @ts-ignore
 import {Env} from '@playkit-js/playkit-js';
-import {ContribServices, FloatingItem, FloatingPositions, FloatingUIModes} from '@playkit-js/common/dist/ui-common';
+import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
 import {QuizLoader} from './providers';
 import {
   IvqConfig,
@@ -43,7 +43,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _removeActiveOverlay: null | Function = null;
   private _ivqPopup: null | FloatingItem = null;
   private _playlistOptions: null | KalturaPlayerTypes.Playlist['options'] = null;
-  private _contribServices: ContribServices;
 
   static defaultConfig: IvqConfig = {};
 
@@ -75,16 +74,14 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._getSeekBarNode,
       this._dataManager.dispatchQuestionChanged
     );
-    this._contribServices = ContribServices.get({kalturaPlayer: this._player});
   }
 
   get ready() {
     return this._quizDataPromise;
   }
 
-  // TODO: remove once contribServices migrated to BasePlugin
-  getUIComponents(): any[] {
-    return this._contribServices.register();
+  private get floatingManager(): FloatingManager {
+    return (this._player.getService('floatingManager') as FloatingManager) || {};
   }
 
   getMiddlewareImpl(): KalturaIvqMiddleware {
@@ -142,7 +139,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     const quizQuestion = this._dataManager.quizQuestionsMap.get(id);
     if (quizQuestion) {
       const {startTime} = quizQuestion;
-      if (!this._shouldPreventSeek(startTime)){
+      if (!this._shouldPreventSeek(startTime)) {
         this._questionsVisualManager.preparePlayer(quizQuestion, true);
       }
     }
@@ -226,17 +223,17 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         return this._submitQuiz();
       }
     };
-    this._ivqPopup = this._contribServices.floatingManager.add({
+    this._ivqPopup = this.floatingManager.add({
       label: 'IVQ popup',
-      mode: FloatingUIModes.Immediate,
-      position: FloatingPositions.InteractiveArea,
+      mode: 'Immediate',
+      position: 'InteractiveArea',
       renderContent: () => <IvqPopup {...popupProps} />
     });
   };
 
   private _removeIvqBanner = () => {
     if (this._ivqPopup) {
-      this._contribServices.floatingManager.remove(this._ivqPopup);
+      this.floatingManager.remove(this._ivqPopup);
     }
   };
 
@@ -518,7 +515,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._playlistOptions = null;
     }
     this._removeIvqBanner();
-    this._contribServices.reset();
   }
 
   destroy(): void {
