@@ -100,7 +100,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         this._handleTimeline(qqm);
         this._handlePlaylistConfiguration();
         this.eventManager.listen(this._player, this._player.Event.ENDED, this._handleEndEvent);
-        this._disablePip();
+        this._disableNativePip();
       });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered or entry Live');
@@ -495,7 +495,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     return Array.from(quizQuestionsMap.values());
   };
 
-  private _disablePip = () => {
+  private _disableNativePip = () => {
     if (this._seekControlEnabled && Env.browser.name === 'Firefox') {
       this._player.getVideoElement().setAttribute('disablePictureInPicture', 'true');
     }
