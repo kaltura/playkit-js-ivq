@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.4.6 (2023-12-21)
+
+
+### Bug Fixes
+
+* **SUP-40335:** Circumvent "no seek forward" in IVQ ([#112](https://github.com/kaltura/playkit-js-ivq/issues/112)) ([caf2ae5](https://github.com/kaltura/playkit-js-ivq/commit/caf2ae5))
+
+
+
 ### 3.4.5 (2023-12-07)
 
 
