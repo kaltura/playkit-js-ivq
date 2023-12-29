@@ -38,7 +38,7 @@ const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
       ...ivqTranslates,
       title: <Text id="ivq.quiz_almost_done_title">You’re almost done</Text>,
       description: (
-        <Text id="ivq.quiz_almost_done_description">It appears that some questions remained unanswered. Please complete the quiz to submit.</Text>
+        <Text id="ivq.quiz_almost_done_description">It appears that some questions remained unanswered You must answer all questions before you can submit</Text>
       )
     };
   } else if (type === IvqPopupTypes.submit) {
