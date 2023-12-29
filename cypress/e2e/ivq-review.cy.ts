@@ -8,7 +8,7 @@ describe('IVQ review', () => {
     cy.intercept('GET', '**/width/164/vid_slices/100', {fixture: '100.jpeg'});
     cy.intercept('GET', '**/height/360/width/640', {fixture: '640.jpeg'});
     // kava
-    cy.intercept('GET', '**/index.php?service=analytics*', {});
+    cy.intercept('POST', '**/index.php?service=analytics*', {});
   });
 
   describe('quiz review', () => {
