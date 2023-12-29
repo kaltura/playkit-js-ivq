@@ -1,9 +1,9 @@
 import {A11yWrapper, OnClick} from '@playkit-js/common/dist/hoc/a11y-wrapper';
+import {Button, ButtonSize, ButtonType} from '@playkit-js/common/dist/components/button';
 import {useState, useCallback} from 'preact/hooks';
 import {h} from 'preact';
 import {icons} from '../icons';
 import {QuizTranslates} from '../../types';
-import {Spinner} from '../spinner';
 import * as styles from './ivq-pupup.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
@@ -111,21 +111,25 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
       </div>
       {type === IvqPopupTypes.submit && (
         <div className={styles.buttonsWrapper}>
-          <A11yWrapper onClick={onReview}>
-            <div tabIndex={0} className={styles.secondaryButton} aria-label={otherProps.reviewButtonAriaLabel} data-testid="ivqPopupReviewButton">
-              {otherProps.reviewButton}
-            </div>
-          </A11yWrapper>
-          <A11yWrapper onClick={handleSubmitClick}>
-            <div
-              tabIndex={0}
-              className={styles.primaryButton}
-              aria-label={otherProps.submitButtonAriaLabel}
-              disabled={isLoading}
-              data-testid="ivqPopupSubmitButton">
-              {isLoading ? <Spinner /> : otherProps.submitButton}
-            </div>
-          </A11yWrapper>
+          <Button
+            onClick={onReview}
+            type={ButtonType.secondary}
+            size={ButtonSize.medium}
+            ariaLabel={otherProps.reviewButtonAriaLabel as string}
+            testId="ivqPopupReviewButton"
+            className={styles.ivqPopupButtons}>
+            {otherProps.reviewButton}
+          </Button>
+          <Button
+            onClick={handleSubmitClick}
+            type={ButtonType.primary}
+            size={ButtonSize.medium}
+            testId="ivqPopupSubmitButton"
+            ariaLabel={otherProps.submitButtonAriaLabel as string}
+            loading={isLoading}
+            className={[styles.ivqPopupButtons, styles.primaryButton].join(' ')}>
+            {otherProps.submitButton}
+          </Button>
         </div>
       )}
     </div>

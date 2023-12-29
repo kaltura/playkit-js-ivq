@@ -54,13 +54,11 @@
     margin-top: 16px;
     display: flex;
     justify-content: flex-start;
-    .primaryButton {
-      @include ivq-primary-button;
-      min-width: 66px;
-      margin-left: 8px;
-    }
-    .secondaryButton {
-      @include ivq-secondary-button;
+    .ivqPopupButtons {
+      width: 100%;
+      &.primaryButton {
+        margin-left: 8px;
+      }
     }
   }
 }
