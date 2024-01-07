@@ -62,7 +62,7 @@
   "kaltura": {
     "name": "ivq",
     "dependencies": {
-      "playkit-kaltura-cuepoints": "3.0.6",
+      "playkit-kaltura-cuepoints": "3.0.7",
       "playkit-ui-managers": "1.5.0",
       "playkit-timeline": "3.0.10"
     }
