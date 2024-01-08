@@ -27,7 +27,7 @@ const translates = ({onSubmit}: QuizSubmitProps): QuizTranslates => {
     description: onSubmit ? (
       <Text id="ivq.submit_description">Take a moment to review your answers or go ahead to submit your answers.</Text>
     ) : (
-      <Text id="ivq.review_description">It appears that some questions remained unanswered. Please complete the quiz to submit.</Text>
+      <Text id="ivq.review_description">It appears that some questions remained unanswered You must answer all questions before you can submit</Text>
     )
   };
 };

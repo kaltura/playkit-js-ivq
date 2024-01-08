@@ -19,7 +19,7 @@
       "review_button": "Review",
       "review_button_area_label": "Click to review quiz",
       "review_title": "You are almost done",
-      "review_description": "It appears that some questions remained unanswered. Please complete the quiz to submit.",
+      "review_description": "It appears that some questions remained unanswered You must answer all questions before you can submit",
       "submit_title": "Quiz completed",
       "submit_description": "Take a moment to review your answers or go ahead to submit your answers.",
       "quiz_score": "Your score is {{quizScore}}",
@@ -46,7 +46,7 @@
       "tip": "All questions must be answered. The quiz will be submitted at the end.",
       "available_attempts_message": "Total attempts available for this quiz: {{availableAttempts}}",
       "quiz_almost_done_title": "You’re almost done",
-      "quiz_almost_done_description": "It appears that some questions remained unanswered. Please complete the quiz to submit.",
+      "quiz_almost_done_description": "It appears that some questions remained unanswered You must answer all questions before you can submit",
       "quiz_submit_description": "Take a moment to review your answers or go ahead to submit your answers.",
       "quiz_completed_description": "Watch the video until the end to submit.",
       "quiz_submitted_title": "Quiz submitted"

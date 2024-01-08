@@ -8,6 +8,10 @@ export const MANIFEST_SAFARI = `#EXTM3U
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=504265,RESOLUTION=480x272,AUDIO="audio",SUBTITLES="subs"
 ${location.origin}/media/index.m3u8`;
 
+Cypress.on('uncaught:exception', (err, runnable) => {
+  return false;
+});
+
 export const getPlayer = () => {
   // @ts-ignore
   return cy.window().then($win => $win.KalturaPlayer.getPlayers()['player-placeholder']);

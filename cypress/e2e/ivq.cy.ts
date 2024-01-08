@@ -1,9 +1,5 @@
 import {mockKalturaBe, loadPlayer, MANIFEST, MANIFEST_SAFARI} from './env';
 
-Cypress.on('uncaught:exception', (err, runnable) => {
-  return false;
-});
-
 describe('IVQ plugin', () => {
   beforeEach(() => {
     // manifest
@@ -12,7 +8,7 @@ describe('IVQ plugin', () => {
     cy.intercept('GET', '**/width/164/vid_slices/100', {fixture: '100.jpeg'});
     cy.intercept('GET', '**/height/360/width/640', {fixture: '640.jpeg'});
     // kava
-    cy.intercept('GET', '**/index.php?service=analytics*', {});
+    cy.intercept('POST', '**/index.php?service=analytics*', {});
   });
 
   describe('welcome screen', () => {
@@ -154,7 +150,7 @@ describe('IVQ plugin', () => {
       mockKalturaBe('quiz_welcome_page_disabled_with_attempt.json', 'cues_4_question.json');
       loadPlayer({}, {autoplay: true}).then(() => {
         cy.get('[data-testid="ivqPopupSubmitButton"]').click({force: true});
-        cy.get('[data-testid="ivqPopupSubmitButton"] [data-testid="ivqSpinner"]').should('exist');
+        cy.get('[data-testid="ivqPopupSubmitButton"][aria-busy="true"]').should('exist');
         cy.wait('@submit');
       });
     });
