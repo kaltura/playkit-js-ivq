@@ -166,4 +166,29 @@ describe('IVQ plugin', () => {
       });
     });
   });
+
+  describe('quiz seek functionality', () => {
+    it('should prevent seek', () => {
+      mockKalturaBe('ivq_QuizQuestionChanged_event/quiz_ban_seek_enabled.json');
+      loadPlayer({}, {autoplay: true}).then(player => {
+        player.pause();
+        player.currentTime = 15;
+        cy.get('.playkit-time-display > span').should($div => {
+          expect($div.text()).to.not.contain('00:15');
+        });
+      });
+    });
+
+    it('should allow seek to submitted quiz', () => {
+      mockKalturaBe('quiz_ban_seek_no_retake.json');
+      loadPlayer({}, {autoplay: true}).then(player => {
+        player.pause();
+        cy.get('[data-testid="ivqPopupRoot"]').should('exist');
+        player.currentTime = 15;
+        cy.get('.playkit-time-display > span').should($div => {
+          expect($div.text()).to.contain('00:15');
+        });
+      });
+    });
+  });
 });

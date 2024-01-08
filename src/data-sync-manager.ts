@@ -62,12 +62,12 @@ export class DataSyncManager {
     this._quizAnswers = quizAnswers;
   };
 
-  public initDataManager = () => {
+  public initDataManager = (allowSeek: boolean) => {
     if (!this.quizData || !this.quizUserEntry) {
       this._logger.warn('initDataManager: quizData or quizUserEntry absent');
       return;
     }
-    if (this.quizData.preventSeek) {
+    if (this.quizData.preventSeek && !allowSeek) {
       this._enableSeekControl();
     }
     this._syncEvents();

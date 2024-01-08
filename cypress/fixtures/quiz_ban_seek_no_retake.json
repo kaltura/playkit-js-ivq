@@ -1,0 +1,47 @@
+[
+  {
+    "partnerId": 1091,
+    "ks": "",
+    "userId": 0,
+    "objectType": "KalturaStartWidgetSessionResponse"
+  },
+  {
+    "objects": [
+      {
+        "score": 1,
+        "calculatedScore": 1,
+        "version": 0,
+        "id": 4184809572,
+        "entryId": "1_y8dwntss",
+        "userId": "lian.binyamin@kaltura.com",
+        "partnerId": 3188353,
+        "status": "quiz.3",
+        "createdAt": 1704187674,
+        "updatedAt": 1704187756,
+        "type": "quiz.QUIZ",
+        "objectType": "KalturaQuizUserEntry"
+      }
+    ],
+    "totalCount": 1,
+    "objectType": "KalturaUserEntryListResponse"
+  },
+  {
+    "version": 4,
+    "uiAttributes": [
+      {"key": "welcomeMessage", "value": "In this video, you will be given a Quiz. Good Luck!", "objectType": "KalturaKeyValue"},
+      {"key": "noSeekAlertText", "value": "", "objectType": "KalturaKeyValue"},
+      {"key": "inVideoTip", "value": "true", "objectType": "KalturaKeyValue"},
+      {"key": "showWelcomePage", "value": "false", "objectType": "KalturaKeyValue"},
+      {"key": "canSkip", "value": "true", "objectType": "KalturaKeyValue"},
+      {"key": "banSeek", "value": "true", "objectType": "KalturaKeyValue"}
+    ],
+    "allowAnswerUpdate": true,
+    "showCorrectAfterSubmission": true,
+    "allowDownload": true,
+    "showGradeAfterSubmission": true,
+    "attemptsAllowed": 0,
+    "scoreType": 3,
+    "objectType": "KalturaQuiz"
+  },
+  {"objects": [], "totalCount": 0, "objectType": "KalturaCuePointListResponse"}
+]

@@ -428,6 +428,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             setQuizUserEntry(lastQuizUserEntry);
           }
           this._manageWelcomeScreen();
+          let allowSeek = false;
           if (!lastQuizUserEntry || (isQuizSubmitted() && isRetakeAllowed())) {
             // in case if quiz attempt doesn't exist
             // OR user has more attempts and latest attempt submitted - create new quiz attempt.
@@ -438,15 +439,19 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
                 // for new quiz attempt answers should be empty;
                 setQuizAnswers([]);
                 setQuizUserEntry(quizNewUserEntry);
-                this._dataManager.initDataManager();
+                this._dataManager.initDataManager(allowSeek);
               }
             });
+          } else if (lastQuizUserEntry && isQuizSubmitted() && !isRetakeAllowed()) {
+            // in case the quiz was already submitted by the same user and retake is not allowed,
+            // set allowSeek to true, so the data manager will not disable the seek functionality.
+            allowSeek = true;
           }
           // set answers for last quiz attempt
           if (quizAnswers) {
             setQuizAnswers(quizAnswers);
           }
-          this._dataManager.initDataManager();
+          this._dataManager.initDataManager(allowSeek);
         }
       })
       .catch((e: any) => {
