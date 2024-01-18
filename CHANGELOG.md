@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 3.5.0 (2024-01-18)
+
+
+### Features
+
+* **FEC-13597:** add the ability to seek for submitted quiz ([#115](https://github.com/kaltura/playkit-js-ivq/issues/115)) ([1bff02b](https://github.com/kaltura/playkit-js-ivq/commit/1bff02b))
+
+
+
 ### 3.4.9 (2024-01-07)
 
 
