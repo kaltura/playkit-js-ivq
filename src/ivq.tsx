@@ -136,7 +136,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   }
 
   private _makeOnClickHandler = (id: string) => () => {
-    console.log('ivqqqq', 'nav-clikc')
     this.dispatchEvent(IvqEventTypes.QUIZ_SEEK,{id});
     const quizQuestion = this._dataManager.quizQuestionsMap.get(id);
     if (quizQuestion) {
