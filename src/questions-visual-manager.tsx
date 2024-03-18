@@ -11,11 +11,11 @@ import {
   KalturaQuizQuestionTypes,
   SubmissionDetails,
   PresetAreas,
-  UiComponentArea
-} from './types';
+  UiComponentArea, IvqEventTypes
+} from "./types";
 import {QuizQuestionWrapper} from './components/quiz-question';
 
-const {EventType} = core;
+const {EventType, FakeEvent} = core;
 
 const SEEK_DELTA = 0.3;
 
@@ -135,6 +135,7 @@ export class QuestionsVisualManager {
         this._removeOverlay();
         this._player.play();
       }
+      this._player.dispatchEvent(new FakeEvent(IvqEventTypes.QUIZ_SKIPPED, { id: qq.id }));
     };
 
     const onContinue = (data: Selected | null) => {
