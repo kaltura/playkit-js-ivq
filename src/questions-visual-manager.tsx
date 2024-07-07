@@ -135,7 +135,7 @@ export class QuestionsVisualManager {
         this._removeOverlay();
         this._player.play();
       }
-      this._player.dispatchEvent(new FakeEvent(IvqEventTypes.QUIZ_SKIPPED, { id: qq.id }));
+      this._player.dispatchEvent(new FakeEvent(IvqEventTypes.QUIZ_SKIPPED, { questionIndex: qq.index + 1 }));
     };
 
     const onContinue = (data: Selected | null) => {
