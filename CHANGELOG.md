@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.5.13 (2024-07-11)
+
+
+### Bug Fixes
+
+* **FEC-13845:** Add Events (used by kava analytics) | Quiz_skip_question "buttonValue" doesn't show question number. ([#130](https://github.com/kaltura/playkit-js-ivq/issues/130)) ([504507f](https://github.com/kaltura/playkit-js-ivq/commit/504507f))
+
+
+
 ### 3.5.12 (2024-06-30)
 
 
