@@ -4,7 +4,7 @@ import {QuestionProps, QuizTranslates} from '../../../types';
 import {QuestionAddons} from '../question-addons';
 import {A11yWrapper} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import * as styles from './true-false.scss';
-
+import {wrapLinksWithTags} from '../../../utils';
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
 const translates = (): QuizTranslates => {
@@ -58,7 +58,7 @@ export const TrueFalse = withText(translates)(
       <div className={styles.trueFalseWrapper} data-testid="trueFalseContainer">
         <legend className={styles.questionText} data-testid="trueFalseQuestionTitle" tabIndex={0} ref={quizQuestionRef}>
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
-          {question}
+          <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
         </legend>
         {hint && <QuestionAddons hint={hint} />}
         <div className={styles.optionalAnswersWrapper} role="listbox" data-testid="trueFalseAnswersContainer">

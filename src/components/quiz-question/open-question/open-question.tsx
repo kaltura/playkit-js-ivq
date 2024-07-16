@@ -3,6 +3,7 @@ import {useCallback, useEffect, useRef} from 'preact/hooks';
 import {QuestionProps, QuizTranslates} from '../../../types';
 import {QuestionAddons} from '../question-addons';
 import * as styles from './open-question.scss';
+import {wrapLinksWithTags} from '../../../utils';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
@@ -37,7 +38,7 @@ export const OpenQuestion = withText(translates)(
       <div className={styles.openQuestionWrapper} data-testid="openQuestionContainer">
         <legend className={styles.questionText} data-testid="openQuestionTitle" tabIndex={0} ref={quizQuestionRef}>
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
-          {question}
+          <div dangerouslySetInnerHTML={{__html: wrapLinksWithTags(question)}} />
         </legend>
         {hint && <QuestionAddons hint={hint} />}
         <div className={styles.textAreaWrapper}>
