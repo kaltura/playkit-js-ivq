@@ -20,16 +20,35 @@ export const makeQuestionLabels = () =>
     .map((e, i) => i + 'A'.charCodeAt(0))
     .map(x => String.fromCharCode(x)); // ["A", "B", "C", ... , "Z"]
 
-//Search for links and links patterns ( [text|http://exampl.com] ) and add a real link to a new tab
+
+/**
+ * Process the input text to wrap URLs in HTML anchor tags (<a>).
+ *
+ * This function performs two main tasks:
+ * 1. It converts patterns of the form `[title|url]` into clickable links with the provided title.
+ * 2. It wraps standalone URLs in clickable links.
+ *
+ * Example:
+ * - Input: "[my title | http://example.com]"
+ *   Output: "<a target='_blank' href='http://example.com'>my title</a>"
+ *
+ * - Input: "http://example.com"
+ *   Output: "<a target='_blank' href='http://example.com'>http://example.com</a>"
+ *
+ * @param text - The input string containing potential URLs or patterns to be converted.
+ * @returns The processed string with URLs wrapped in <a> tags.
+ */
 export const wrapLinksWithTags = (text: string): string => {
+  // Replace the pattern [title|url] with <a> tags
   const wrapLinksWithTitle = text.replace(/\[(\s+)?([^\|\]]*)(\|)(\s+)?((https?|ftps?):\/\/[^\s\]]+)(\s+)?(\])/gi, (url: string): string => {
-    const updatedUrl = url.slice(1, -1).split('|');
-    const title = updatedUrl[0].trim();
-    const href = updatedUrl[1].trim();
+    const linkInfo = url.slice(1, -1).split('|');
+    const title = linkInfo[0].trim();
+    const href = linkInfo[1].trim();
     return `<a target="_blank" href="${href}">${title}</a>`;
   });
 
-  return wrapLinksWithTitle.replace(/((https?|ftps?):\/\/[^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/gi, (url: string): string => {
+  // Replace standalone URLs with <a> tags
+  return wrapLinksWithTitle.replace(/((https?|ftps?):\/\/[^\s"<\]]+)(?![^<>]*>|[^"]*<\/a>)/gi, (url: string): string => {
     return `<a target="_blank" href="${url}">${url}</a>`;
   });
 };
