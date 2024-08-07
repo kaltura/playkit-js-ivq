@@ -2,6 +2,7 @@ import {h} from 'preact';
 import {useEffect, useRef} from 'preact/hooks';
 import {QuestionProps, QuizTranslates} from '../../../types';
 import * as styles from './reflection-point.scss';
+import {wrapLinksWithTags} from '../../../utils';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
@@ -22,7 +23,7 @@ export const ReflectionPoint = withText(translates)(({question, questionIndex, .
     <div className={styles.reflectionPointWrapper}>
       <legend className={styles.reflectionText} data-testid="reflectionPointTitle" tabIndex={0} ref={quizQuestionRef}>
         <span className={styles.visuallyHidden}>{`${otherProps.questionLabel}# ${questionIndex}, ${otherProps.reflectionPoint}:`}</span>
-        {question}
+        <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
       </legend>
     </div>
   );

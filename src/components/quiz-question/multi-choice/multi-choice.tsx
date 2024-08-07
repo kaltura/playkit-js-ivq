@@ -1,6 +1,6 @@
 import {h} from 'preact';
 import {useCallback, useEffect, useRef} from 'preact/hooks';
-import {makeQuestionLabels} from '../../../utils';
+import {makeQuestionLabels, wrapLinksWithTags} from '../../../utils';
 import {QuestionProps, QuizTranslates} from '../../../types';
 import {QuestionAddons} from '../question-addons';
 import {A11yWrapper} from '@playkit-js/common/dist/hoc/a11y-wrapper';
@@ -85,7 +85,7 @@ export const MultiChoice = withText(translates)(
       <div className={styles.multiChoiceWrapper} data-testid="multipleChoiceContainer">
         <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle" tabIndex={0} ref={quizQuestionRef}>
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
-          {question}
+          <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
         </legend>
         {hint && <QuestionAddons hint={hint} />}
         <div className={styles.optionalAnswersWrapper} data-testid="multipleChoiceAnswersWrapper">
