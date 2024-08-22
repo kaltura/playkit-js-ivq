@@ -64,7 +64,7 @@
     "dependencies": {
       "playkit-kaltura-cuepoints": "3.0.14",
       "playkit-ui-managers": "1.6.0",
-      "playkit-timeline": "3.0.15"
+      "playkit-timeline": "3.0.16"
     }
   },
   "dependencies": {
