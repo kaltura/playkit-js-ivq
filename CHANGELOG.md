@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.5.15 (2024-08-22)
+
+
+### Bug Fixes
+
+* **SUP-43316:** support links in IVQ questions ([#131](https://github.com/kaltura/playkit-js-ivq/issues/131)) ([86a8bbc](https://github.com/kaltura/playkit-js-ivq/commit/86a8bbc))
+
+
+
 ### 3.5.14 (2024-08-03)
 
 
