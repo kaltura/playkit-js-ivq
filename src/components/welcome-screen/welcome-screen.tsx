@@ -121,6 +121,7 @@ export const WelcomeScreen = withText(translates)(
       ),
       []
     );
-    return onClose ? <Overlay open permanent children={renderWelcomeScreen} /> : renderWelcomeScreen;
+    // TODO: check why Overlay component is not being rendered under OverlayPortal component
+    return onClose ? <Overlay open permanent children={renderWelcomeScreen} dontCheckOverlayPortal /> : renderWelcomeScreen;
   }
 );
