@@ -89,7 +89,7 @@ export const MultiChoice = withText(translates)(
         </legend>
         {hint && <QuestionAddons hint={hint} />}
         <div className={styles.optionalAnswersWrapper} data-testid="multipleChoiceAnswersWrapper">
-          <div className={styles.optionalAnswersContainer} role="listbox" data-testid="multipleChoiceAnswersContainer">
+          <div className={styles.optionalAnswersContainer} role="radiogroup" data-testid="multipleChoiceAnswersContainer">
             {optionalAnswers.map(({key, text}, index) => {
               const isActive = selectedArray.includes(key);
               return (
@@ -97,7 +97,7 @@ export const MultiChoice = withText(translates)(
                   onClick={handleSelect(key, isActive)}
                   onUpKeyPressed={() => handleUpKeyPressed(index)}
                   onDownKeyPressed={() => handleDownKeyPressed(index)}
-                  role="option">
+                  role="radio">
                   <div
                     ref={node => {
                       setAnswerOptionRef(index, node);
@@ -105,7 +105,7 @@ export const MultiChoice = withText(translates)(
                     key={key}
                     tabIndex={0}
                     data-testid="multipleChoiceSelectAnswer"
-                    aria-selected={isActive}
+                    aria-checked={isActive}
                     aria-disabled={disabled}
                     aria-multiselectable={Boolean(multiAnswer)}
                     aria-label={`${otherProps.answerNumber} ${index + 1}, ${text}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}

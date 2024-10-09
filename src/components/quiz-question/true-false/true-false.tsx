@@ -61,7 +61,7 @@ export const TrueFalse = withText(translates)(
           <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
         </legend>
         {hint && <QuestionAddons hint={hint} />}
-        <div className={styles.optionalAnswersWrapper} role="listbox" data-testid="trueFalseAnswersContainer">
+        <div className={styles.optionalAnswersWrapper} role="radiogroup" data-testid="trueFalseAnswersContainer">
           {optionalAnswers.map(({key, text}, index) => {
             const isActive = selected.includes(key);
             const classes = [styles.trueFalseAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ');
@@ -72,7 +72,7 @@ export const TrueFalse = withText(translates)(
                 onDownKeyPressed={() => {}}
                 onLeftKeyPressed={() => handleLeftKeyPressed(index)}
                 onRightKeyPressed={() => handleRightKeyPressed(index)}
-                role="option">
+                role="radio">
                 <div
                   ref={node => {
                     setAnswerOptionRef(index, node);
@@ -80,7 +80,7 @@ export const TrueFalse = withText(translates)(
                   key={key}
                   tabIndex={0}
                   data-testid="trueFalseAnswerContent"
-                  aria-selected={isActive}
+                  aria-checked={isActive}
                   aria-disabled={disabled}
                   className={classes}
                   aria-label={`${otherProps.answerNumber} ${index + 1}, ${text}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}>
