@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.5.21 (2024-11-01)
+
+
+### Bug Fixes
+
+* **ADA-1778:** [UCB] Incorrect usage of ARIA Listbox for Multiple Choice Questions ([#137](https://github.com/kaltura/playkit-js-ivq/issues/137)) ([00fa591](https://github.com/kaltura/playkit-js-ivq/commit/00fa591))
+
+
+
 ### 3.5.20 (2024-10-13)
 
 
