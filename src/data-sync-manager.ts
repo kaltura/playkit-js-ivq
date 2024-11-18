@@ -1,7 +1,7 @@
 // @ts-ignore
 import {core} from '@playkit-js/kaltura-player-js';
-import {getKeyValue, stringToBoolean, isNumber} from './utils';
-import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry} from './providers/response-types';
+import {getKeyValue, generateKeyValue, stringToBoolean, isNumber} from './utils';
+import {KalturaQuiz, KalturaQuizAnswer, KalturaUserEntry, KalturaUserEntryStatus, KalturaUserEntryType} from './providers/response-types';
 import {IvqEventTypes, KalturaQuizQuestion, KalturaQuizQuestionTypes, QuizData, QuizQuestion, QuizQuestionMap, Selected} from './types';
 import {QuizAnswerLoader, QuizAnswerSubmitLoader, QuizSubmitLoader, QuizUserEntryIdLoader} from './providers';
 import {QuestionStateTypes} from './types/questionStateTypes';
@@ -37,6 +37,50 @@ export class DataSyncManager {
   private _syncEvents = () => {
     this._eventManager.listen(this._player, this._player.Event.TIMED_METADATA_CHANGE, this._onTimedMetadataChange);
     this._eventManager.listen(this._player, this._player.Event.TIMED_METADATA_ADDED, this._onTimedMetadataAdded);
+  };
+
+  static generateQuizUserEntry = (data: any = {}): KalturaUserEntry => {
+    return {
+      id: data.id || '1',
+      entryId: data.entryId || '1',
+      userId: data.userId || '1',
+      partnerId: data.partnerId || 1,
+      status: KalturaUserEntryStatus.active,
+      createdAt: data.createdAt || '1',
+      updatedAt: data.updatedAt || '1',
+      type: data.type || KalturaUserEntryType.quiz,
+      version: data.version || undefined,
+      score: data.score || undefined,
+      calculatedScore: data.calculatedScore || undefined
+    };
+  };
+
+  static generateRawQuizData = (data: any = {}): KalturaQuiz => {
+    const defaultUiAttributes = [
+      generateKeyValue('welcomeMessage', 'In this video, you will be given a Quiz. Good Luck!'),
+      generateKeyValue('noSeekAlertText', ''),
+      generateKeyValue('inVideoTip', 'true'),
+      generateKeyValue('showWelcomePage', 'true'),
+      generateKeyValue('canSkip', 'true'),
+      generateKeyValue('banSeek', 'false')
+    ];
+    return {
+      version: data.version || 1,
+      uiAttributes: defaultUiAttributes.map(item => {
+        return {
+          ...item,
+          value: data.uiAttributes?.find((attr: any) => attr.key === item.key)?.value || item.value
+        };
+      }),
+      allowAnswerUpdate: data.allowAnswerUpdate || true,
+      showCorrectAfterSubmission: data.showCorrectAfterSubmission || true,
+      allowDownload: data.allowDownload || true,
+      showGradeAfterSubmission: data.showGradeAfterSubmission || true,
+      attemptsAllowed: data.attemptsAllowed || 0,
+      scoreType: data.scoreType || 3,
+      showResultOnAnswer: data.showResultOnAnswer || undefined,
+      showCorrectKeyOnAnswer: data.showCorrectKeyOnAnswer || undefined
+    };
   };
 
   public setQuizData = (rawQuizData: KalturaQuiz) => {
@@ -187,13 +231,13 @@ export class DataSyncManager {
 
   private _getSubmittedAttempts = () => {
     if (isNumber(this.quizUserEntry?.version)) {
-      return this.isQuizSubmitted() ? this.quizUserEntry!.version + 1 : this.quizUserEntry!.version;
+      return this.isQuizSubmitted() ? this.quizUserEntry!.version as number + 1 : this.quizUserEntry!.version as number;
     }
     return 0;
   };
 
   public getQuizScore = () => {
-    return this.isQuizSubmitted() ? (this.quizUserEntry!.score * 100).toFixed(0) : '0';
+    return this.isQuizSubmitted() ? (this.quizUserEntry!.score as number * 100).toFixed(0) : '0';
   };
 
   public getAvailableAttempts = () => {

@@ -7,6 +7,10 @@ export const getKeyValue = (kalturaKeyValueArray: KalturaKeyValue[], key: string
   return kalturaKeyValue?.value || '';
 };
 
+export const generateKeyValue = (key: string, value: any): KalturaKeyValue => {
+  return {key, value, objectType: 'KalturaKeyValue'};
+};
+
 export const stringToBoolean = (value: string) => {
   return value === 'true';
 };
@@ -19,7 +23,6 @@ export const makeQuestionLabels = () =>
   Array.from(Array(26))
     .map((e, i) => i + 'A'.charCodeAt(0))
     .map(x => String.fromCharCode(x)); // ["A", "B", "C", ... , "Z"]
-
 
 /**
  * Process the input text to wrap URLs in HTML anchor tags (<a>).

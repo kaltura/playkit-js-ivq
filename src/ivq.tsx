@@ -30,6 +30,8 @@ const {EventType} = core;
 
 const HAS_IVQ_OVERLAY_CLASSNAME = 'has-ivq-plugin-overlay';
 
+export const PLUGIN_NAME = 'ivq';
+
 export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _player: KalturaPlayerTypes.Player;
   private _resolveQuizDataPromise = () => {};
@@ -74,6 +76,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._getSeekBarNode,
       this._dataManager.dispatchQuestionChanged
     );
+    this._registerQuizApi();
   }
 
   get ready() {
@@ -104,6 +107,21 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._resolveQuizDataPromise();
     }
   }
+
+  private _registerQuizApi = () => {
+    const {setQuizData, setQuizUserEntry, setQuizAnswers} = this._dataManager;
+    this._player.registerService(PLUGIN_NAME, {
+      setQuizAttributes: (quizData: any = {}, quizUserEntry: any = {}) => {
+        const rawQuizData = DataSyncManager.generateRawQuizData(quizData);
+        setQuizData(rawQuizData);
+        this._manageWelcomeScreen();
+        setQuizAnswers([]);
+        const quizNewUserEntry = DataSyncManager.generateQuizUserEntry(quizUserEntry);
+        setQuizUserEntry(quizNewUserEntry);
+        this._dataManager.initDataManager(true);
+      }
+    });
+  };
 
   private _getBottomBarNode = () => {
     return this._player.getView().parentNode?.parentNode?.querySelector(KalturaPlayerBottomBarSelector) || null;
@@ -136,7 +154,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   }
 
   private _makeOnClickHandler = (id: string) => () => {
-    this.dispatchEvent(IvqEventTypes.QUIZ_SEEK,{id});
+    this.dispatchEvent(IvqEventTypes.QUIZ_SEEK, {id});
     const quizQuestion = this._dataManager.quizQuestionsMap.get(id);
     if (quizQuestion) {
       const {startTime} = quizQuestion;

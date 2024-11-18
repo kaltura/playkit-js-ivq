@@ -1,6 +1,7 @@
 export interface KalturaKeyValue {
   key?: string;
   value?: string;
+  objectType: string;
 }
 
 export enum KalturaNullableBoolean {
