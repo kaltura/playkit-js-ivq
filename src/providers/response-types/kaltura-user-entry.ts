@@ -26,8 +26,8 @@ export interface KalturaUserEntryArgs {
 }
 
 export class KalturaUserEntry {
-  calculatedScore: number;
-  score: number;
+  calculatedScore: number | undefined;
+  score: number | undefined;
   id: string;
   entryId: string;
   userId: string;
@@ -36,7 +36,7 @@ export class KalturaUserEntry {
   createdAt: string;
   updatedAt: string;
   type: KalturaUserEntryType;
-  version: number;
+  version: number | undefined;
 
   constructor(userEntry: KalturaUserEntryArgs) {
     this.calculatedScore = userEntry.calculatedScore;

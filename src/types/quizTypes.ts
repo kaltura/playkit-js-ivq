@@ -55,6 +55,7 @@ export interface QuizData extends KalturaQuiz {
   showWelcomePage: boolean;
   canSkip: boolean;
   preventSeek: boolean;
+  previewMode?: boolean;
 }
 
 export type QuizQuestionMap = Map<string, QuizQuestion>;
