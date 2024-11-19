@@ -113,7 +113,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this._player.registerService(PLUGIN_NAME, {
       setQuizAttributes: (quizData: any = {}, quizUserEntry: any = {}) => {
         const rawQuizData = DataSyncManager.generateRawQuizData(quizData);
-        setQuizData(rawQuizData);
+        setQuizData(rawQuizData, true);
         this._manageWelcomeScreen();
         setQuizAnswers([]);
         const quizNewUserEntry = DataSyncManager.generateQuizUserEntry(quizUserEntry);
@@ -275,6 +275,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _showWelcomeScreen = (prePlaybackState = false) => {
     this.logger.debug("show 'Welcome Screen'");
     const handleDownload = () => {
+      if (this._dataManager.quizData?.previewMode) {
+        this.logger.debug("Preview mode doesn't allow download pre-test");
+        return Promise.resolve();
+      }
       return this._player.provider
         .doRequest([{loader: QuizDownloadLoader, params: {entryId: this._player.sources.id}}])
         .then((data: Map<string, any>) => {

@@ -83,8 +83,8 @@ export class DataSyncManager {
     };
   };
 
-  public setQuizData = (rawQuizData: KalturaQuiz) => {
-    this._logger.debug('setQuizData', rawQuizData);
+  public setQuizData = (rawQuizData: KalturaQuiz, isPreview = false) => {
+    this._logger.debug(`setQuizData${isPreview ? ' in preview mode' : ''}`, rawQuizData);
     this.quizData = {
       ...rawQuizData,
       welcomeMessage: getKeyValue(rawQuizData.uiAttributes, 'welcomeMessage'),
@@ -92,7 +92,8 @@ export class DataSyncManager {
       inVideoTip: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'inVideoTip')),
       showWelcomePage: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'showWelcomePage')),
       canSkip: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'canSkip')),
-      preventSeek: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'banSeek'))
+      preventSeek: stringToBoolean(getKeyValue(rawQuizData.uiAttributes, 'banSeek')),
+      previewMode: isPreview
     };
   };
 
@@ -231,13 +232,14 @@ export class DataSyncManager {
 
   private _getSubmittedAttempts = () => {
     if (isNumber(this.quizUserEntry?.version)) {
-      return this.isQuizSubmitted() ? this.quizUserEntry!.version as number + 1 : this.quizUserEntry!.version as number;
+      const quizVersion = this.quizUserEntry!.version as number;
+      return this.isQuizSubmitted() ? quizVersion + 1 : quizVersion;
     }
     return 0;
   };
 
   public getQuizScore = () => {
-    return this.isQuizSubmitted() ? (this.quizUserEntry!.score as number * 100).toFixed(0) : '0';
+    return this.isQuizSubmitted() ? ((this.quizUserEntry!.score as number) * 100).toFixed(0) : '0';
   };
 
   public getAvailableAttempts = () => {
@@ -268,6 +270,10 @@ export class DataSyncManager {
         };
       }
       const onContinue = (data: Selected) => {
+        if (this.quizData?.previewMode) {
+          this._logger.debug("Preview mode doesn't send answer data to BE");
+          return Promise.resolve();
+        }
         const answer = this.quizQuestionsMap.get(cue.id)!.a;
         return this._sendQuizAnswer(data, cue.metadata.questionType, answer?.id, cue.id)
           .then((newAnswer: KalturaQuizAnswer) => {
