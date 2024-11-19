@@ -191,4 +191,14 @@ describe('IVQ plugin', () => {
       });
     });
   });
+
+  describe('quiz API', () => {
+    it('should expose quiz API ', done => {
+      mockKalturaBe();
+      loadPlayer().then(player => {
+        expect(player.getService('ivq').setQuizAttributes).to.be.a('function');
+        done();
+      });
+    });
+  });
 });
