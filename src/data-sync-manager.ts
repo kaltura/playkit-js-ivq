@@ -72,14 +72,14 @@ export class DataSyncManager {
           value: data.uiAttributes?.find((attr: any) => attr.key === item.key)?.value || item.value
         };
       }),
-      allowAnswerUpdate: data.allowAnswerUpdate || true,
-      showCorrectAfterSubmission: data.showCorrectAfterSubmission || true,
-      allowDownload: data.allowDownload || true,
-      showGradeAfterSubmission: data.showGradeAfterSubmission || true,
-      attemptsAllowed: data.attemptsAllowed || 0,
-      scoreType: data.scoreType || 3,
-      showResultOnAnswer: data.showResultOnAnswer || undefined,
-      showCorrectKeyOnAnswer: data.showCorrectKeyOnAnswer || undefined
+      allowAnswerUpdate: data.allowAnswerUpdate ?? true,
+      showCorrectAfterSubmission: data.showCorrectAfterSubmission ?? true,
+      allowDownload: data.allowDownload ?? true,
+      showGradeAfterSubmission: data.showGradeAfterSubmission ?? true,
+      attemptsAllowed: data.attemptsAllowed ?? 0,
+      scoreType: data.scoreType ?? 3,
+      showResultOnAnswer: data.showResultOnAnswer ?? undefined,
+      showCorrectKeyOnAnswer: data.showCorrectKeyOnAnswer ?? undefined
     };
   };
 
