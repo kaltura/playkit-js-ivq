@@ -206,6 +206,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   }
 
   private _handleEndEvent = () => {
+    if (this._dataManager.quizData?.previewMode) {
+      this.logger.debug("In preview mode, quiz won't be submitted");
+      return;
+    }
     if (this._dataManager.isQuizSubmitted()) {
       this._displayQuizReview();
     } else {
