@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 3.6.0 (2024-11-28)
+
+
+### Features
+
+* **FEC-14234:** quiz preview fixes ([#142](https://github.com/kaltura/playkit-js-ivq/issues/142)) ([4b28821](https://github.com/kaltura/playkit-js-ivq/commit/4b28821))
+
+
+
 ### 3.5.22 (2024-11-14)
 
 
