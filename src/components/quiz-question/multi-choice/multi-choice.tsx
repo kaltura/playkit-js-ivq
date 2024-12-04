@@ -83,7 +83,7 @@ export const MultiChoice = withText(translates)(
 
     return (
       <div className={styles.multiChoiceWrapper} data-testid="multipleChoiceContainer">
-        <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle" tabIndex={0} ref={quizQuestionRef}>
+        <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle" ref={quizQuestionRef}>
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
           <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
         </legend>

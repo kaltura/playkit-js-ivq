@@ -56,7 +56,7 @@ export const TrueFalse = withText(translates)(
 
     return (
       <div className={styles.trueFalseWrapper} data-testid="trueFalseContainer">
-        <legend className={styles.questionText} data-testid="trueFalseQuestionTitle" tabIndex={0} ref={quizQuestionRef}>
+        <legend className={styles.questionText} data-testid="trueFalseQuestionTitle" ref={quizQuestionRef}>
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
           <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
         </legend>
