@@ -21,7 +21,7 @@ export const ReflectionPoint = withText(translates)(({question, questionIndex, .
 
   return (
     <div className={styles.reflectionPointWrapper}>
-      <legend className={styles.reflectionText} data-testid="reflectionPointTitle" tabIndex={0} ref={quizQuestionRef}>
+      <legend className={styles.reflectionText} data-testid="reflectionPointTitle" ref={quizQuestionRef}>
         <span className={styles.visuallyHidden}>{`${otherProps.questionLabel}# ${questionIndex}, ${otherProps.reflectionPoint}:`}</span>
         <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
       </legend>
