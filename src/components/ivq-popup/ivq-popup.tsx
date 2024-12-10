@@ -90,7 +90,7 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
     popupClasses.push(styles.completed);
   }
   return (
-    <div className={popupClasses.join(' ')} data-testid="ivqPopupRoot">
+    <div className={popupClasses.join(' ')} data-testid="ivqPopupRoot" role="alert">
       <A11yWrapper onClick={onClose}>
         <div tabIndex={0} className={styles.closeButton} aria-label={otherProps.closeButton} data-testid="ivqPopupCloseButton">
           <Icon
