@@ -27,7 +27,7 @@ export const TrueFalse = withText(translates)(
     const quizQuestionRef = useRef<HTMLLegendElement>(null);
     useEffect(() => {
       if (!disabled) {
-        quizQuestionRef.current?.focus();
+        answersOptionsRefMap.get(0)?.focus();
       }
     }, [question]);
 

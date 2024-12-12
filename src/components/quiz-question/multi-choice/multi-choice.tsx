@@ -40,7 +40,7 @@ export const MultiChoice = withText(translates)(
 
     useEffect(() => {
       if (!disabled) {
-        quizQuestionRef.current?.focus();
+        answersOptionsRefMap.get(0)?.focus();
       }
     }, [question]);
 

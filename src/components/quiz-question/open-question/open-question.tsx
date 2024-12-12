@@ -19,6 +19,7 @@ const translates = (): QuizTranslates => {
 export const OpenQuestion = withText(translates)(
   ({question, selected, onSelect, hint, questionIndex, ...otherProps}: QuestionProps & QuizTranslates) => {
     const disabled = !onSelect;
+      const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const handleChange = useCallback(
       (e: any) => {
@@ -31,6 +32,7 @@ export const OpenQuestion = withText(translates)(
     useEffect(() => {
       if (!disabled) {
         quizQuestionRef.current?.focus();
+          textareaRef.current?.focus();
       }
     }, [question]);
 
@@ -52,6 +54,7 @@ export const OpenQuestion = withText(translates)(
             onChange={handleChange}
             disabled={disabled}
             data-testid="openQuestionAnswerInput"
+            ref={textareaRef}
           />
           <div className={styles.charCounter}>{`${selected.length}/${MAX_LENGTH}`}</div>
         </div>

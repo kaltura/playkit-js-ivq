@@ -134,7 +134,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       case KalturaQuizQuestionTypes.MultiChoice:
         return <MultiChoice {...questionProps} />;
       case KalturaQuizQuestionTypes.Reflection:
-        return <ReflectionPoint {...questionProps} />;
+        return <ReflectionPoint {...questionProps} continueButton={continueButtonRef}/>;
       case KalturaQuizQuestionTypes.OpenQuestion:
         return <OpenQuestion {...questionProps} />;
       case KalturaQuizQuestionTypes.MultiAnswer:
