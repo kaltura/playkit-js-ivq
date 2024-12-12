@@ -31,8 +31,7 @@ export const OpenQuestion = withText(translates)(
     const quizQuestionRef = useRef<HTMLLegendElement>(null);
     useEffect(() => {
       if (!disabled) {
-        quizQuestionRef.current?.focus();
-          textareaRef.current?.focus();
+        textareaRef.current?.focus();
       }
     }, [question]);
 
