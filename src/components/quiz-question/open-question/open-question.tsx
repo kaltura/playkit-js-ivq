@@ -28,7 +28,6 @@ export const OpenQuestion = withText(translates)(
       [onSelect]
     );
 
-    const quizQuestionRef = useRef<HTMLLegendElement>(null);
     useEffect(() => {
       if (!disabled) {
         textareaRef.current?.focus();
@@ -37,7 +36,7 @@ export const OpenQuestion = withText(translates)(
 
     return (
       <div className={styles.openQuestionWrapper} data-testid="openQuestionContainer">
-        <legend className={styles.questionText} data-testid="openQuestionTitle" ref={quizQuestionRef}>
+        <legend className={styles.questionText} data-testid="openQuestionTitle">
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
           <div dangerouslySetInnerHTML={{__html: wrapLinksWithTags(question)}} />
         </legend>

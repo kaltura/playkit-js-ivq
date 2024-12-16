@@ -35,7 +35,6 @@ export const MultiChoice = withText(translates)(
   }: QuestionProps & MultiChoiceProps & QuizTranslates) => {
     const selectedArray = selected ? selected.split(',') : [];
     const disabled = !onSelect;
-    const quizQuestionRef = useRef<HTMLLegendElement>(null);
     let answersOptionsRefMap: Map<number, HTMLElement | null> = new Map();
 
     useEffect(() => {
@@ -83,7 +82,7 @@ export const MultiChoice = withText(translates)(
 
     return (
       <div className={styles.multiChoiceWrapper} data-testid="multipleChoiceContainer">
-        <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle" ref={quizQuestionRef}>
+        <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle">
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
           <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
         </legend>

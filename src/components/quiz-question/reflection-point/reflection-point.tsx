@@ -1,14 +1,10 @@
-import {h, RefObject} from 'preact';
+import {h} from 'preact';
 import {useEffect, useRef} from 'preact/hooks';
 import {QuestionProps, QuizTranslates} from '../../../types';
 import * as styles from './reflection-point.scss';
 import {wrapLinksWithTags} from '../../../utils';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
-
-interface reflectionPointProps {
-  continueButton: RefObject<HTMLDivElement>;
-}
 
 const translates = (): QuizTranslates => {
   return {
@@ -17,15 +13,11 @@ const translates = (): QuizTranslates => {
   };
 };
 
-export const ReflectionPoint = withText(translates)(({question, questionIndex, ...otherProps}: QuestionProps & QuizTranslates & reflectionPointProps) => {
-  const quizQuestionRef = useRef<HTMLLegendElement>(null);
-  useEffect(() => {
-    otherProps.continueButton.current?.focus();
-  }, [question]);
+export const ReflectionPoint = withText(translates)(({question, questionIndex, ...otherProps}: QuestionProps & QuizTranslates) => {
 
   return (
     <div className={styles.reflectionPointWrapper}>
-      <legend className={styles.reflectionText} data-testid="reflectionPointTitle" ref={quizQuestionRef}>
+      <legend className={styles.reflectionText} data-testid="reflectionPointTitle">
         <span className={styles.visuallyHidden}>{`${otherProps.questionLabel}# ${questionIndex}, ${otherProps.reflectionPoint}:`}</span>
         <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
       </legend>
