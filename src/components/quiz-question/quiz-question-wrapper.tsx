@@ -63,9 +63,6 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       if (!playerNav) {
         return;
       }
-      if (qui.a) {
-        continueButtonRef.current?.focus();
-      }
     });
   }, [qui]);
 
