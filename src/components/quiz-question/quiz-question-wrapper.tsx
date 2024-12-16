@@ -72,7 +72,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   useEffect(() => {
     setSelected(getSelected(qui));
     setIsLoading(false);
-    if(qui.q.questionType === KalturaQuizQuestionTypes.Reflection){
+    if(qui.a || qui.q.questionType === KalturaQuizQuestionTypes.Reflection){
       continueButtonRef.current?.focus();
     }
   }, [qui]);
