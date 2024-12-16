@@ -63,16 +63,17 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       if (!playerNav) {
         return;
       }
-      if (qui.a) {
-        continueButtonRef.current?.focus();
-      }
     });
   }, [qui]);
 
   useEffect(() => {
     setSelected(getSelected(qui));
     setIsLoading(false);
+    if(qui.a || qui.q.questionType === KalturaQuizQuestionTypes.Reflection){
+      continueButtonRef.current?.focus();
+    }
   }, [qui]);
+
 
   const handleContinue = useCallback(() => {
     if (!selected) {
@@ -134,7 +135,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       case KalturaQuizQuestionTypes.MultiChoice:
         return <MultiChoice {...questionProps} />;
       case KalturaQuizQuestionTypes.Reflection:
-        return <ReflectionPoint {...questionProps} />;
+        return <ReflectionPoint {...questionProps}/>;
       case KalturaQuizQuestionTypes.OpenQuestion:
         return <OpenQuestion {...questionProps} />;
       case KalturaQuizQuestionTypes.MultiAnswer:

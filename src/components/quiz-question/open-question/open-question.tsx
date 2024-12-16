@@ -19,6 +19,7 @@ const translates = (): QuizTranslates => {
 export const OpenQuestion = withText(translates)(
   ({question, selected, onSelect, hint, questionIndex, ...otherProps}: QuestionProps & QuizTranslates) => {
     const disabled = !onSelect;
+      const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const handleChange = useCallback(
       (e: any) => {
@@ -27,16 +28,15 @@ export const OpenQuestion = withText(translates)(
       [onSelect]
     );
 
-    const quizQuestionRef = useRef<HTMLLegendElement>(null);
     useEffect(() => {
       if (!disabled) {
-        quizQuestionRef.current?.focus();
+        textareaRef.current?.focus();
       }
     }, [question]);
 
     return (
       <div className={styles.openQuestionWrapper} data-testid="openQuestionContainer">
-        <legend className={styles.questionText} data-testid="openQuestionTitle" ref={quizQuestionRef}>
+        <legend className={styles.questionText} data-testid="openQuestionTitle">
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
           <div dangerouslySetInnerHTML={{__html: wrapLinksWithTags(question)}} />
         </legend>
@@ -52,6 +52,7 @@ export const OpenQuestion = withText(translates)(
             onChange={handleChange}
             disabled={disabled}
             data-testid="openQuestionAnswerInput"
+            ref={textareaRef}
           />
           <div className={styles.charCounter}>{`${selected.length}/${MAX_LENGTH}`}</div>
         </div>

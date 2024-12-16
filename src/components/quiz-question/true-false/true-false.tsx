@@ -24,10 +24,9 @@ export const TrueFalse = withText(translates)(
       },
       [onSelect]
     );
-    const quizQuestionRef = useRef<HTMLLegendElement>(null);
     useEffect(() => {
       if (!disabled) {
-        quizQuestionRef.current?.focus();
+        answersOptionsRefMap.get(0)?.focus();
       }
     }, [question]);
 
@@ -56,7 +55,7 @@ export const TrueFalse = withText(translates)(
 
     return (
       <div className={styles.trueFalseWrapper} data-testid="trueFalseContainer">
-        <legend className={styles.questionText} data-testid="trueFalseQuestionTitle" ref={quizQuestionRef}>
+        <legend className={styles.questionText} data-testid="trueFalseQuestionTitle">
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
           <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
         </legend>

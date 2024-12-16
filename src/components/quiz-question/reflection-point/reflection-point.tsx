@@ -14,14 +14,10 @@ const translates = (): QuizTranslates => {
 };
 
 export const ReflectionPoint = withText(translates)(({question, questionIndex, ...otherProps}: QuestionProps & QuizTranslates) => {
-  const quizQuestionRef = useRef<HTMLLegendElement>(null);
-  useEffect(() => {
-    quizQuestionRef.current?.focus();
-  }, [question]);
 
   return (
     <div className={styles.reflectionPointWrapper}>
-      <legend className={styles.reflectionText} data-testid="reflectionPointTitle" ref={quizQuestionRef}>
+      <legend className={styles.reflectionText} data-testid="reflectionPointTitle">
         <span className={styles.visuallyHidden}>{`${otherProps.questionLabel}# ${questionIndex}, ${otherProps.reflectionPoint}:`}</span>
         <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
       </legend>
