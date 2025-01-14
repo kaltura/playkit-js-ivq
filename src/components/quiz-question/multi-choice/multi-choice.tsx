@@ -10,7 +10,6 @@ const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
 const translates = (): QuizTranslates => {
   return {
-    answerNumber: <Text id="ivq.answer_number">answer number</Text>,
     yourAnswer: <Text id="ivq.your_answer">Your answer</Text>,
     questionLabel: <Text id="ivq.question">Question</Text>
   };
@@ -107,7 +106,7 @@ export const MultiChoice = withText(translates)(
                     aria-checked={isActive}
                     aria-disabled={disabled}
                     aria-multiselectable={Boolean(multiAnswer)}
-                    aria-label={`${otherProps.answerNumber} ${index + 1}, ${text}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
+                    aria-label={`${questionLabels[index]}, ${text}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
                     className={[styles.multiSelectAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ')}>
                     <div className={styles.questionLabel} data-testid="multipleChoiceQuestionLabel">
                       {questionLabels[index]}
