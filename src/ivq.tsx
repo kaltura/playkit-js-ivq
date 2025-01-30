@@ -45,6 +45,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _removeActiveOverlay: null | Function = null;
   private _ivqPopup: null | FloatingItem = null;
   private _playlistOptions: null | KalturaPlayerTypes.Playlist['options'] = null;
+  private isNoSeekAlertShown = false;
   private defaultToastDuration = 5 * 1000;
 
   static defaultConfig: IvqConfig = {};
@@ -424,15 +425,22 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   };
 
   private _showNoSeekAlertPopUp = () => {
-    const noSeekAlertText = this._dataManager.quizData?.noSeekAlertText
-    this.toastManager.add({
-      icon: null,
-      onClick(): void {},
-      severity: 'Info',
-      title: noSeekAlertText ?? 'default',
-      text: ' ',
-      duration: this.defaultToastDuration
-    })
+    const noSeekAlertText = "Seeking was disabled on this video";
+    if(!this.isNoSeekAlertShown) {
+      this.toastManager.add({
+        icon: null,
+        onClick(): void {
+        },
+        severity: 'Error',
+        title: '',
+        text: noSeekAlertText,
+        duration: this.defaultToastDuration
+      })
+    }
+    this.isNoSeekAlertShown = true;
+    setTimeout(() => {
+      this.isNoSeekAlertShown = false;
+    }, this.defaultToastDuration)
   };
 
   private _onQuizRetake = (): Promise<void> => {
