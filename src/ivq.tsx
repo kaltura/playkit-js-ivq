@@ -1,9 +1,9 @@
 import {h} from 'preact';
 // @ts-ignore
-import {core} from '@playkit-js/kaltura-player-js';
+import {core, ui} from '@playkit-js/kaltura-player-js';
 // @ts-ignore
 import {Env} from '@playkit-js/playkit-js';
-import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
+import {FloatingItem, FloatingManager, ToastManager, ToastSeverity} from '@playkit-js/ui-managers';
 import {QuizLoader} from './providers';
 import {
   IvqConfig,
@@ -45,6 +45,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _removeActiveOverlay: null | Function = null;
   private _ivqPopup: null | FloatingItem = null;
   private _playlistOptions: null | KalturaPlayerTypes.Playlist['options'] = null;
+  private defaultToastDuration = 5 * 1000;
 
   static defaultConfig: IvqConfig = {};
 
@@ -87,8 +88,12 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     return (this._player.getService('floatingManager') as FloatingManager) || {};
   }
 
+  private get toastManager(): ToastManager {
+    return (this.player.getService('toastManager') as ToastManager) || {};
+  }
+
   getMiddlewareImpl(): KalturaIvqMiddleware {
-    return new KalturaIvqMiddleware(this._shouldPreventSeek);
+    return new KalturaIvqMiddleware(this._shouldPreventSeek, this._showNoSeekAlertPopUp);
   }
 
   loadMedia(): void {
@@ -418,6 +423,18 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     return this._seekControlEnabled && !this._questionsVisualManager.quizQuestionJumping && to > this._maxCurrentTime;
   };
 
+  private _showNoSeekAlertPopUp = () => {
+    const noSeekAlertText = this._dataManager.quizData?.noSeekAlertText
+    this.toastManager.add({
+      icon: null,
+      onClick(): void {},
+      severity: 'Info',
+      title: noSeekAlertText ?? 'default',
+      text: ' ',
+      duration: this.defaultToastDuration
+    })
+  };
+
   private _onQuizRetake = (): Promise<void> => {
     return this._dataManager.createNewQuizUserEntry().then((quizNewUserEntry: KalturaUserEntry) => {
       if (!quizNewUserEntry) {
@@ -443,6 +460,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           const lastQuizUserEntry = quizLoader?.response?.userEntries[0];
           const quizData = quizLoader?.response?.quiz;
           const quizAnswers = quizLoader?.response?.quizAnswers;
+
           if (!quizData) {
             this.logger.warn('quiz data absent');
             return;
