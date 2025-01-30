@@ -3,7 +3,7 @@ import {h} from 'preact';
 import {core} from '@playkit-js/kaltura-player-js';
 // @ts-ignore
 import {Env} from '@playkit-js/playkit-js';
-import {FloatingItem, FloatingManager, ToastManager, ToastSeverity} from '@playkit-js/ui-managers';
+import {FloatingItem, FloatingManager, ToastManager} from '@playkit-js/ui-managers';
 import {QuizLoader} from './providers';
 import {
   IvqConfig,
