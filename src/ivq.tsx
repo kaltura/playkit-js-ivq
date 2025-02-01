@@ -1,10 +1,11 @@
 import {h} from 'preact';
 // @ts-ignore
-import {core} from '@playkit-js/kaltura-player-js';
+import {core, ui} from '@playkit-js/kaltura-player-js';
 // @ts-ignore
 import {Env} from '@playkit-js/playkit-js';
 import {FloatingItem, FloatingManager, ToastManager} from '@playkit-js/ui-managers';
 import {QuizLoader} from './providers';
+
 import {
   IvqConfig,
   IvqEventTypes,
@@ -29,6 +30,7 @@ import {KalturaIvqMiddleware} from './quiz-middleware';
 const {EventType} = core;
 
 const HAS_IVQ_OVERLAY_CLASSNAME = 'has-ivq-plugin-overlay';
+const {Text} = KalturaPlayer.ui.preacti18n;
 
 export const PLUGIN_NAME = 'ivq';
 
@@ -424,16 +426,16 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     return this._seekControlEnabled && !this._questionsVisualManager.quizQuestionJumping && to > this._maxCurrentTime;
   };
 
+
   private _showNoSeekAlertPopUp = () => {
-    const noSeekAlertText = "Seeking was disabled on this video";
     if(!this.isNoSeekAlertShown) {
       this.toastManager.add({
         icon: null,
         onClick(): void {
         },
         severity: 'Error',
-        title: '',
-        text: noSeekAlertText,
+        title: (<Text id="ivq.seeking_is_disable_popup_title"></Text>) as any,
+        text: '',
         duration: this.defaultToastDuration
       })
     }
