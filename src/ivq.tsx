@@ -431,10 +431,9 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if(!this.isNoSeekAlertShown) {
       this.toastManager.add({
         icon: null,
-        onClick(): void {
-        },
+        onClick(): void {},
         severity: 'Error',
-        title: (<Text id="ivq.seeking_is_disable_popup_title"></Text>) as any,
+        title: (<Text id="ivq.seeking_is_disable_popup_title">Seeking was disabled on this video</Text>) as any,
         text: '',
         duration: this.defaultToastDuration
       })
