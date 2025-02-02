@@ -112,6 +112,7 @@ export class DataSyncManager {
       this._logger.warn('initDataManager: quizData or quizUserEntry absent');
       return;
     }
+
     if ((this.quizData.preventSeek && !allowSeek) || this._player.ui.store.getState().seekbar.isPreventSeek) {
       this._enableSeekControl();
     }

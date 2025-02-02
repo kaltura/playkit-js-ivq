@@ -1,10 +1,11 @@
 import {h} from 'preact';
 // @ts-ignore
-import {core} from '@playkit-js/kaltura-player-js';
+import {core, ui} from '@playkit-js/kaltura-player-js';
 // @ts-ignore
 import {Env} from '@playkit-js/playkit-js';
-import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
+import {FloatingItem, FloatingManager, ToastManager} from '@playkit-js/ui-managers';
 import {QuizLoader} from './providers';
+
 import {
   IvqConfig,
   IvqEventTypes,
@@ -29,6 +30,7 @@ import {KalturaIvqMiddleware} from './quiz-middleware';
 const {EventType} = core;
 
 const HAS_IVQ_OVERLAY_CLASSNAME = 'has-ivq-plugin-overlay';
+const {Text} = KalturaPlayer.ui.preacti18n;
 
 export const PLUGIN_NAME = 'ivq';
 
@@ -45,6 +47,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _removeActiveOverlay: null | Function = null;
   private _ivqPopup: null | FloatingItem = null;
   private _playlistOptions: null | KalturaPlayerTypes.Playlist['options'] = null;
+  private isNoSeekAlertShown = false;
+  private defaultToastDuration = 5 * 1000;
 
   static defaultConfig: IvqConfig = {};
 
@@ -87,8 +91,12 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     return (this._player.getService('floatingManager') as FloatingManager) || {};
   }
 
+  private get toastManager(): ToastManager {
+    return (this.player.getService('toastManager') as ToastManager) || {};
+  }
+
   getMiddlewareImpl(): KalturaIvqMiddleware {
-    return new KalturaIvqMiddleware(this._shouldPreventSeek);
+    return new KalturaIvqMiddleware(this._shouldPreventSeek, this._showNoSeekAlertPopUp);
   }
 
   loadMedia(): void {
@@ -418,6 +426,24 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     return this._seekControlEnabled && !this._questionsVisualManager.quizQuestionJumping && to > this._maxCurrentTime;
   };
 
+
+  private _showNoSeekAlertPopUp = () => {
+    if(!this.isNoSeekAlertShown) {
+      this.toastManager.add({
+        icon: null,
+        onClick(): void {},
+        severity: 'Error',
+        title: (<Text id="ivq.seeking_is_disable_popup_title">Seeking was disabled on this video</Text>) as any,
+        text: '',
+        duration: this.defaultToastDuration
+      })
+    }
+    this.isNoSeekAlertShown = true;
+    setTimeout(() => {
+      this.isNoSeekAlertShown = false;
+    }, this.defaultToastDuration)
+  };
+
   private _onQuizRetake = (): Promise<void> => {
     return this._dataManager.createNewQuizUserEntry().then((quizNewUserEntry: KalturaUserEntry) => {
       if (!quizNewUserEntry) {
@@ -443,6 +469,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           const lastQuizUserEntry = quizLoader?.response?.userEntries[0];
           const quizData = quizLoader?.response?.quiz;
           const quizAnswers = quizLoader?.response?.quizAnswers;
+
           if (!quizData) {
             this.logger.warn('quiz data absent');
             return;
