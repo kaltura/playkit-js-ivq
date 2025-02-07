@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.6.5 (2025-02-07)
+
+
+### Bug Fixes
+
+* **SUP-45709:** IVQ Editor - No Seeking forward Alert for V7 player ([#148](https://github.com/kaltura/playkit-js-ivq/issues/148)) ([340cb98](https://github.com/kaltura/playkit-js-ivq/commit/340cb98))
+
+
+
 ### 3.6.4 (2025-01-23)
 
 
