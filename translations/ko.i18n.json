@@ -48,7 +48,8 @@
       "quiz_almost_done_description": "몇 가지 질문에 답하지 않은 것으로 보입니다. 제출할 퀴즈를 완료하십시오.",
       "quiz_submit_description": "잠시 시간을 내어 답변을 검토하거나 계속해서 답변을 제출하세요.",
       "quiz_completed_description": "퀴즈 동영상을 끝까지 시청하여 제출하시기 바랍니다.",
-      "quiz_submitted_title": "퀴즈 답변 제출"
+      "quiz_submitted_title": "퀴즈 답변 제출",
+      "seeking_is_disable_popup_title": "이 플레이어에서 검색이 비활성화됨"
     }
   }
 }
