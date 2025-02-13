@@ -8,6 +8,13 @@
   max-height: calc(100% - #{$bottom-bar-height});
   padding: 32px 32px 12px 32px;
 
+  :focus {
+    outline: 1px solid var(--playkit-tab-focus-color) !important;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 1px #FFFFFF, 0 0 0 2px var(--playkit-tab-focus-color);
+    border-radius: 4px;
+  }
+
   .ivqQuestionWrapper {
     display: flex;
     flex-direction: column;
