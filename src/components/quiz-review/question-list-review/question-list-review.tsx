@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {useMemo, useState, useCallback} from 'preact/hooks';
+import {useMemo, useState, useCallback, useRef, useEffect} from 'preact/hooks';
 import {Spinner} from '../../spinner';
 import {QuizQuestion} from '../../../types';
 import {QuizTranslates, KalturaQuizQuestionTypes} from '../../../types';
@@ -46,6 +46,8 @@ const translates = ({score}: QuestionListReviewProps): QuizTranslates => {
 export const QuestionListReview = withText(translates)(
   ({onRetake, score, reviewDetails, showAnswers, showScores, onClose, onQuestionClick, ...otherProps}: QuestionListReviewProps & QuizTranslates) => {
     const [isLoading, setIsLoading] = useState(false);
+    const modalRef = useRef<HTMLDivElement>(null);
+    const lastFocusedElement = useRef<HTMLElement | null>(null);
 
     const handleRetake = useCallback(() => {
       setIsLoading(true);
@@ -93,14 +95,61 @@ export const QuestionListReview = withText(translates)(
         </div>
       );
     }, [reviewDetails]);
+
+    // Focus Management and Focus Trap
+    useEffect(() => {
+      const focusableElementsString = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]';
+      const focusableElements = modalRef.current?.querySelectorAll(focusableElementsString);
+
+      const firstElement = focusableElements?.[0] as HTMLElement;
+      const lastElement = focusableElements?.[focusableElements.length - 1] as HTMLElement;
+
+      if (firstElement) {
+        setTimeout(() => firstElement.focus(), 50);
+      }
+
+      const handleTab = (e: KeyboardEvent) => {
+        if (e.key === 'Tab') {
+          if (e.shiftKey) {
+            if (document.activeElement === firstElement) {
+              e.preventDefault();
+              lastElement?.focus();
+            }
+          } else {
+            if (document.activeElement === lastElement) {
+              e.preventDefault();
+              firstElement?.focus();
+            }
+          }
+        }
+        if (e.key === 'Escape') {
+          onClose();
+        }
+      };
+
+      document.addEventListener('keydown', handleTab);
+
+      lastFocusedElement.current = document.activeElement as HTMLElement;
+      return () => {
+        document.removeEventListener('keydown', handleTab);
+        lastFocusedElement.current?.focus();
+      };
+    }, [onClose]);
+
     return (
-      <div className={['ivq', styles.quizReviewWrapper].join(' ')} role="dialog" aria-live="polite" data-testid="quizReviewWrapper">
+      <div
+        className={['ivq', styles.quizReviewWrapper].join(' ')}
+        role="dialog"
+        aria-modal="true"
+        ref={modalRef}
+        data-testid="quizReviewWrapper"
+      >
         {showScores ? (
-          <legend data-testid="quizScoreTitle" className={styles.quizScore} tabIndex={0}>
+          <legend data-testid="quizScoreTitle" className={styles.quizScore}>
             {otherProps.quizScore}
           </legend>
         ) : (
-          <div className={styles.quizScore} data-testid="quizScoreTitle" tabIndex={0}>
+          <div className={styles.quizScore} data-testid="quizScoreTitle">
             {otherProps.quizCompleted}
           </div>
         )}
@@ -109,21 +158,23 @@ export const QuestionListReview = withText(translates)(
           {onRetake && (
             <A11yWrapper onClick={handleRetake}>
               <div
-                tabIndex={0}
+                tabIndex={isLoading ? -1 : 0}
                 className={styles.primaryButton}
                 aria-label={otherProps.retakeButtonAreaLabel}
                 data-testid="reviewRetakeButton"
-                disabled={isLoading}>
+                disabled={isLoading}
+              >
                 {isLoading ? <Spinner /> : otherProps.retakeButton}
               </div>
             </A11yWrapper>
           )}
           <A11yWrapper onClick={onClose}>
             <div
-              tabIndex={0}
+              tabIndex={isLoading ? -1 : 0}
               data-testid="reviewCloseButton"
               className={[onRetake ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
-              aria-label={otherProps.closeButtonAriaLabel}>
+              aria-label={otherProps.closeButtonAriaLabel}
+            >
               {otherProps.closeButton}
             </div>
           </A11yWrapper>

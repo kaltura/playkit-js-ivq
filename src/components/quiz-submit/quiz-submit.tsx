@@ -35,17 +35,46 @@ const translates = ({onSubmit}: QuizSubmitProps): QuizTranslates => {
 export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...otherProps}: QuizSubmitProps & QuizTranslates) => {
   const [isLoading, setIsLoading] = useState(false);
   const submitButtonRef = useRef<HTMLDivElement>(null);
-  const reviewButtonRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const lastFocusedElement = useRef<HTMLElement | null>(null);
+
+  // Focus management and trap
   useEffect(() => {
-    const playerNav = useSelector((state: any) => state.shell.playerNav);
-    if (!playerNav) {
-      return;
+    lastFocusedElement.current = document.activeElement as HTMLElement;
+
+    const focusableElementsString = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]';
+    const focusableElements = modalRef.current?.querySelectorAll(focusableElementsString);
+    const firstElement = focusableElements?.[0] as HTMLElement;
+    const lastElement = focusableElements?.[focusableElements.length - 1] as HTMLElement;
+
+    if (firstElement) {
+      setTimeout(() => firstElement.focus(), 50);
     }
-    if (onSubmit) {
-      submitButtonRef.current?.focus();
-    } else {
-      reviewButtonRef.current?.focus();
-    }
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      }
+      if (e.key === 'Escape') {
+        onReview();
+      }
+    };
+
+    document.addEventListener('keydown', handleTab);
+    return () => {
+      document.removeEventListener('keydown', handleTab);
+      lastFocusedElement.current?.focus();
+    };
   }, [onSubmit]);
   const handleReviewClick = useCallback(() => {
     onReview();
@@ -57,11 +86,16 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...otherPro
         setIsLoading(false);
       });
     }
-  }, []);
+  }, [onSubmit]);
   return (
     <IvqOverlay>
-      <div className={['ivq', styles.quizSubmitWrapper].join(' ')} data-testid="submitContainer">
-        <div tabIndex={0}>
+      <div
+        className={['ivq', styles.quizSubmitWrapper].join(' ')}
+        role="dialog"
+        ref={modalRef}
+        data-testid="submitContainer"
+      >
+        <div>
           <div className={styles.title}>{otherProps.title}</div>
           <div className={styles.description}>{otherProps.description}</div>
         </div>
@@ -69,7 +103,7 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...otherPro
           {onSubmit && (
             <A11yWrapper onClick={handleSubmitClick}>
               <div
-                tabIndex={0}
+                tabIndex={isLoading ? -1 : 0}
                 className={styles.primaryButton}
                 aria-label={otherProps.submitButtonAriaLabel}
                 disabled={isLoading}
@@ -80,11 +114,10 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...otherPro
           )}
           <A11yWrapper onClick={handleReviewClick}>
             <div
-              tabIndex={0}
+              tabIndex={isLoading ? -1 : 0}
               disabled={isLoading}
               className={[onSubmit ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
-              aria-label={otherProps.reviewButtonAriaLabel}
-              ref={reviewButtonRef}>
+              aria-label={otherProps.reviewButtonAriaLabel}>
               {otherProps.reviewButton}
             </div>
           </A11yWrapper>

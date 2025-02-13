@@ -55,8 +55,23 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
   const [isLoading, setIsLoading] = useState(false);
   const continueButtonRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const bottomBarRef = useRef<HTMLDivElement>(null);
+  const lastFocusedElement = useRef<HTMLElement | null>(null);
 
+  // Trap focus within the modal
   useEffect(() => {
+    const focusableElementsString = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]';
+    const modalFocusableElements = modalRef.current?.querySelectorAll(focusableElementsString);
+    const bottomBarFocusableElements = bottomBarRef.current?.querySelectorAll(focusableElementsString);
+
+    const focusableElements = [
+      ...(modalFocusableElements ? Array.from(modalFocusableElements) : []),
+      ...(bottomBarFocusableElements ? Array.from(bottomBarFocusableElements) : [])
+    ];
+
+    const firstElement = focusableElements[0] as HTMLElement;
+    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
     // wait till plugin gets player store
     setTimeout(() => {
       const playerNav = useSelector((state: any) => state.shell.playerNav);
@@ -64,7 +79,39 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
         return;
       }
     });
+    if (firstElement) {
+      setTimeout(() => firstElement.focus(), 0);
+    }
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      }
+      if (e.key === 'Escape') {
+        qui.onSkip?.();
+      }
+    };
+
+    document.addEventListener('keydown', handleTab);
+    return () => document.removeEventListener('keydown', handleTab);
   }, [qui]);
+
+  useEffect(() => {
+    lastFocusedElement.current = document.activeElement as HTMLElement;
+    return () => {
+      lastFocusedElement.current?.focus();
+    };
+  }, []);
 
   useEffect(() => {
     setSelected(getSelected(qui));
@@ -150,13 +197,14 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       <div className={styles.ivqButtonsWrapper}>
         <A11yWrapper onClick={handleContinue}>
           <div
-            tabIndex={0}
-            ref={continueButtonRef}
+            role="button"
+            tabIndex={continueDisabled ? -1 : 0}
             data-testid="continueButton"
             disabled={continueDisabled}
             aria-disabled={continueDisabled}
             aria-label={continueButtonAriaLabel}
-            className={[styles.continueButton, continueDisabled ? styles.disabled : ''].join(' ')}>
+            className={[styles.continueButton, continueDisabled ? styles.disabled : ''].join(' ')}
+          >
             {isLoading ? <Spinner /> : props.continueButton}
           </div>
         </A11yWrapper>
@@ -164,28 +212,39 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
         {qui.onSkip && (
           <A11yWrapper onClick={handleSkip}>
             <div
-              tabIndex={0}
+              role="button"
+              tabIndex={isLoading ? -1 : 0}
               data-testid="skipButton"
               aria-label={props.skipButtonAriaLabel}
               className={[styles.skipButton, isLoading ? styles.disabled : ''].join(' ')}
-              disabled={isLoading}>
+              disabled={isLoading}
+            >
               {props.skipButton}
             </div>
           </A11yWrapper>
         )}
       </div>
     );
-  }, [qui, selected, isLoading, continueButtonRef]);
+  }, [qui, selected, isLoading]);
 
   return (
     <IvqOverlay>
-      <div className={['ivq', styles.ivqQuestionContainer].join(' ')} data-testid="ivqQuestionContainer">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="ivq.question_counter"
+        ref={modalRef}
+        className={['ivq', styles.ivqQuestionContainer].join(' ')}
+        data-testid="ivqQuestionContainer"
+      >
         <div className={styles.ivqQuestionWrapper} data-testid="ivqQuestionWrapper">
           {renderIvqQuestion}
         </div>
         {renderIvqButtons}
       </div>
-      <IvqBottomBar questionCounter={props.questionCounter} onPrev={qui.onPrev} onNext={qui.onNext} getSeekBarNode={getSeekBarNode} />
+      <div ref={bottomBarRef}>
+        <IvqBottomBar questionCounter={props.questionCounter} onPrev={qui.onPrev} onNext={qui.onNext} getSeekBarNode={getSeekBarNode}/>
+      </div>
     </IvqOverlay>
   );
 });
