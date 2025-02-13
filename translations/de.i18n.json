@@ -50,7 +50,8 @@
       "quiz_almost_done_description": "Es scheint, dass einige Fragen unbeantwortet blieben. Bitte füllen Sie das Quiz aus, um es abzusenden.",
       "quiz_submit_description": "Nehmen Sie sich einen Moment Zeit, um Ihre Antworten zu überprüfen, oder reichen Sie Ihre Antworten ein.",
       "quiz_completed_description": "Sehen Sie sich das Video bis zum Ende an, um es einzureichen.",
-      "quiz_submitted_title": "Quiz eingereicht"
+      "quiz_submitted_title": "Quiz eingereicht",
+      "seeking_is_disable_popup_title": "Die Suchfunktion ist bei diesem Player deaktiv"
     }
   }
 }
