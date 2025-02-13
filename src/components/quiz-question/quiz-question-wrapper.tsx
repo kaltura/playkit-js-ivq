@@ -137,8 +137,6 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
         return <ReflectionPoint {...questionProps} />;
       case KalturaQuizQuestionTypes.OpenQuestion:
         return <OpenQuestion {...questionProps} />;
-      case KalturaQuizQuestionTypes.MultiAnswer:
-        return <MultiChoice {...questionProps} multiAnswer />;
       default:
         return <MultiChoice {...questionProps} multiAnswer />;
     }
