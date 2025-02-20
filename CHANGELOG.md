@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.6.6 (2025-02-20)
+
+
+### Bug Fixes
+
+* SUP-46658:  V7 player freezes when loading quiz question ([#151](https://github.com/kaltura/playkit-js-ivq/issues/151)) ([c2d95a7](https://github.com/kaltura/playkit-js-ivq/commit/c2d95a7))
+
+
+
 ### 3.6.5 (2025-02-07)
 
 
