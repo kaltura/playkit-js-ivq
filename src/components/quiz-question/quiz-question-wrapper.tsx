@@ -106,12 +106,6 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   const onSelect = useCallback(
     (data: Selected, byKeyboard?: boolean) => {
       setSelected(data);
-      if (byKeyboard) {
-        setTimeout(() => {
-          // set focus after re-render happens
-          continueButtonRef.current?.focus();
-        });
-      }
     },
     [selected, continueButtonRef]
   );
