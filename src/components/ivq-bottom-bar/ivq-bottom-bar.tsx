@@ -13,7 +13,7 @@ interface IvqBottomBarProps {
   onNext?: OnClick;
   questionCounter: string | VNode<{}>;
   getSeekBarNode: () => Element | null;
-  updateHover: () => void;
+  updatePlayerHover: () => void;
 }
 
 const translates: QuizTranslates = {
@@ -22,10 +22,11 @@ const translates: QuizTranslates = {
 };
 
 export const IvqBottomBar = withText(translates)(
-  ({onPrev, onNext, questionCounter, getSeekBarNode, updateHover, ...otherProps}: IvqBottomBarProps & QuizTranslates) => {
+  ({onPrev, onNext, questionCounter, getSeekBarNode, updatePlayerHover, ...otherProps}: IvqBottomBarProps & QuizTranslates) => {
     const ivqBottomBarRef = useRef<HTMLDivElement>(null);
     useLayoutEffect(() => {
-      window.dispatchEvent(new Event('updateHover'));
+      // window.dispatchEvent(new Event('updateHover'));
+      updatePlayerHover();
       const seekBarNode = getSeekBarNode();
       if (ivqBottomBarRef.current && seekBarNode) {
         // inject player seek bar into IvqBottomBar component

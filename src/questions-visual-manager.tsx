@@ -11,8 +11,9 @@ import {
   KalturaQuizQuestionTypes,
   SubmissionDetails,
   PresetAreas,
-  UiComponentArea, IvqEventTypes
-} from "./types";
+  UiComponentArea,
+  IvqEventTypes
+} from './types';
 import {QuizQuestionWrapper} from './components/quiz-question';
 
 const {EventType, FakeEvent} = core;
@@ -33,7 +34,8 @@ export class QuestionsVisualManager {
     private _removeOverlay: () => void,
     private _isOverlayExist: () => boolean,
     private _getSeekBarNode: () => Element | null,
-    private _dispatchQuestionChanged: () => void
+    private _dispatchQuestionChanged: () => void,
+    private _updatePlayerHover: () => void
   ) {
     this._eventManager.listen(this._player, EventType.SEEKING, this._resetLastQuizCuePointId);
   }
@@ -98,7 +100,9 @@ export class QuestionsVisualManager {
             this._updateQuestionComponent = (qui: QuizQuestionUI) => {
               setQui(qui);
             };
-            return <QuizQuestionWrapper qui={qui || quizQuestionUi} getSeekBarNode={this._getSeekBarNode} />;
+            return (
+              <QuizQuestionWrapper qui={qui || quizQuestionUi} getSeekBarNode={this._getSeekBarNode} updatePlayerHover={this._updatePlayerHover} />
+            );
           }
         })
       );
@@ -135,7 +139,7 @@ export class QuestionsVisualManager {
         this._removeOverlay();
         this._player.play();
       }
-      this._player.dispatchEvent(new FakeEvent(IvqEventTypes.QUIZ_SKIPPED, { questionIndex: qq.index + 1 }));
+      this._player.dispatchEvent(new FakeEvent(IvqEventTypes.QUIZ_SKIPPED, {questionIndex: qq.index + 1}));
     };
 
     const onContinue = (data: Selected | null) => {
