@@ -25,7 +25,6 @@ export const IvqBottomBar = withText(translates)(
   ({onPrev, onNext, questionCounter, getSeekBarNode, updatePlayerHover, ...otherProps}: IvqBottomBarProps & QuizTranslates) => {
     const ivqBottomBarRef = useRef<HTMLDivElement>(null);
     useLayoutEffect(() => {
-      // window.dispatchEvent(new Event('updateHover'));
       updatePlayerHover();
       const seekBarNode = getSeekBarNode();
       if (ivqBottomBarRef.current && seekBarNode) {
