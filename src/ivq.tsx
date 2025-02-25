@@ -1,6 +1,6 @@
 import {h} from 'preact';
 // @ts-ignore
-import {core, FakeEvent} from '@playkit-js/kaltura-player-js';
+import {core} from '@playkit-js/kaltura-player-js';
 // @ts-ignore
 import {Env} from '@playkit-js/playkit-js';
 import {FloatingItem, FloatingManager, ToastManager} from '@playkit-js/ui-managers';
