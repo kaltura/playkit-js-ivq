@@ -28,7 +28,7 @@ import {QuizDownloadLoader} from './providers/quiz-download-loader';
 import {KalturaIvqMiddleware} from './quiz-middleware';
 
 const {EventType, FakeEvent} = core;
-const {PLAYER_HOVER_STATE_CHANGED} = KalturaPlayer.ui.EventType;
+const {PLAYER_HOVERED} = KalturaPlayer.ui.EventType;
 
 const HAS_IVQ_OVERLAY_CLASSNAME = 'has-ivq-plugin-overlay';
 const {Text} = KalturaPlayer.ui.preacti18n;
@@ -142,7 +142,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   };
 
   private _updatePlayerHover = () => {
-    this._player.dispatchEvent(new FakeEvent(PLAYER_HOVER_STATE_CHANGED));
+    this._player.dispatchEvent(new FakeEvent(PLAYER_HOVERED));
   };
 
   private _restoreSeekBar = () => {
