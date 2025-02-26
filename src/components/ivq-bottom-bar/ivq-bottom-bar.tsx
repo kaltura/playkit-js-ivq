@@ -1,5 +1,5 @@
 import {h, VNode} from 'preact';
-import {useMemo, useEffect, useRef} from 'preact/hooks';
+import {useMemo, useRef, useLayoutEffect} from 'preact/hooks';
 import {A11yWrapper, OnClick} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import {icons} from '../icons';
 import {QuizTranslates} from '../../types';
@@ -13,6 +13,7 @@ interface IvqBottomBarProps {
   onNext?: OnClick;
   questionCounter: string | VNode<{}>;
   getSeekBarNode: () => Element | null;
+  updatePlayerHover: () => void;
 }
 
 const translates: QuizTranslates = {
@@ -21,9 +22,10 @@ const translates: QuizTranslates = {
 };
 
 export const IvqBottomBar = withText(translates)(
-  ({onPrev, onNext, questionCounter, getSeekBarNode, ...otherProps}: IvqBottomBarProps & QuizTranslates) => {
+  ({onPrev, onNext, questionCounter, getSeekBarNode, updatePlayerHover, ...otherProps}: IvqBottomBarProps & QuizTranslates) => {
     const ivqBottomBarRef = useRef<HTMLDivElement>(null);
-    useEffect(() => {
+    useLayoutEffect(() => {
+      updatePlayerHover();
       const seekBarNode = getSeekBarNode();
       if (ivqBottomBarRef.current && seekBarNode) {
         // inject player seek bar into IvqBottomBar component

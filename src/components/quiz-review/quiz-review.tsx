@@ -15,9 +15,17 @@ export interface QuizReviewProps {
   showScores: boolean;
   getSeekBarNode: () => Element | null;
   restoreSeekBar: () => void;
+  updatePlayerHover: () => void;
 }
 
-export const QuizReview = ({reviewDetails, preparePlayer, getSeekBarNode, restoreSeekBar, ...questionListReviewProps}: QuizReviewProps) => {
+export const QuizReview = ({
+  reviewDetails,
+  preparePlayer,
+  getSeekBarNode,
+  restoreSeekBar,
+  updatePlayerHover,
+  ...questionListReviewProps
+}: QuizReviewProps) => {
   const [reviewQuestion, setReviewQuestion] = useState<ReviewQuestion | null>(null);
 
   const handleQuestionClick = useCallback(
@@ -60,6 +68,7 @@ export const QuizReview = ({reviewDetails, preparePlayer, getSeekBarNode, restor
         reviewQuestion={reviewQuestion}
         questionsAmount={reviewDetails.length}
         getSeekBarNode={getSeekBarNode}
+        updatePlayerHover={updatePlayerHover}
       />
     );
   }, [reviewQuestion, reviewDetails, getSeekBarNode]);

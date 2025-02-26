@@ -1,6 +1,6 @@
 import {h} from 'preact';
 // @ts-ignore
-import {core, ui} from '@playkit-js/kaltura-player-js';
+import {core} from '@playkit-js/kaltura-player-js';
 // @ts-ignore
 import {Env} from '@playkit-js/playkit-js';
 import {FloatingItem, FloatingManager, ToastManager} from '@playkit-js/ui-managers';
@@ -27,7 +27,8 @@ import {IvqPopup, IvqPopupProps, IvqPopupTypes} from './components/ivq-popup';
 import {QuizDownloadLoader} from './providers/quiz-download-loader';
 import {KalturaIvqMiddleware} from './quiz-middleware';
 
-const {EventType} = core;
+const {EventType, FakeEvent} = core;
+const {PLAYER_HOVERED} = KalturaPlayer.ui.EventType;
 
 const HAS_IVQ_OVERLAY_CLASSNAME = 'has-ivq-plugin-overlay';
 const {Text} = KalturaPlayer.ui.preacti18n;
@@ -78,7 +79,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._removeOverlay,
       () => Boolean(this._removeActiveOverlay),
       this._getSeekBarNode,
-      this._dataManager.dispatchQuestionChanged
+      this._dataManager.dispatchQuestionChanged,
+      this._updatePlayerHover
     );
     this._registerQuizApi();
   }
@@ -137,6 +139,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
 
   private _getSeekBarNode = () => {
     return this._player.getView().parentNode?.parentNode?.querySelector(KalturaPlayerSeekBarSelector) || null;
+  };
+
+  private _updatePlayerHover = () => {
+    this._player.dispatchEvent(new FakeEvent(PLAYER_HOVERED));
   };
 
   private _restoreSeekBar = () => {
@@ -355,7 +361,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
               showScores: showGradeAfterSubmission,
               preparePlayer: this._questionsVisualManager.preparePlayer,
               getSeekBarNode: this._getSeekBarNode,
-              restoreSeekBar: this._restoreSeekBar
+              restoreSeekBar: this._restoreSeekBar,
+              updatePlayerHover: this._updatePlayerHover
             };
             if (this._dataManager.isRetakeAllowed()) {
               params.onRetake = () => {
@@ -426,9 +433,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     return this._seekControlEnabled && !this._questionsVisualManager.quizQuestionJumping && to > this._maxCurrentTime;
   };
 
-
   private _showNoSeekAlertPopUp = () => {
-    if(!this.isNoSeekAlertShown) {
+    if (!this.isNoSeekAlertShown) {
       this.toastManager.add({
         icon: null,
         onClick(): void {},
@@ -436,12 +442,12 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         title: (<Text id="ivq.seeking_is_disable_popup_title">Seeking was disabled on this video</Text>) as any,
         text: '',
         duration: this.defaultToastDuration
-      })
+      });
     }
     this.isNoSeekAlertShown = true;
     setTimeout(() => {
       this.isNoSeekAlertShown = false;
-    }, this.defaultToastDuration)
+    }, this.defaultToastDuration);
   };
 
   private _onQuizRetake = (): Promise<void> => {
