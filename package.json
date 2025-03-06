@@ -70,6 +70,6 @@
   "dependencies": {
     "@playkit-js/common": "^1.5.3",
     "@playkit-js/playkit-js-ui": "^0.77.2",
-    "@playkit-js/webpack-common": "^1.0.1-canary.0-dfd24a9"
+    "@playkit-js/webpack-common": "^1.0.3"
   }
 }
