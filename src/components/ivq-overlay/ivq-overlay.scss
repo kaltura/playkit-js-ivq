@@ -17,6 +17,12 @@
     padding: 0 !important; // overwrite responsive overlay styles
     overflow: hidden;
   }
+    :focus {
+    outline: 1px solid var(--playkit-tab-focus-color) !important;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 1px #FFFFFF, 0 0 0 2px var(--playkit-tab-focus-color);
+    border-radius: 4px;
+  }
 }
 
 :global(.playkit-player.has-ivq-plugin-overlay .playkit-playlist-next-screen-overlay) {

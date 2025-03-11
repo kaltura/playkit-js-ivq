@@ -5,6 +5,7 @@ import {QuizTranslates} from '../../types';
 import {IvqOverlay} from '../ivq-overlay';
 import {Spinner} from '../spinner';
 import * as styles from './quiz-submit.scss';
+import { FocusTrap } from '@playkit-js/common/dist/components/focus-trap';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
@@ -60,36 +61,38 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...otherPro
   }, []);
   return (
     <IvqOverlay>
-      <div className={['ivq', styles.quizSubmitWrapper].join(' ')} data-testid="submitContainer">
-        <div tabIndex={0}>
-          <div className={styles.title}>{otherProps.title}</div>
-          <div className={styles.description}>{otherProps.description}</div>
-        </div>
-        <div className={styles.buttonWrapper} data-testid="submitButton">
-          {onSubmit && (
-            <A11yWrapper onClick={handleSubmitClick}>
+      <FocusTrap active>
+        <div className={['ivq', styles.quizSubmitWrapper].join(' ')} data-testid="submitContainer">
+          <div tabIndex={0}>
+            <div className={styles.title}>{otherProps.title}</div>
+            <div className={styles.description}>{otherProps.description}</div>
+          </div>
+          <div className={styles.buttonWrapper} data-testid="submitButton">
+            {onSubmit && (
+              <A11yWrapper onClick={handleSubmitClick}>
+                <div
+                  tabIndex={0}
+                  className={styles.primaryButton}
+                  aria-label={otherProps.submitButtonAriaLabel}
+                  disabled={isLoading}
+                  ref={submitButtonRef}>
+                  {isLoading ? <Spinner /> : otherProps.submitButton}
+                </div>
+              </A11yWrapper>
+            )}
+            <A11yWrapper onClick={handleReviewClick}>
               <div
                 tabIndex={0}
-                className={styles.primaryButton}
-                aria-label={otherProps.submitButtonAriaLabel}
                 disabled={isLoading}
-                ref={submitButtonRef}>
-                {isLoading ? <Spinner /> : otherProps.submitButton}
+                className={[onSubmit ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
+                aria-label={otherProps.reviewButtonAriaLabel}
+                ref={reviewButtonRef}>
+                {otherProps.reviewButton}
               </div>
             </A11yWrapper>
-          )}
-          <A11yWrapper onClick={handleReviewClick}>
-            <div
-              tabIndex={0}
-              disabled={isLoading}
-              className={[onSubmit ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
-              aria-label={otherProps.reviewButtonAriaLabel}
-              ref={reviewButtonRef}>
-              {otherProps.reviewButton}
-            </div>
-          </A11yWrapper>
+          </div>
         </div>
-      </div>
+      </FocusTrap>
     </IvqOverlay>
   );
 });
