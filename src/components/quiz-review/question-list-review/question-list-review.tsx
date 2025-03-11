@@ -6,6 +6,7 @@ import {QuizTranslates, KalturaQuizQuestionTypes} from '../../../types';
 import {QuestionIcon} from '../question-icon';
 import {A11yWrapper} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import * as styles from './question-list-review.scss';
+import { FocusTrap } from '@playkit-js/common/dist/components/focus-trap';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
@@ -94,41 +95,43 @@ export const QuestionListReview = withText(translates)(
       );
     }, [reviewDetails]);
     return (
-      <div className={['ivq', styles.quizReviewWrapper].join(' ')} role="dialog" aria-live="polite" data-testid="quizReviewWrapper">
-        {showScores ? (
-          <legend data-testid="quizScoreTitle" className={styles.quizScore} tabIndex={0}>
-            {otherProps.quizScore}
-          </legend>
-        ) : (
-          <div className={styles.quizScore} data-testid="quizScoreTitle" tabIndex={0}>
-            {otherProps.quizCompleted}
-          </div>
-        )}
-        <div className={styles.questionsWrapper}>{showAnswers && renderAnswers}</div>
-        <div className={styles.buttonWrapper} data-testid="reviewButtonWrapper">
-          {onRetake && (
-            <A11yWrapper onClick={handleRetake}>
+      <FocusTrap active>
+        <div className={['ivq', styles.quizReviewWrapper].join(' ')} role="dialog" aria-live="polite" data-testid="quizReviewWrapper">
+          {showScores ? (
+            <legend data-testid="quizScoreTitle" className={styles.quizScore} tabIndex={0}>
+              {otherProps.quizScore}
+            </legend>
+          ) : (
+            <div className={styles.quizScore} data-testid="quizScoreTitle" tabIndex={0}>
+              {otherProps.quizCompleted}
+            </div>
+          )}
+          <div className={styles.questionsWrapper}>{showAnswers && renderAnswers}</div>
+          <div className={styles.buttonWrapper} data-testid="reviewButtonWrapper">
+            {onRetake && (
+              <A11yWrapper onClick={handleRetake}>
+                <div
+                  tabIndex={0}
+                  className={styles.primaryButton}
+                  aria-label={otherProps.retakeButtonAreaLabel}
+                  data-testid="reviewRetakeButton"
+                  disabled={isLoading}>
+                  {isLoading ? <Spinner /> : otherProps.retakeButton}
+                </div>
+              </A11yWrapper>
+            )}
+            <A11yWrapper onClick={onClose}>
               <div
                 tabIndex={0}
-                className={styles.primaryButton}
-                aria-label={otherProps.retakeButtonAreaLabel}
-                data-testid="reviewRetakeButton"
-                disabled={isLoading}>
-                {isLoading ? <Spinner /> : otherProps.retakeButton}
+                data-testid="reviewCloseButton"
+                className={[onRetake ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
+                aria-label={otherProps.closeButtonAriaLabel}>
+                {otherProps.closeButton}
               </div>
             </A11yWrapper>
-          )}
-          <A11yWrapper onClick={onClose}>
-            <div
-              tabIndex={0}
-              data-testid="reviewCloseButton"
-              className={[onRetake ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
-              aria-label={otherProps.closeButtonAriaLabel}>
-              {otherProps.closeButton}
-            </div>
-          </A11yWrapper>
+          </div>
         </div>
-      </div>
+      </FocusTrap>
     );
   }
 );
