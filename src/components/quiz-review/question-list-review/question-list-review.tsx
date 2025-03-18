@@ -48,15 +48,10 @@ export const QuestionListReview = withText(translates)(
   ({onRetake, score, reviewDetails, showAnswers, showScores, onClose, onQuestionClick, ...otherProps}: QuestionListReviewProps & QuizTranslates) => {
     const [isLoading, setIsLoading] = useState(false);
     const closeButtonRef = useRef<HTMLDivElement>(null);
-    
+
     useEffect(() => {
       if (closeButtonRef.current) {
-        const focusableElement = closeButtonRef.current.querySelector(
-          '[tabindex]:not([tabindex="-1"])'
-        ) as HTMLElement;
-        if (focusableElement) {
-          focusableElement.focus();
-        }
+        closeButtonRef.current.focus();
       }
     }, []);
 
@@ -119,7 +114,7 @@ export const QuestionListReview = withText(translates)(
             </div>
           )}
           <div className={styles.questionsWrapper}>{showAnswers && renderAnswers}</div>
-          <div ref={closeButtonRef} className={styles.buttonWrapper} data-testid="reviewButtonWrapper">
+          <div className={styles.buttonWrapper} data-testid="reviewButtonWrapper">
             {onRetake && (
               <A11yWrapper onClick={handleRetake}>
                 <div
@@ -134,6 +129,7 @@ export const QuestionListReview = withText(translates)(
             )}
             <A11yWrapper onClick={onClose}>
               <div
+                ref={closeButtonRef}
                 tabIndex={0}
                 data-testid="reviewCloseButton"
                 className={[onRetake ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
