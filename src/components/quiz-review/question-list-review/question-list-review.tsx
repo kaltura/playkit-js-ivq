@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {useMemo, useState, useCallback} from 'preact/hooks';
+import {useMemo, useState, useCallback, useRef, useEffect} from 'preact/hooks';
 import {Spinner} from '../../spinner';
 import {QuizQuestion} from '../../../types';
 import {QuizTranslates, KalturaQuizQuestionTypes} from '../../../types';
@@ -47,6 +47,18 @@ const translates = ({score}: QuestionListReviewProps): QuizTranslates => {
 export const QuestionListReview = withText(translates)(
   ({onRetake, score, reviewDetails, showAnswers, showScores, onClose, onQuestionClick, ...otherProps}: QuestionListReviewProps & QuizTranslates) => {
     const [isLoading, setIsLoading] = useState(false);
+    const closeButtonRef = useRef<HTMLDivElement>(null);
+    
+    useEffect(() => {
+      if (closeButtonRef.current) {
+        const focusableElement = closeButtonRef.current.querySelector(
+          '[tabindex]:not([tabindex="-1"])'
+        ) as HTMLElement;
+        if (focusableElement) {
+          focusableElement.focus();
+        }
+      }
+    }, []);
 
     const handleRetake = useCallback(() => {
       setIsLoading(true);
@@ -107,7 +119,7 @@ export const QuestionListReview = withText(translates)(
             </div>
           )}
           <div className={styles.questionsWrapper}>{showAnswers && renderAnswers}</div>
-          <div className={styles.buttonWrapper} data-testid="reviewButtonWrapper">
+          <div ref={closeButtonRef} className={styles.buttonWrapper} data-testid="reviewButtonWrapper">
             {onRetake && (
               <A11yWrapper onClick={handleRetake}>
                 <div
