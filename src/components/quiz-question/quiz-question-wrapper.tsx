@@ -97,6 +97,7 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
     }
     qui.onContinue(newAnswer).finally(() => {
       setIsLoading(false);
+      updatePlayerHover();
     });
   }, [qui, selected]);
 
