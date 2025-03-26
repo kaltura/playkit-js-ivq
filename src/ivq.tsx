@@ -111,7 +111,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         this._handlePlaylistConfiguration();
         this.eventManager.listen(this._player, this._player.Event.ENDED, this._handleEndEvent);
         this._disableNativePip();
-        this.eventManager.listen(this._player, this._player.Event.ALL_ADS_COMPLETED, () => this._handleAdsCompletedEvent(qqm))
       });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered or entry Live');
@@ -231,16 +230,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       this._displayQuizSubmit();
     }
   };
-
-  private _handleAdsCompletedEvent = (qqm: QuizQuestionMap) => {
-    const timelineService: any = this._player.getService('timeline');
-    qqm.forEach((qq: QuizQuestion) => {
-      if (qq.id) {
-        timelineService.removeCueFromTimeline({ id: qq.id , startTime: qq.startTime});
-      }
-    })
-    this._handleTimeline(qqm); 
-  }
 
   private _manageIvqPopup = (onInit = true) => {
     this.logger.debug("show 'IVQ Banner'");
