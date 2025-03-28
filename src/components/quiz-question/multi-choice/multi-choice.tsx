@@ -86,7 +86,7 @@ export const MultiChoice = withText(translates)(
           <div id="multiChoiceQuestion" dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
         </legend>
         {hint && <QuestionAddons hint={hint} />}
-        <div className={styles.optionalAnswersWrapper} data-testid="multipleChoiceAnswersWrapper HEREIAMDUDE">
+        <div className={styles.optionalAnswersWrapper} data-testid="multipleChoiceAnswersWrapper">
           <div className={styles.optionalAnswersContainer} role="radiogroup" aria-labelledby="multiChoiceQuestion" data-testid="multipleChoiceAnswersContainer">
             {optionalAnswers.map(({key, text}, index) => {
               const isActive = selectedArray.includes(key);
