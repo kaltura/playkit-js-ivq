@@ -83,11 +83,11 @@ export const MultiChoice = withText(translates)(
       <div className={styles.multiChoiceWrapper} data-testid="multipleChoiceContainer">
         <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle">
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
-          <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
+          <div id="multiChoiceQuestion" dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
         </legend>
         {hint && <QuestionAddons hint={hint} />}
         <div className={styles.optionalAnswersWrapper} data-testid="multipleChoiceAnswersWrapper">
-          <div className={styles.optionalAnswersContainer} role="radiogroup" data-testid="multipleChoiceAnswersContainer">
+          <div className={styles.optionalAnswersContainer} role="radiogroup" aria-labelledby="multiChoiceQuestion" data-testid="multipleChoiceAnswersContainer">
             {optionalAnswers.map(({key, text}, index) => {
               const isActive = selectedArray.includes(key);
               return (
