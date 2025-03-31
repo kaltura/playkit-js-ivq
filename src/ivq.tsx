@@ -111,7 +111,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         this._handlePlaylistConfiguration();
         this.eventManager.listen(this._player, this._player.Event.ENDED, this._handleEndEvent);
         this._disableNativePip();
-        this.eventManager.listen(this._player, this._player.Event.ALL_ADS_COMPLETED, () => this._handleAdsCompletedEvent(qqm))
+        this.eventManager.listen(this._player, this._player.Event.AD_SKIPPED, () => this._handleAdsCompletedEvent(qqm))
+        this.eventManager.listen(this._player, this._player.Event.AD_COMPLETED, () => this._handleAdsCompletedEvent(qqm))
       });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered or entry Live');
