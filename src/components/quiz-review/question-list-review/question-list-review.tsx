@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {useMemo, useState, useCallback} from 'preact/hooks';
+import {useMemo, useState, useCallback, useRef, useEffect} from 'preact/hooks';
 import {Spinner} from '../../spinner';
 import {QuizQuestion} from '../../../types';
 import {QuizTranslates, KalturaQuizQuestionTypes} from '../../../types';
@@ -47,6 +47,13 @@ const translates = ({score}: QuestionListReviewProps): QuizTranslates => {
 export const QuestionListReview = withText(translates)(
   ({onRetake, score, reviewDetails, showAnswers, showScores, onClose, onQuestionClick, ...otherProps}: QuestionListReviewProps & QuizTranslates) => {
     const [isLoading, setIsLoading] = useState(false);
+    const closeButtonRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      if (closeButtonRef.current) {
+        closeButtonRef.current.focus();
+      }
+    }, []);
 
     const handleRetake = useCallback(() => {
       setIsLoading(true);
@@ -122,6 +129,7 @@ export const QuestionListReview = withText(translates)(
             )}
             <A11yWrapper onClick={onClose}>
               <div
+                ref={closeButtonRef}
                 tabIndex={0}
                 data-testid="reviewCloseButton"
                 className={[onRetake ? styles.secondaryButton : styles.primaryButton, isLoading ? styles.disabled : ''].join(' ')}
