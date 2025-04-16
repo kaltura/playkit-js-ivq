@@ -4,6 +4,7 @@ $roundness-1: 4px;
 
 $button-background: rgba(255, 255, 255, 0.12);
 $button-background-active: rgba(255, 255, 255, 0.2);
+$selection-border-width: 2px;
 
 @mixin ivq-text {
   font-style: normal;
@@ -87,7 +88,7 @@ $button-background-active: rgba(255, 255, 255, 0.2);
 
   background: $button-background;
   border-style: solid;
-  border-width: 1px;
+  border-width: $selection-border-width;
   border-radius: $roundness-1;
   border-color: transparent;
   font-size: 16px;

@@ -64,7 +64,7 @@
           flex-basis: 32px;
           padding: 5px 8px;
           border-right-style: solid;
-          border-right-width: 1px;
+          border-right-width: $selection-border-width;
           border-right-color: $tone-1-color;
         }
         .questionContent {
