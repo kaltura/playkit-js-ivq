@@ -105,7 +105,6 @@ export const MultiChoice = withText(translates)(
                     data-testid="multipleChoiceSelectAnswer"
                     aria-checked={isActive}
                     aria-disabled={disabled}
-                    aria-multiselectable={Boolean(multiAnswer)}
                     aria-label={`${questionLabels[index]}, ${text}${isActive ? `. ${otherProps.yourAnswer}` : ''}`}
                     className={[styles.multiSelectAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ')}>
                     <div className={styles.questionLabel} data-testid="multipleChoiceQuestionLabel">
