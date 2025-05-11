@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.7.6 (2025-05-11)
+
+
+### Bug Fixes
+
+* **ADA-1783:** Remove aria multiselectable ([#167](https://github.com/kaltura/playkit-js-ivq/issues/167)) ([31869ae](https://github.com/kaltura/playkit-js-ivq/commit/31869ae))
+
+
+
 ### 3.7.5 (2025-04-24)
 
 
