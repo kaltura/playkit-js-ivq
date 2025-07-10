@@ -38,10 +38,6 @@ export const QuizSubmit = withText(translates)(({onReview, onSubmit, ...otherPro
   const submitButtonRef = useRef<HTMLDivElement>(null);
   const reviewButtonRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const playerNav = useSelector((state: any) => state.shell.playerNav);
-    if (!playerNav) {
-      return;
-    }
     if (onSubmit) {
       submitButtonRef.current?.focus();
     } else {

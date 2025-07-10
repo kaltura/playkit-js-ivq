@@ -81,7 +81,7 @@ export const QuestionListReview = withText(translates)(
 
     const renderAnswers = useMemo(() => {
       return (
-        <div className={styles.questionsContainer} data-testid="reviewQuestionsContainer" role="listbox">
+        <div className={styles.questionsContainer} data-testid="reviewQuestionsContainer" role="list">
           {reviewDetails.map((qq, index) => {
             return (
               <A11yWrapper onClick={onQuestionClick(qq, index)} role="listitem">

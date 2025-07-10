@@ -58,16 +58,6 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   const continueButtonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // wait till plugin gets player store
-    setTimeout(() => {
-      const playerNav = useSelector((state: any) => state.shell.playerNav);
-      if (!playerNav) {
-        return;
-      }
-    });
-  }, [qui]);
-
-  useEffect(() => {
     setSelected(getSelected(qui));
     setIsLoading(false);
     if (qui.a || qui.q.questionType === KalturaQuizQuestionTypes.Reflection) {
