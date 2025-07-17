@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.7.8 (2025-07-17)
+
+
+### Bug Fixes
+
+* **ADA-2797:** Fix Quiz issues ([#168](https://github.com/kaltura/playkit-js-ivq/issues/168)) ([dfaa43d](https://github.com/kaltura/playkit-js-ivq/commit/dfaa43d))
+
+
+
 ### 3.7.7 (2025-05-22)
 
 
