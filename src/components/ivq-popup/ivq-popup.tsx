@@ -108,8 +108,10 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
           position: 'absolute',
           width: '1px',
           height: '1px',
+          margin: '-1px',
+          padding: 0,
           overflow: 'hidden',
-          clip: 'rect(1px, 1px, 1px, 1px)',
+          border: 0,
           whiteSpace: 'nowrap'
         }}
       >
@@ -120,8 +122,7 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
         data-testid="ivqPopupRoot"
         role="dialog"
         aria-modal="false"
-        aria-labelledby="ivqPopupTitle"
-        aria-describedby="ivqPopupDescription"
+        aria-label={`${otherProps.title} ${otherProps.description}`}
       >
         <A11yWrapper onClick={onClose}>
           <div tabIndex={0} className={styles.closeButton} aria-label={otherProps.closeButton} data-testid="ivqPopupCloseButton">
