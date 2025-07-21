@@ -1,7 +1,7 @@
 import {A11yWrapper, OnClick} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import {Button, ButtonSize, ButtonType} from '@playkit-js/common/dist/components/button';
-import {useState, useCallback} from 'preact/hooks';
-import {h} from 'preact';
+import {useState, useCallback, useEffect} from 'preact/hooks';
+import {Fragment, h} from 'preact';
 import {icons} from '../icons';
 import {QuizTranslates} from '../../types';
 import * as styles from './ivq-pupup.scss';
@@ -71,6 +71,16 @@ const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
 
 export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview, ...otherProps}: IvqPopupProps & QuizTranslates) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [liveMessage, setLiveMessage] = useState('');
+
+  useEffect(() => {    
+    if (type !== IvqPopupTypes.none) {
+      const msg = `${otherProps.title} ${otherProps.description}`;
+      setLiveMessage(msg);      
+    } else {
+      setLiveMessage('');
+    }
+  }, [type]);
 
   const handleSubmitClick = useCallback(() => {
     if (onSubmit) {
@@ -90,48 +100,72 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
     popupClasses.push(styles.completed);
   }
   return (
-    <div className={popupClasses.join(' ')} data-testid="ivqPopupRoot" role="alert">
-      <A11yWrapper onClick={onClose}>
-        <div tabIndex={0} className={styles.closeButton} aria-label={otherProps.closeButton} data-testid="ivqPopupCloseButton">
-          <Icon
-            id="ivq-close"
-            data-testid="closeIvqPopup"
-            height={icons.MediumSize}
-            width={icons.MediumSize}
-            viewBox={`0 0 ${icons.MediumSize} ${icons.MediumSize}`}
-            path={icons.CLOSE}
-          />
-        </div>
-      </A11yWrapper>
-      <div className={styles.title} data-testid="ivqPopupTitle">
-        {otherProps.title}
+    <Fragment>
+      <div
+        role='alert'
+        aria-live="assertive"
+        style={{
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          margin: '-1px',
+          padding: 0,
+          overflow: 'hidden',
+          border: 0,
+          whiteSpace: 'nowrap'
+        }}
+      >
+        {liveMessage}
       </div>
-      <div className={styles.description} data-testid="ivqPopupDescription">
-        {otherProps.description}
-      </div>
-      {type === IvqPopupTypes.submit && (
-        <div className={styles.buttonsWrapper}>
-          <Button
-            onClick={onReview}
-            type={ButtonType.secondary}
-            size={ButtonSize.medium}
-            ariaLabel={otherProps.reviewButtonAriaLabel as string}
-            testId="ivqPopupReviewButton"
-            className={styles.ivqPopupButtons}>
-            {otherProps.reviewButton}
-          </Button>
-          <Button
-            onClick={handleSubmitClick}
-            type={ButtonType.primary}
-            size={ButtonSize.medium}
-            testId="ivqPopupSubmitButton"
-            ariaLabel={otherProps.submitButtonAriaLabel as string}
-            loading={isLoading}
-            className={[styles.ivqPopupButtons, styles.primaryButton].join(' ')}>
-            {otherProps.submitButton}
-          </Button>
+      <div
+        className={popupClasses.join(' ')}
+        data-testid="ivqPopupRoot"
+        role="dialog"
+        aria-modal="false"
+        aria-label={`${otherProps.title} ${otherProps.description}`}
+      >
+        <A11yWrapper onClick={onClose}>
+          <div tabIndex={0} className={styles.closeButton} aria-label={otherProps.closeButton} data-testid="ivqPopupCloseButton">
+            <Icon
+              id="ivq-close"
+              data-testid="closeIvqPopup"
+              height={icons.MediumSize}
+              width={icons.MediumSize}
+              viewBox={`0 0 ${icons.MediumSize} ${icons.MediumSize}`}
+              path={icons.CLOSE}
+            />
+          </div>
+        </A11yWrapper>
+        <div className={styles.title} data-testid="ivqPopupTitle">
+          {otherProps.title}
         </div>
-      )}
-    </div>
+        <div className={styles.description} data-testid="ivqPopupDescription">
+          {otherProps.description}
+        </div>
+        {type === IvqPopupTypes.submit && (
+          <div className={styles.buttonsWrapper}>
+            <Button
+              onClick={onReview}
+              type={ButtonType.secondary}
+              size={ButtonSize.medium}
+              ariaLabel={otherProps.reviewButtonAriaLabel as string}
+              testId="ivqPopupReviewButton"
+              className={styles.ivqPopupButtons}>
+              {otherProps.reviewButton}
+            </Button>
+            <Button
+              onClick={handleSubmitClick}
+              type={ButtonType.primary}
+              size={ButtonSize.medium}
+              testId="ivqPopupSubmitButton"
+              ariaLabel={otherProps.submitButtonAriaLabel as string}
+              loading={isLoading}
+              className={[styles.ivqPopupButtons, styles.primaryButton].join(' ')}>
+              {otherProps.submitButton}
+            </Button>
+          </div>
+        )}
+      </div>
+    </Fragment>
   );
 });
