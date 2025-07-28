@@ -28,6 +28,7 @@
       display: flex;
       flex-direction: column;
       width: 100%;
+      margin: 4px;
       @include outline-fix;
       .reviewAnswer {
         @include optional-answer;
