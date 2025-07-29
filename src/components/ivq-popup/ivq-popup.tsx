@@ -31,7 +31,8 @@ const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
     submitButton: <Text id="ivq.submit_button">Submit</Text>,
     submitButtonAriaLabel: <Text id="ivq.submit_button_area_label">Click to submit quiz</Text>,
     reviewButton: <Text id="ivq.review_button">Review</Text>,
-    reviewButtonAriaLabel: <Text id="ivq.review_button_area_label">Click to review quiz</Text>
+    reviewButtonAriaLabel: <Text id="ivq.review_button_area_label">Click to review quiz</Text>,
+    popupShortcut: <Text id="ivq.quiz_popup_shortcut">Use Alt M keys to jump to the popup</Text>
   };
   if (type === IvqPopupTypes.almostDone) {
     return {
@@ -75,12 +76,31 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
 
   useEffect(() => {    
     if (type !== IvqPopupTypes.none) {
-      const msg = `${otherProps.title} ${otherProps.description}`;
+    const msg = `${otherProps.title} ${otherProps.description} ${otherProps.popupShortcut}`;
       setLiveMessage(msg);      
     } else {
       setLiveMessage('');
     }
   }, [type]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.altKey && e.ctrlKey && e.key.toLowerCase() === 'm' && type !== IvqPopupTypes.none) {
+        const popupRoot = document.querySelector('[data-testid="ivqPopupRoot"]');
+        if (popupRoot) {
+          const firstButton = popupRoot.querySelector('button');
+          if (firstButton instanceof HTMLElement) {
+            firstButton.focus();
+            e.preventDefault();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [type]);
+
 
   const handleSubmitClick = useCallback(() => {
     if (onSubmit) {
