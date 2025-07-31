@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.7.9 (2025-07-31)
+
+
+### Bug Fixes
+
+* **FEC-14603:** Fix focus indicator margin cut ([#173](https://github.com/kaltura/playkit-js-ivq/issues/173)) ([827310e](https://github.com/kaltura/playkit-js-ivq/commit/827310e))
+
+
+
 ### 3.7.8 (2025-07-17)
 
 
