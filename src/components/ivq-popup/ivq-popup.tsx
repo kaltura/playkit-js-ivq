@@ -32,7 +32,7 @@ const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
     submitButtonAriaLabel: <Text id="ivq.submit_button_area_label">Click to submit quiz</Text>,
     reviewButton: <Text id="ivq.review_button">Review</Text>,
     reviewButtonAriaLabel: <Text id="ivq.review_button_area_label">Click to review quiz</Text>,
-    popupShortcut: <Text id="ivq.quiz_popup_shortcut">Use Alt M keys to jump to the popup</Text>
+    popupShortcut: <Text id="ivq.quiz_popup_shortcut">Press Alt + M to access the dialog directly</Text>
   };
   if (type === IvqPopupTypes.almostDone) {
     return {
@@ -85,7 +85,7 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.altKey && e.ctrlKey && e.key.toLowerCase() === 'm' && type !== IvqPopupTypes.none) {
+      if (e.altKey && e.key.toLowerCase() === 'm' && type !== IvqPopupTypes.none) {
         const popupRoot = document.querySelector('[data-testid="ivqPopupRoot"]');
         if (popupRoot) {
           const firstButton = popupRoot.querySelector('button');
