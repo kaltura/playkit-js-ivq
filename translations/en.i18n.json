@@ -50,7 +50,8 @@
       "quiz_submit_description": "Take a moment to review your answers or go ahead to submit your answers.",
       "quiz_completed_description": "Watch the video until the end to submit.",
       "quiz_submitted_title": "Quiz submitted",
-      "seeking_is_disable_popup_title": "Seeking was disabled on this video"
+      "seeking_is_disable_popup_title": "Seeking was disabled on this video",
+      "quiz_popup_shortcut": "Press Alt + M to access the dialog directly"
     }
   }
 }
