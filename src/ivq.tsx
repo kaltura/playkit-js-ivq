@@ -247,6 +247,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this.logger.debug("show 'IVQ Banner'");
     this._removeIvqBanner();
     const submissionDetails = this._questionsVisualManager.getSubmissionDetails();
+    const targetId = this._player.config.targetId;
     let type: IvqPopupTypes = IvqPopupTypes.none;
 
     if (onInit && this._dataManager.isQuizSubmitted() && !this._dataManager.isRetakeAllowed()) {
@@ -262,6 +263,9 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if (type === IvqPopupTypes.none) {
       return;
     }
+    if (!targetId) {
+      return;
+    }
     const popupProps: IvqPopupProps = {
       score: this._dataManager.getQuizScore(),
       type,
@@ -270,7 +274,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       onSubmit: () => {
         this._player.pause();
         return this._submitQuiz();
-      }
+      },
+      targetId,
     };
     this._ivqPopup = this.floatingManager.add({
       label: 'IVQ popup',
