@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.7.10 (2025-08-14)
+
+
+### Bug Fixes
+
+* **FEC-14592:** Announce popup buttons text ([#171](https://github.com/kaltura/playkit-js-ivq/issues/171)) ([185010d](https://github.com/kaltura/playkit-js-ivq/commit/185010d))
+
+
+
 ### 3.7.9 (2025-07-31)
 
 
