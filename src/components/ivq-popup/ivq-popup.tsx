@@ -79,8 +79,15 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
 
   useEffect(() => {    
     if (type !== IvqPopupTypes.none) {
-    const msg = `${otherProps.title} ${otherProps.description} ${otherProps.popupShortcut}`;
-      setLiveMessage(msg);      
+      const msg = `${otherProps.title} ${otherProps.description} ${otherProps.popupShortcut}`;
+      // announce buttons' text
+      let buttonsMsg = `${otherProps.closeButton}`; // Always include Close
+      if (type === IvqPopupTypes.submit) {
+        buttonsMsg += ` ${otherProps.reviewButton} ${otherProps.submitButton}`;
+      }
+
+      const liveRegionText = `${msg} ${buttonsMsg}`;
+      setLiveMessage(liveRegionText.trim());
     } else {
       setLiveMessage('');
     }
