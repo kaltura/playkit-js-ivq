@@ -1,6 +1,6 @@
 import {A11yWrapper, OnClick} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import {Button, ButtonSize, ButtonType} from '@playkit-js/common/dist/components/button';
-import {useState, useCallback, useEffect} from 'preact/hooks';
+import {useState, useCallback, useEffect, useRef} from 'preact/hooks';
 import {Fragment, h} from 'preact';
 import {icons} from '../icons';
 import {QuizTranslates} from '../../types';
@@ -23,6 +23,7 @@ export interface IvqPopupProps {
   onClose: () => void;
   onSubmit: () => Promise<void>;
   onReview: OnClick;
+  targetId: string;
 }
 
 const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
@@ -31,7 +32,8 @@ const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
     submitButton: <Text id="ivq.submit_button">Submit</Text>,
     submitButtonAriaLabel: <Text id="ivq.submit_button_area_label">Click to submit quiz</Text>,
     reviewButton: <Text id="ivq.review_button">Review</Text>,
-    reviewButtonAriaLabel: <Text id="ivq.review_button_area_label">Click to review quiz</Text>
+    reviewButtonAriaLabel: <Text id="ivq.review_button_area_label">Click to review quiz</Text>,
+    popupShortcut: <Text id="ivq.quiz_popup_shortcut">Press Alt + M to access the dialog directly</Text>
   };
   if (type === IvqPopupTypes.almostDone) {
     return {
@@ -69,13 +71,15 @@ const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
   };
 };
 
-export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview, ...otherProps}: IvqPopupProps & QuizTranslates) => {
+export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview, targetId, ...otherProps}: IvqPopupProps & QuizTranslates) => {
   const [isLoading, setIsLoading] = useState(false);
   const [liveMessage, setLiveMessage] = useState('');
+  const reviewButtonRef = useRef<any>(null);
+  const closeButtonRef = useRef<HTMLDivElement | null>(null); 
 
   useEffect(() => {    
     if (type !== IvqPopupTypes.none) {
-      const msg = `${otherProps.title} ${otherProps.description}`;
+      const msg = `${otherProps.title} ${otherProps.description} ${otherProps.popupShortcut}`;
       // announce buttons' text
       let buttonsMsg = `${otherProps.closeButton}`; // Always include Close
       if (type === IvqPopupTypes.submit) {
@@ -88,6 +92,36 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
       setLiveMessage('');
     }
   }, [type]);
+
+  useEffect(() => {
+    if (!targetId) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.altKey && e.key.toLowerCase() === 'm' && type !== IvqPopupTypes.none) {
+        const container = document.getElementById(targetId);
+        if (!container) return;
+
+        const isFocusedInside = container.contains(document.activeElement);
+        if (!isFocusedInside) return;
+
+        const ReviewBtn = reviewButtonRef.current?.buttonRef?.current;
+        if (ReviewBtn) {
+          ReviewBtn.focus();
+          e.preventDefault();
+          return;
+        }
+
+        if (closeButtonRef.current) {
+          closeButtonRef.current.focus();
+          e.preventDefault();
+          return;
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [type, targetId]);
 
   const handleSubmitClick = useCallback(() => {
     if (onSubmit) {
@@ -127,12 +161,13 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
       <div
         className={popupClasses.join(' ')}
         data-testid="ivqPopupRoot"
+        data-player-id={targetId}
         role="dialog"
         aria-modal="false"
         aria-label={`${otherProps.title} ${otherProps.description}`}
       >
         <A11yWrapper onClick={onClose}>
-          <div tabIndex={0} className={styles.closeButton} aria-label={otherProps.closeButton} data-testid="ivqPopupCloseButton">
+          <div ref={closeButtonRef} tabIndex={0} className={styles.closeButton} aria-label={otherProps.closeButton} data-testid="ivqPopupCloseButton">
             <Icon
               id="ivq-close"
               data-testid="closeIvqPopup"
@@ -152,6 +187,7 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
         {type === IvqPopupTypes.submit && (
           <div className={styles.buttonsWrapper}>
             <Button
+              ref={reviewButtonRef}
               onClick={onReview}
               type={ButtonType.secondary}
               size={ButtonSize.medium}
