@@ -10,7 +10,7 @@ const {TimedMetadata} = core;
 
 interface TimedMetadataEvent {
   payload: {
-    cues: Array<InstanceType<typeof TimedMetadata>>;
+    cues: Array<typeof TimedMetadata>;
   };
 }
 
