@@ -10,7 +10,7 @@ const {TimedMetadata} = core;
 
 interface TimedMetadataEvent {
   payload: {
-    cues: Array<typeof TimedMetadata>;
+    cues: Array<InstanceType<typeof TimedMetadata>>;
   };
 }
 
@@ -351,7 +351,7 @@ export class DataSyncManager {
     });
   };
 
-  private _getQuizQuePoints = (data: Array<typeof TimedMetadata>) => {
+  private _getQuizQuePoints = (data: Array<any>) => {
     return data.filter(cue => cue?.type === TimedMetadata.TYPE.CUE_POINT && cue.metadata?.cuePointType === 'quiz.QUIZ_QUESTION');
   };
 
