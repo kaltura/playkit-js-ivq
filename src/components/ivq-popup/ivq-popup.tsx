@@ -5,9 +5,11 @@ import {Fragment, h} from 'preact';
 import {icons} from '../icons';
 import {QuizTranslates} from '../../types';
 import * as styles from './ivq-pupup.scss';
+import {ui} from '@playkit-js/kaltura-player-js';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 const {Icon} = KalturaPlayer.ui.components;
+const {KeyCode} = ui.utils;
 
 export enum IvqPopupTypes {
   none,
@@ -33,7 +35,7 @@ const translates = ({type, score}: IvqPopupProps): QuizTranslates => {
     submitButtonAriaLabel: <Text id="ivq.submit_button_area_label">Click to submit quiz</Text>,
     reviewButton: <Text id="ivq.review_button">Review</Text>,
     reviewButtonAriaLabel: <Text id="ivq.review_button_area_label">Click to review quiz</Text>,
-    popupShortcut: <Text id="ivq.quiz_popup_shortcut">Press Alt + M to access the dialog directly</Text>
+    popupShortcut: <Text id="ivq.quiz_popup_shortcut">Press Shift + Alt + Q or Shift + Option + Q to access the dialog directly</Text>
   };
   if (type === IvqPopupTypes.almostDone) {
     return {
@@ -96,10 +98,11 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
   useEffect(() => {
     if (!targetId) return;
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.altKey && e.key.toLowerCase() === 'm' && type !== IvqPopupTypes.none) {
-        const container = document.getElementById(targetId);
-        if (!container) return;
+      const handleKeyDown = (e: KeyboardEvent) => {
+        // Using `as any` to access KeyCode until the types are updated
+        if (e.shiftKey && e.altKey && e.code === (KeyCode as any).KeyQ && type !== IvqPopupTypes.none) {
+          const container = document.getElementById(targetId);
+          if (!container) return;
 
         const isFocusedInside = container.contains(document.activeElement);
         if (!isFocusedInside) return;

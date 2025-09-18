@@ -141,20 +141,21 @@
     react-redux "7.2.1"
     redux "4.0.5"
 
+"@playkit-js/playkit-js-ui@0.82.7-canary.0-04a0966":
+  version "0.82.7-canary.0-04a0966"
+  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-ui/-/playkit-js-ui-0.82.7-canary.0-04a0966.tgz#ddca6bf06d3e5a034840aede72cb31b5b77f4f24"
+  integrity sha512-Dil+M4b0M8bLsFbCf5Q5l/lOsxmGVDFwYsK/fouZyr1jTpxutoC+9FKwuScp72BNCr4eJHfQBltl0ft4bwkb+w==
+  dependencies:
+    "@playkit-js/webpack-common" "^1.0.1-canary.0-dfd24a9"
+    preact "10.4.6"
+    preact-i18n "2.0.0-preactx.2"
+    react-redux "7.2.1"
+    redux "4.0.5"
+
 "@playkit-js/playkit-js-ui@^0.77.10":
   version "0.77.11"
   resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-ui/-/playkit-js-ui-0.77.11.tgz#36a3ba1e02eb7abd68df132db3bb91c13400455d"
   integrity sha512-ZvcXOmlzcslzDKoeRt60tXdlJIPC62UoLcj1T49rwBQQncY1oAI+8uetOm33R8fculLIUKlQTKKCDKeqyaQV6Q==
-  dependencies:
-    preact "^10.3.4"
-    preact-i18n "^2.0.0-preactx.2"
-    react-redux "^7.2.0"
-    redux "^4.0.5"
-
-"@playkit-js/playkit-js-ui@^0.77.2":
-  version "0.77.2"
-  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-ui/-/playkit-js-ui-0.77.2.tgz#5340ba529a0a0554c4a63d7720a0bf8b27c7a696"
-  integrity sha512-vuRHXlde6P7I0YdXchkcdfSQVw1sn1MCHx0o9g4AakwlCawZ9JktIWGD2s4hTCRnH5HAk6xJbMMMRaEgjCg9bQ==
   dependencies:
     preact "^10.3.4"
     preact-i18n "^2.0.0-preactx.2"
