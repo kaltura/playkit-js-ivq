@@ -57,10 +57,10 @@ export const TrueFalse = withText(translates)(
       <div className={styles.trueFalseWrapper} data-testid="trueFalseContainer">
         <legend className={styles.questionText} data-testid="trueFalseQuestionTitle">
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
-          <div dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
+          <div id="trueFalseQuestion" dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
         </legend>
         {hint && <QuestionAddons hint={hint} />}
-        <div className={styles.optionalAnswersWrapper} role="radiogroup" data-testid="trueFalseAnswersContainer">
+        <div className={styles.optionalAnswersWrapper} role="radiogroup" aria-labelledBy="trueFalseQuestion" data-testid="trueFalseAnswersContainer">
           {optionalAnswers.map(({key, text}, index) => {
             const isActive = selected.includes(key);
             const classes = [styles.trueFalseAnswer, isActive ? styles.active : '', disabled ? styles.disabled : ''].join(' ');
