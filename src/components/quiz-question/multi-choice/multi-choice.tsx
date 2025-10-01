@@ -101,7 +101,7 @@ export const MultiChoice = withText(translates)(
                       setAnswerOptionRef(index, node);
                     }}
                     key={key}
-                    tabIndex={0}
+                    tabIndex={isActive || (!selectedArray.length && index === 0) ? 0 : -1}
                     data-testid="multipleChoiceSelectAnswer"
                     aria-checked={isActive}
                     aria-disabled={disabled}

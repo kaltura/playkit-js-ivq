@@ -77,7 +77,7 @@ export const TrueFalse = withText(translates)(
                     setAnswerOptionRef(index, node);
                   }}
                   key={key}
-                  tabIndex={0}
+                  tabIndex={isActive || (!selected.length && index === 0) ? 0 : -1}
                   data-testid="trueFalseAnswerContent"
                   aria-checked={isActive}
                   aria-disabled={disabled}
