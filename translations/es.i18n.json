@@ -50,7 +50,8 @@
       "quiz_submit_description": "Tómese un momento para revisar sus respuestas o continúe para enviarlas.",
       "quiz_completed_description": "Mire el video hasta el final para poder enviarlo.",
       "quiz_submitted_title": "Cuestionario presentado",
-      "seeking_is_disable_popup_title": "La búsqueda está deshabilitada en este reproductor"
+      "seeking_is_disable_popup_title": "La búsqueda está deshabilitada en este reproductor",
+      "quiz_popup_shortcut": "Pulsa Mayús + Alt + Q o Mayús + Opción + Q para acceder al diálogo directamente"
     }
   }
 }

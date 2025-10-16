@@ -47,7 +47,8 @@
       "quiz_submit_description": "解答を確認し、送信して下さい。",
       "quiz_completed_description": "動画を最後まで見て応募してください。",
       "quiz_submitted_title": "解答提出",
-      "seeking_is_disable_popup_title": "このプレーヤーではシークが無効になっています"
+      "seeking_is_disable_popup_title": "このプレーヤーではシークが無効になっています",
+      "quiz_popup_shortcut": "ダイアログに直接アクセスするには、Shift + Alt + Q または Shift + Option + Q を押してください"
     }
   } 
 }
