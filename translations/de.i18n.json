@@ -51,7 +51,8 @@
       "quiz_submit_description": "Nehmen Sie sich einen Moment Zeit, um Ihre Antworten zu überprüfen, oder reichen Sie Ihre Antworten ein.",
       "quiz_completed_description": "Sehen Sie sich das Video bis zum Ende an, um es einzureichen.",
       "quiz_submitted_title": "Quiz eingereicht",
-      "seeking_is_disable_popup_title": "Die Suchfunktion ist bei diesem Player deaktiv"
+      "seeking_is_disable_popup_title": "Die Suchfunktion ist bei diesem Player deaktiv",
+      "quiz_popup_shortcut": "Shift + Alt + Q oder Shift + Option + Q drücken, um direkt auf den Dialog zuzugreifen"
     }
   }
 }

@@ -49,7 +49,8 @@
       "quiz_submit_description": "잠시 시간을 내어 답변을 검토하거나 계속해서 답변을 제출하세요.",
       "quiz_completed_description": "퀴즈 동영상을 끝까지 시청하여 제출하시기 바랍니다.",
       "quiz_submitted_title": "퀴즈 답변 제출",
-      "seeking_is_disable_popup_title": "이 플레이어에서 검색이 비활성화됨"
+      "seeking_is_disable_popup_title": "이 플레이어에서 검색이 비활성화됨",
+      "quiz_popup_shortcut": "Shift + Alt + Q 또는 Shift + Option + Q를 누르면 대화상자로 바로 이동합니다"
     }
   }
 }
