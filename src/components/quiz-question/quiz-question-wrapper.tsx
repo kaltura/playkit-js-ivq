@@ -56,6 +56,12 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
   const [isLoading, setIsLoading] = useState(false);
   const continueButtonRef = useRef<HTMLDivElement>(null);
+  const selectedRef = useRef<Selected>(selected);
+
+  // update the ref whenever selected changes
+  useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
 
   useEffect(() => {
     setSelected(getSelected(qui));
@@ -64,6 +70,13 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       continueButtonRef.current?.focus();
     }
   }, [qui]);
+
+  // provide getter function for current selection to parent - always get latest answer value
+  useEffect(() => {
+    if (qui.setCurrentSelectedGetter) {
+      qui.setCurrentSelectedGetter(() => selectedRef.current);
+    }
+  }, [qui.setCurrentSelectedGetter]);
 
   const handleContinue = useCallback(() => {
     if (!selected) {
