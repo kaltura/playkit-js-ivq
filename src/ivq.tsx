@@ -606,7 +606,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this.eventManager.removeAll();
     this._seekControlEnabled = false;
     this._maxCurrentTime = 0;
-    this._skippedQuestions.clear(); // Clear skipped questions tracking
+    this._skippedQuestions.clear();
     if (this._playlistOptions) {
       // restore playlist options
       const {autoContinue, loop} = this._playlistOptions;
