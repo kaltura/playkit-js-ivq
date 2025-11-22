@@ -81,7 +81,8 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       () => Boolean(this._removeActiveOverlay),
       this._getSeekBarNode,
       this._dataManager.dispatchQuestionChanged,
-      this._updatePlayerHover
+      this._updatePlayerHover,
+      (id: string) => this._skippedQuestions.has(id)
     );
     this._registerQuizApi();
   }
@@ -187,15 +188,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     if (quizQuestion) {
       const {startTime} = quizQuestion;
       if (!this._shouldPreventSeek(startTime)) {
-        // check if there are multiple questions at the same time and find the next available one
-        const questionsAtSameTime = Array.from(this._dataManager.quizQuestionsMap.values())
-          .filter(qq => qq.startTime === startTime)
-          .sort((a, b) => a.index - b.index); // sort by question index
-
-        // find the first unanswered and unskipped question at this time, or fall back to the clicked question
-        const nextQuestion = questionsAtSameTime.find(qq => !qq.a && !qq.disabled && !this._skippedQuestions.has(qq.id)) || quizQuestion;
-
-        this._questionsVisualManager.preparePlayer(nextQuestion, true);
+        this._questionsVisualManager.preparePlayer(quizQuestion, true);
       }
     }
   };
