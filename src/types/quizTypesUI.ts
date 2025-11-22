@@ -13,6 +13,7 @@ export interface QuizQuestionUI {
   onContinue: (data: Selected | null) => Promise<void>;
   onSkip?: () => void;
   disabled: boolean;
+  setCurrentSelectedGetter?: (getCurrentSelectedFn: () => Selected) => void;
 }
 
 export interface QuestionProps {

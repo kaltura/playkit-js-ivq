@@ -24,6 +24,7 @@ export class QuestionsVisualManager {
   private _updateQuestionComponent = (qui: QuizQuestionUI) => {};
   public quizQuestionJumping = false;
   private _lastQuizCuePointId: string | null = null;
+  private _getCurrentSelected: (() => Selected) | null = null;
 
   constructor(
     private _getQuizQuestionMap: () => QuizQuestionMap,
@@ -35,7 +36,8 @@ export class QuestionsVisualManager {
     private _isOverlayExist: () => boolean,
     private _getSeekBarNode: () => Element | null,
     private _dispatchQuestionChanged: () => void,
-    private _updatePlayerHover: () => void
+    private _updatePlayerHover: () => void,
+    private _isQuestionSkipped: (id: string) => boolean
   ) {
     this._eventManager.listen(this._player, EventType.SEEKING, this._resetLastQuizCuePointId);
   }
@@ -118,6 +120,16 @@ export class QuestionsVisualManager {
       const nextQuestion = this._getQuizQuestionMap().get(next.id)!;
       if (qq.skipAvailable || (a && nextQuestion.a)) {
         onNext = () => {
+          // save current answer before navigating
+          if (this._getCurrentSelected) {
+            const currentSelected = this._getCurrentSelected();
+            if (currentSelected && currentSelected.length > 0) {
+              qq.onContinue(currentSelected).finally(() => {
+                this.preparePlayer(nextQuestion, true);
+              });
+              return;
+            }
+          }
           this.preparePlayer(nextQuestion, true);
         };
       }
@@ -127,6 +139,16 @@ export class QuestionsVisualManager {
       const prevQuestion = this._getQuizQuestionMap().get(prev.id)!;
       if (qq.skipAvailable || (a && prevQuestion.a)) {
         onPrev = () => {
+          // save current answer before navigating
+          if (this._getCurrentSelected) {
+            const currentSelected = this._getCurrentSelected();
+            if (currentSelected && currentSelected.length > 0) {
+              qq.onContinue(currentSelected).finally(() => {
+                this.preparePlayer(this._getQuizQuestionMap().get(prev.id)!, true);
+              });
+              return;
+            }
+          }
           this.preparePlayer(this._getQuizQuestionMap().get(prev.id)!, true);
         };
       }
@@ -134,7 +156,20 @@ export class QuestionsVisualManager {
 
     const onSkip = () => {
       if (qq.startTime === next?.startTime) {
-        this.preparePlayer(this._getQuizQuestionMap().get(next.id)!, true);
+        // check if there are multiple questions at the same time and find the next available one
+        const questionsAtSameTime = Array.from(this._getQuizQuestionMap().values())
+          .filter(q => q.startTime === qq.startTime)
+          .sort((a, b) => a.index - b.index); // sort by question index
+
+        // find the first unanswered and unskipped question at this time
+        const nextQuestion = questionsAtSameTime.find(q => !q.a && !q.disabled && !this._isQuestionSkipped(q.id));
+
+        if (nextQuestion) {
+          this.preparePlayer(nextQuestion, true);
+        } else {
+          this._removeOverlay();
+          this._player.play();
+        }
       } else {
         this._removeOverlay();
         this._player.play();
@@ -164,7 +199,10 @@ export class QuestionsVisualManager {
       onNext,
       onPrev,
       onContinue,
-      disabled: disabled || Boolean(!qq.allowAnswerUpdate && a)
+      disabled: disabled || Boolean(!qq.allowAnswerUpdate && a),
+      setCurrentSelectedGetter: (getCurrentSelectedFn: () => Selected) => {
+        this._getCurrentSelected = getCurrentSelectedFn;
+      }
     };
 
     if (qq.skipAvailable && qq.q.questionType !== KalturaQuizQuestionTypes.Reflection) {
