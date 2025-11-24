@@ -24,7 +24,6 @@ export class QuestionsVisualManager {
   private _updateQuestionComponent = (qui: QuizQuestionUI) => {};
   public quizQuestionJumping = false;
   private _lastQuizCuePointId: string | null = null;
-  private _getCurrentSelected: (() => Selected) | null = null;
 
   constructor(
     private _getQuizQuestionMap: () => QuizQuestionMap,
@@ -120,16 +119,6 @@ export class QuestionsVisualManager {
       const nextQuestion = this._getQuizQuestionMap().get(next.id)!;
       if (qq.skipAvailable || (a && nextQuestion.a)) {
         onNext = () => {
-          // save current answer before navigating
-          if (this._getCurrentSelected) {
-            const currentSelected = this._getCurrentSelected();
-            if (currentSelected && currentSelected.length > 0) {
-              qq.onContinue(currentSelected).finally(() => {
-                this.preparePlayer(nextQuestion, true);
-              });
-              return;
-            }
-          }
           this.preparePlayer(nextQuestion, true);
         };
       }
@@ -139,16 +128,6 @@ export class QuestionsVisualManager {
       const prevQuestion = this._getQuizQuestionMap().get(prev.id)!;
       if (qq.skipAvailable || (a && prevQuestion.a)) {
         onPrev = () => {
-          // save current answer before navigating
-          if (this._getCurrentSelected) {
-            const currentSelected = this._getCurrentSelected();
-            if (currentSelected && currentSelected.length > 0) {
-              qq.onContinue(currentSelected).finally(() => {
-                this.preparePlayer(this._getQuizQuestionMap().get(prev.id)!, true);
-              });
-              return;
-            }
-          }
           this.preparePlayer(this._getQuizQuestionMap().get(prev.id)!, true);
         };
       }
@@ -199,10 +178,7 @@ export class QuestionsVisualManager {
       onNext,
       onPrev,
       onContinue,
-      disabled: disabled || Boolean(!qq.allowAnswerUpdate && a),
-      setCurrentSelectedGetter: (getCurrentSelectedFn: () => Selected) => {
-        this._getCurrentSelected = getCurrentSelectedFn;
-      }
+      disabled: disabled || Boolean(!qq.allowAnswerUpdate && a)
     };
 
     if (qq.skipAvailable && qq.q.questionType !== KalturaQuizQuestionTypes.Reflection) {
