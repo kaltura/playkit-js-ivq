@@ -2,7 +2,8 @@
   "en": {
     "ivq": {
       "continue_button": "Continue",
-      "continue_button_area_label": "Continue quiz with the selected answer",
+      "save_continue_button": "Save and Continue",
+      "save_continue_button_area_label": "Save and continue quiz with the selected answer",
       "skip_button": "Skip",
       "skip_button_area_label": "Skip for now",
       "question_counter": "Question {{current}} of {{total}}",
