@@ -513,6 +513,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           if (!this._dataManager.quizData?.showWelcomePage) {
             if (this.componentRemover) {
               this.componentRemover();
+              this.componentRemover = null;
             }
           }
           if (lastQuizUserEntry) {
