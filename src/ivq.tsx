@@ -1,6 +1,6 @@
 import {h} from 'preact';
 // @ts-ignore
-import {core} from '@playkit-js/kaltura-player-js';
+import {core, ui} from '@playkit-js/kaltura-player-js';
 // @ts-ignore
 import {Env} from '@playkit-js/playkit-js';
 import {FloatingItem, FloatingManager, ToastManager} from '@playkit-js/ui-managers';
@@ -50,6 +50,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _playlistOptions: null | KalturaPlayerTypes.Playlist['options'] = null;
   private isNoSeekAlertShown = false;
   private defaultToastDuration = 5 * 1000;
+  private componentRemover: (() => void) | undefined;
 
   static defaultConfig: IvqConfig = {};
 
@@ -102,6 +103,15 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   }
 
   loadMedia(): void {
+    this.componentRemover = this.player.ui.addComponent({
+      label: 'remove-media-info-display-component',
+      presets: [ui.ReservedPresetNames.Playback, ui.ReservedPresetNames.Live],
+      area: 'GuiArea',
+      replaceComponent: 'MediaInfoDisplay',
+      get: () => {
+        return null;
+      }
+    });
     const kalturaCuePointService: any = this._player.getService('kalturaCuepoints');
     if (kalturaCuePointService && !this._player.isLive()) {
       this._getQuestions(kalturaCuePointService);
@@ -240,7 +250,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         timelineService.removeCueFromTimeline({ id: qq.id , startTime: qq.startTime});
       }
     })
-    this._handleTimeline(qqm); 
+    this._handleTimeline(qqm);
   }
 
   private _manageIvqPopup = (onInit = true) => {
@@ -500,6 +510,12 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
           const {setQuizUserEntry, setQuizAnswers, setQuizData, isQuizSubmitted, isRetakeAllowed} = this._dataManager;
           // set main quiz data
           setQuizData(quizData);
+          if (!this._dataManager.quizData?.showWelcomePage) {
+            if (this.componentRemover) {
+              this.componentRemover();
+              this.componentRemover = undefined;
+            }
+          }
           if (lastQuizUserEntry) {
             // set lastQuizUserEntry to define if submit and retake allowed
             setQuizUserEntry(lastQuizUserEntry);
@@ -582,6 +598,9 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
 
   reset(): void {
     this._removeOverlay();
+    if (this.componentRemover) {
+      this.componentRemover();
+    }
     this._questionsVisualManager.reset();
     this._dataManager.reset();
     this._quizDataPromise = this._makeQuizDataPromise();
