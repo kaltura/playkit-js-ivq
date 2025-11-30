@@ -25,8 +25,8 @@ interface QuizQuestionWrapperProps {
 
 const translates = ({qui}: QuizQuestionWrapperProps): QuizTranslates => {
   return {
-    continueButton: <Text id="ivq.continue_button">Continue</Text>,
-    continueButtonAriaLabel: <Text id="ivq.continue_button_area_label">Continue quiz with the selected answer</Text>,
+    continueButton: <Text id="ivq.save_continue_button">Save and Continue</Text>,
+    continueButtonAriaLabel: <Text id="ivq.save_continue_button_area_label">Save and continue quiz with the selected answer</Text>,
     skipButton: <Text id="ivq.skip_button">Skip</Text>,
     skipButtonAriaLabel: <Text id="ivq.skip_button_area_label">Skip for now</Text>,
     questionCounter: (
