@@ -1,6 +1,7 @@
 /// <reference path="./global.d.ts" />
 
 import {Ivq, PLUGIN_NAME} from './ivq';
+import {registerPlugin} from '@playkit-js/kaltura-player-js';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -12,4 +13,4 @@ export {Ivq as Plugin};
 export {VERSION, NAME};
 export {IvqEventTypes as EventType} from './types';
 
-KalturaPlayer.core.registerPlugin(PLUGIN_NAME, Ivq);
+registerPlugin(PLUGIN_NAME, Ivq as any);
