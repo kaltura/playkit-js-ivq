@@ -97,14 +97,6 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
     qui.onSkip!();
   }, [qui]);
 
-  const handleSkipKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      e.stopPropagation();
-      qui.onSkip!();
-    }
-  }, [qui]);
-
   const onSelect = useCallback(
     (data: Selected, byKeyboard?: boolean) => {
       setSelected(data);
@@ -167,8 +159,6 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
               aria-label={props.skipButtonAriaLabel}
               className={[styles.skipButton, isLoading ? styles.disabled : ''].join(' ')}
               disabled={isLoading}
-              onClick={handleSkip}
-              onKeyDown={handleSkipKeyDown}
               role="button">
               {props.skipButton}
             </div>
