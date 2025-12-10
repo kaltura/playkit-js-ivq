@@ -56,12 +56,15 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
   const [isLoading, setIsLoading] = useState(false);
   const continueButtonRef = useRef<HTMLDivElement>(null);
+  const skipButtonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setSelected(getSelected(qui));
     setIsLoading(false);
     if (qui.a || qui.q.questionType === KalturaQuizQuestionTypes.Reflection) {
       continueButtonRef.current?.focus();
+    } else if (qui.onSkip) {
+      skipButtonRef.current?.focus();
     }
   }, [qui]);
 
@@ -92,6 +95,14 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
 
   const handleSkip = useCallback(() => {
     qui.onSkip!();
+  }, [qui]);
+
+  const handleSkipKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+      qui.onSkip!();
+    }
   }, [qui]);
 
   const onSelect = useCallback(
@@ -141,7 +152,8 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
             disabled={continueDisabled}
             aria-disabled={continueDisabled}
             aria-label={continueButtonAriaLabel}
-            className={[styles.continueButton, continueDisabled ? styles.disabled : ''].join(' ')}>
+            className={[styles.continueButton, continueDisabled ? styles.disabled : ''].join(' ')}
+            role="button">
             {isLoading ? <Spinner /> : props.continueButton}
           </div>
         </A11yWrapper>
@@ -150,17 +162,21 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
           <A11yWrapper onClick={handleSkip}>
             <div
               tabIndex={0}
+              ref={skipButtonRef}
               data-testid="skipButton"
               aria-label={props.skipButtonAriaLabel}
               className={[styles.skipButton, isLoading ? styles.disabled : ''].join(' ')}
-              disabled={isLoading}>
+              disabled={isLoading}
+              onClick={handleSkip}
+              onKeyDown={handleSkipKeyDown}
+              role="button">
               {props.skipButton}
             </div>
           </A11yWrapper>
         )}
       </div>
     );
-  }, [qui, selected, isLoading, continueButtonRef]);
+  }, [qui, selected, isLoading, continueButtonRef, skipButtonRef]);
 
   return (
     <IvqOverlay>
