@@ -35,8 +35,7 @@ export class QuestionsVisualManager {
     private _isOverlayExist: () => boolean,
     private _getSeekBarNode: () => Element | null,
     private _dispatchQuestionChanged: () => void,
-    private _updatePlayerHover: () => void,
-    private _isQuestionSkipped: (id: string) => boolean
+    private _updatePlayerHover: () => void
   ) {
     this._eventManager.listen(this._player, EventType.SEEKING, this._resetLastQuizCuePointId);
   }
@@ -135,20 +134,7 @@ export class QuestionsVisualManager {
 
     const onSkip = () => {
       if (qq.startTime === next?.startTime) {
-        // check if there are multiple questions at the same time and find the next available one
-        const questionsAtSameTime = Array.from(this._getQuizQuestionMap().values())
-          .filter(q => q.startTime === qq.startTime)
-          .sort((a, b) => a.index - b.index); // sort by question index
-
-        // find the first unanswered and unskipped question at this time
-        const nextQuestion = questionsAtSameTime.find(q => !q.a && !q.disabled && !this._isQuestionSkipped(q.id));
-
-        if (nextQuestion) {
-          this.preparePlayer(nextQuestion, true);
-        } else {
-          this._removeOverlay();
-          this._player.play();
-        }
+        this.preparePlayer(this._getQuizQuestionMap().get(next.id)!, true);
       } else {
         this._removeOverlay();
         this._player.play();

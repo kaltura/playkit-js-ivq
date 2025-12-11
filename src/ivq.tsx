@@ -45,7 +45,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   private _questionsVisualManager: QuestionsVisualManager;
   private _maxCurrentTime = 0;
   private _seekControlEnabled = false;
-  private _skippedQuestions: Set<string> = new Set();
   private _removeActiveOverlay: null | Function = null;
   private _ivqPopup: null | FloatingItem = null;
   private _playlistOptions: null | KalturaPlayerTypes.Playlist['options'] = null;
@@ -82,8 +81,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
       () => Boolean(this._removeActiveOverlay),
       this._getSeekBarNode,
       this._dataManager.dispatchQuestionChanged,
-      this._updatePlayerHover,
-      (id: string) => this._skippedQuestions.has(id)
+      this._updatePlayerHover
     );
     this._registerQuizApi();
   }
@@ -125,17 +123,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         this._disableNativePip();
         this.eventManager.listen(this._player, this._player.Event.AD_SKIPPED, () => this._handleAdsCompletedEvent(qqm))
         this.eventManager.listen(this._player, this._player.Event.AD_COMPLETED, () => this._handleAdsCompletedEvent(qqm))
-        // listen for quiz skipped events to track skipped questions
-        this.eventManager.listen(this._player, IvqEventTypes.QUIZ_SKIPPED, (event: any) => {
-          const questionIndex = event.payload?.questionIndex;
-          if (questionIndex !== undefined) {
-            // find the question by index and mark as skipped
-            const skippedQuestion = Array.from(qqm.values()).find(qq => qq.index === questionIndex - 1);
-            if (skippedQuestion) {
-              this._skippedQuestions.add(skippedQuestion.id);
-            }
-          }
-        });
       });
     } else {
       this.logger.warn('kalturaCuepoints service is not registered or entry Live');
@@ -210,6 +197,9 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     } else {
       const isMarkerDisabled = () => Boolean(this._removeActiveOverlay);
       qqm.forEach((qq: QuizQuestion) => {
+        if (qq.startTime === qq.prev?.startTime) {
+          return;
+        }
         const handleOnQuestionClick = this._makeOnClickHandler(qq.id);
         const qqData = {
           onClick: handleOnQuestionClick,
@@ -618,7 +608,6 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this.eventManager.removeAll();
     this._seekControlEnabled = false;
     this._maxCurrentTime = 0;
-    this._skippedQuestions.clear();
     if (this._playlistOptions) {
       // restore playlist options
       const {autoContinue, loop} = this._playlistOptions;
