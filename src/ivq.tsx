@@ -125,8 +125,12 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
         this.eventManager.listen(this._player, this._player.Event.AD_COMPLETED, () => this._handleAdsCompletedEvent(qqm))
       });
     } else {
-      this.logger.warn('kalturaCuepoints service is not registered or entry Live');
-      this._resolveQuizDataPromise();
+        this.logger.warn('kalturaCuepoints service is not registered or entry Live');
+        if (this.componentRemover) {
+            this.componentRemover();
+            this.componentRemover = undefined;
+        }
+        this._resolveQuizDataPromise();
     }
   }
 
