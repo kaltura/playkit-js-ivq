@@ -509,6 +509,10 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
 
           if (!quizData) {
             this.logger.warn('quiz data absent');
+            if (this.componentRemover) {
+                this.componentRemover();
+                this.componentRemover = undefined;
+            }
             return;
           }
           const {setQuizUserEntry, setQuizAnswers, setQuizData, isQuizSubmitted, isRetakeAllowed} = this._dataManager;
@@ -549,10 +553,19 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
             setQuizAnswers(quizAnswers);
           }
           this._dataManager.initDataManager(allowSeek);
+        } else {
+            if (this.componentRemover) {
+                this.componentRemover();
+                this.componentRemover = undefined;
+            }
         }
       })
       .catch((e: any) => {
         this.logger.warn("can't process quiz data", e);
+          if (this.componentRemover) {
+              this.componentRemover();
+              this.componentRemover = undefined;
+          }
       })
       .finally(() => {
         this._resolveQuizDataPromise();
@@ -604,6 +617,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     this._removeOverlay();
     if (this.componentRemover) {
       this.componentRemover();
+      this.componentRemover = undefined;
     }
     this._questionsVisualManager.reset();
     this._dataManager.reset();
