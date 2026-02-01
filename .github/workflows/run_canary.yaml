@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - master
-      
+
 jobs:
   test:
     uses: kaltura/playkit-js-common/.github/workflows/cypress.yml@master
