@@ -5,8 +5,7 @@ run-name: Canary
 on:
   push:
     branches:
-      - test-style-loader-fix
-
+      - master
 jobs:
   test:
     uses: kaltura/playkit-js-common/.github/workflows/cypress.yml@master
