@@ -41,6 +41,7 @@ module.exports = {
           {
             loader: 'style-loader',
             options: {
+              injectType: "singletonStyleTag",
               attributes: {
                 id: `${packageData.name}`
               },
