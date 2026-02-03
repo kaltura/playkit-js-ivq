@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.7.18 (2026-02-03)
+
+
+### Bug Fixes
+
+* **FEC-14873:** Duplicate <style> tags appear on the page ([#190](https://github.com/kaltura/playkit-js-ivq/issues/190)) ([b2dff9a](https://github.com/kaltura/playkit-js-ivq/commit/b2dff9a))
+
+
+
 ### 3.7.17 (2025-12-31)
 
 
