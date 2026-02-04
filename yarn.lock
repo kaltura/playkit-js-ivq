@@ -82,20 +82,20 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.3.tgz#0300943770e04231041a51bd39f0439b5c7ab4f0"
   integrity sha512-nkalE/f1RvRGChwBnEIoBfSEYOXnCRdleKuv6+lePbMDrMZXeDQnqak5XDOeBgrPPyPfAdcCu/B5z+v3VhplGg==
 
+"@playkit-js/common@1.5.27":
+  version "1.5.27"
+  resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.5.27.tgz#c3b9f947448c81f7cb58cbe3f9c7e435c50a1731"
+  integrity sha512-x4XhNnhC6H3YDR+0FAxJygkjXSQsAyJ8itGVR4+AUHIKg2t65BgQuCt4D1u5wNLL6d6yj/pWVXcDzdwXVumQxA==
+  dependencies:
+    classnames "^2.3.2"
+    linkify-it "^4.0.1"
+
 "@playkit-js/common@^1.2.10":
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.5.1.tgz#14edd4f01ecd16ea22016bdb68f7dd3604eb39a0"
   integrity sha512-YRJfhxZihOggy9tXOL1wm/pYChV+b+NuD9f7Y/JjVt5KIjVgeEPvPhSWSyKRv3LxbBJ4BcwYXtMe8Tg/gUmq3A==
   dependencies:
     "@playkit-js/playkit-js-ui" "^0.77.10"
-    classnames "^2.3.2"
-    linkify-it "^4.0.1"
-
-"@playkit-js/common@^1.5.19":
-  version "1.5.23"
-  resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.5.23.tgz#4cb66fcaecf847dafd55510f507c1c6cdacf6d92"
-  integrity sha512-t7uCY5y6NbcmKWj4u2U0ZpKznY6B6lY9IMqeE3vLNyGLcZinLO6soRH5CyhSsPny5+EF3CEAeakZ0t7tuVyIPg==
-  dependencies:
     classnames "^2.3.2"
     linkify-it "^4.0.1"
 
