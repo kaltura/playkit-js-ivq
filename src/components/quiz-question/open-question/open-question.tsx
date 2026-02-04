@@ -1,5 +1,6 @@
 import {h} from 'preact';
 import {useCallback, useEffect, useRef, useState} from 'preact/hooks';
+import {debounce} from '@playkit-js/common/dist/utils-common';
 import {QuestionProps, QuizTranslates} from '../../../types';
 import {QuestionAddons} from '../question-addons';
 import * as styles from './open-question.scss';
@@ -23,8 +24,8 @@ export const OpenQuestion = withText(translates)(
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const [liveMessage, setLiveMessage] = useState<preact.ComponentChild>(null);
-    const liveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const lastAnnouncedCountRef = useRef<number>(-1);
+    const charCountAnnouncerRef = useRef<any>(null);
 
     const handleChange = useCallback(
       (e: any) => {
@@ -32,23 +33,8 @@ export const OpenQuestion = withText(translates)(
       },
       [onSelect]
     );
-
-    useEffect(() => {
-      if (!disabled) {
-        textareaRef.current?.focus();
-      }
-    }, [question]);
-
-    useEffect(() => {
-      if (liveTimeoutRef.current) {
-        clearTimeout(liveTimeoutRef.current);
-      }
-
-      const characterCount = selected.length;
-
-      //setTimeout is used to avoid announcing on every keystroke
-      //the message will be announced only if the user stops typing for 800ms
-      liveTimeoutRef.current = setTimeout(() => {
+    if (!charCountAnnouncerRef.current) {
+      charCountAnnouncerRef.current = debounce((characterCount: number) => {
         if (characterCount !== lastAnnouncedCountRef.current) {
           setLiveMessage(
             <Text
@@ -64,13 +50,18 @@ export const OpenQuestion = withText(translates)(
           lastAnnouncedCountRef.current = characterCount;
         }
       }, 800);
+    }
 
-      return () => {
-        if (liveTimeoutRef.current) {
-          clearTimeout(liveTimeoutRef.current);
-        }
-      };
+    // Trigger debounced announcement when the answer text changes
+    useEffect(() => {
+      charCountAnnouncerRef.current?.(selected.length);
     }, [selected]);
+    // Cancel pending announcement on unmount
+    useEffect(() => {
+      return () => {
+        charCountAnnouncerRef.current?.cancel?.();
+      };
+    }, []);
 
     return (
       <div className={styles.openQuestionWrapper} data-testid="openQuestionContainer">
