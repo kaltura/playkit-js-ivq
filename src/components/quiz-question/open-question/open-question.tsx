@@ -49,7 +49,7 @@ export const OpenQuestion = withText(translates)(
           );
           lastAnnouncedCountRef.current = characterCount;
         }
-      }, 800);
+      }, 1500);
     }
 
     // Trigger debounced announcement when the answer text changes
