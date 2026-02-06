@@ -9,6 +9,8 @@
       "next_question_area_label": "Next Question",
       "prev_question_area_label": "Previous Question",
       "open_question_placeholder": "Type your answer here...",
+      "textarea_aria_label": "Open-ended quiz answer, maximum 250 characters.",
+      "open_question_char_count": "{{count}} of {{max}} characters used",
       "question": "Question",
       "reflection_point": "Reflection Point",
       "welcome_title": "Start your video quiz!",
