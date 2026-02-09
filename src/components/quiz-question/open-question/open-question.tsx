@@ -52,6 +52,11 @@ export const OpenQuestion = withText(translates)(
       }, 1500);
     }
 
+    useEffect(() => {
+      if (!disabled) {
+        textareaRef.current?.focus();
+      }
+    }, [question]);
     // Trigger debounced announcement when the answer text changes
     useEffect(() => {
       charCountAnnouncerRef.current?.(selected.length);
