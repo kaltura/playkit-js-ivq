@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.7.19 (2026-02-12)
+
+
+### Bug Fixes
+
+* **FEC-14884:** Focus inside text area ([#192](https://github.com/kaltura/playkit-js-ivq/issues/192)) ([12553f0](https://github.com/kaltura/playkit-js-ivq/commit/12553f0))
+
+
+
 ### 3.7.18 (2026-02-03)
 
 
