@@ -14,7 +14,7 @@ import * as styles from './quiz-question-wrapper.scss';
 
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 const {
-  redux: {useSelector}
+  redux: { connect }
 } = KalturaPlayer.ui;
 
 interface QuizQuestionWrapperProps {
@@ -22,6 +22,10 @@ interface QuizQuestionWrapperProps {
   getSeekBarNode: Element | null;
   updatePlayerHover: () => void;
 }
+
+const mapStateToProps = (state: any) => ({
+  playerSize: state.shell.playerClientRect.width
+});
 
 const translates = ({qui}: QuizQuestionWrapperProps): QuizTranslates => {
   return {
@@ -51,8 +55,8 @@ const getSelected = (qui: QuizQuestionUI): string => {
   return qui.a?.answerKey || '';
 };
 
-export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrapperProps & QuizTranslates) => {
-  const {qui, getSeekBarNode, updatePlayerHover} = props;
+export const QuizQuestionWrapper = connect(mapStateToProps)(withText(translates)((props: QuizQuestionWrapperProps & QuizTranslates & ReturnType<typeof mapStateToProps>) => {
+  const {qui, getSeekBarNode, updatePlayerHover, playerSize} = props;
   const [selected, setSelected] = useState<Selected>(getSelected(qui));
   const [isLoading, setIsLoading] = useState(false);
   const continueButtonRef = useRef<HTMLDivElement>(null);
@@ -108,7 +112,8 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       questionIndex: qui.questionIndex[0],
       optionalAnswers,
       hint,
-      selected
+      selected,
+      playerSize
     };
     if (!(qui.disabled || isLoading)) {
       questionProps.onSelect = onSelect;
@@ -179,4 +184,4 @@ export const QuizQuestionWrapper = withText(translates)((props: QuizQuestionWrap
       />
     </IvqOverlay>
   );
-});
+}));

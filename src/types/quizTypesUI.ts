@@ -22,6 +22,7 @@ export interface QuestionProps {
   hint?: string;
   onSelect?: (data: Selected, byKeyboard?: boolean) => void;
   selected: Selected;
+  playerSize?: number;
 }
 
 export type QuizTranslates = Record<string, VNode | string>;
