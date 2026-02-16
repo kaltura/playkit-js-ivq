@@ -1,11 +1,13 @@
 import {h} from 'preact';
-import {useCallback, useEffect, useRef} from 'preact/hooks';
+import {useCallback, useEffect} from 'preact/hooks';
 import {makeQuestionLabels, wrapLinksWithTags} from '../../../utils';
 import {QuestionProps, QuizTranslates} from '../../../types';
 import {QuestionAddons} from '../question-addons';
 import {A11yWrapper} from '@playkit-js/common/dist/hoc/a11y-wrapper';
 import * as styles from './multi-choice.scss';
+import { ui } from '@playkit-js/kaltura-player-js';
 
+const {PLAYER_BREAK_POINTS} = ui.Components;
 const {withText, Text} = KalturaPlayer.ui.preacti18n;
 
 const translates = (): QuizTranslates => {
@@ -30,11 +32,13 @@ export const MultiChoice = withText(translates)(
     hint,
     multiAnswer,
     questionIndex,
+    playerSize,
     ...otherProps
   }: QuestionProps & MultiChoiceProps & QuizTranslates) => {
     const selectedArray = selected ? selected.split(',') : [];
     const disabled = !onSelect;
     let answersOptionsRefMap: Map<number, HTMLElement | null> = new Map();
+    const isLargePlayer = playerSize !== undefined ? playerSize >= PLAYER_BREAK_POINTS.LARGE : false;
 
     useEffect(() => {
       if (!disabled) {
@@ -81,7 +85,7 @@ export const MultiChoice = withText(translates)(
 
     return (
       <div className={styles.multiChoiceWrapper} data-testid="multipleChoiceContainer">
-        <legend className={styles.questionText} data-testid="multipleChoiceQuestionTitle">
+        <legend className={[styles.questionText, isLargePlayer ? styles.largePlayer : ''].join(' ')} data-testid="multipleChoiceQuestionTitle">
           <span className={styles.visuallyHidden}>{`${otherProps.questionLabel} #${questionIndex}:`}</span>
           <div id="multiChoiceQuestion" dangerouslySetInnerHTML={{ __html: wrapLinksWithTags(question) }} />
         </legend>
@@ -110,7 +114,7 @@ export const MultiChoice = withText(translates)(
                     <div className={styles.questionLabel} data-testid="multipleChoiceQuestionLabel">
                       {questionLabels[index]}
                     </div>
-                    <div className={styles.questionContent} data-testid="multipleChoiceQuestionContent">
+                    <div className={[styles.questionContent, isLargePlayer ? styles.largePlayer : ''].join(' ')} data-testid="multipleChoiceQuestionContent">
                       {text}
                     </div>
                   </div>
