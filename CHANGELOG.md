@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.7.20 (2026-02-26)
+
+
+### Bug Fixes
+
+* **ADA-2949:** Extra large player ivq styling ([#193](https://github.com/kaltura/playkit-js-ivq/issues/193)) ([fc98940](https://github.com/kaltura/playkit-js-ivq/commit/fc98940))
+
+
+
 ### 3.7.19 (2026-02-12)
 
 
