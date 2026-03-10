@@ -1,0 +1,77 @@
+[
+  {
+    "partnerId": 1091,
+    "ks": "",
+    "userId": 0,
+    "objectType": "KalturaStartWidgetSessionResponse"
+  },
+  {
+    "objects": [
+      {
+        "optionalAnswers": [
+          {"key": "1", "text": "Answer A", "weight": 1, "isCorrect": true, "objectType": "KalturaOptionalAnswer"},
+          {"key": "2", "text": "Answer B", "weight": 1, "isCorrect": false, "objectType": "KalturaOptionalAnswer"}
+        ],
+        "question": "Question 1 at 691s",
+        "questionType": 1,
+        "excludeFromScore": false,
+        "id": "q_691_first",
+        "intId": 1000001,
+        "cuePointType": "quiz.QUIZ_QUESTION",
+        "status": 1,
+        "entryId": "test_entry",
+        "partnerId": 5174,
+        "createdAt": 1663342164,
+        "updatedAt": 1663342164,
+        "startTime": 691000,
+        "userId": "test@test.com",
+        "isMomentary": true,
+        "objectType": "KalturaQuestionCuePoint"
+      },
+      {
+        "optionalAnswers": [
+          {"key": "1", "text": "Answer A", "weight": 1, "isCorrect": true, "objectType": "KalturaOptionalAnswer"},
+          {"key": "2", "text": "Answer B", "weight": 1, "isCorrect": false, "objectType": "KalturaOptionalAnswer"}
+        ],
+        "question": "Question 2 at 692s",
+        "questionType": 1,
+        "excludeFromScore": false,
+        "id": "q_692_second",
+        "intId": 1000002,
+        "cuePointType": "quiz.QUIZ_QUESTION",
+        "status": 1,
+        "entryId": "test_entry",
+        "partnerId": 5174,
+        "createdAt": 1663342165,
+        "updatedAt": 1663342165,
+        "startTime": 692000,
+        "userId": "test@test.com",
+        "isMomentary": true,
+        "objectType": "KalturaQuestionCuePoint"
+      },
+      {
+        "optionalAnswers": [
+          {"key": "1", "text": "Answer A", "weight": 1, "isCorrect": true, "objectType": "KalturaOptionalAnswer"},
+          {"key": "2", "text": "Answer B", "weight": 1, "isCorrect": false, "objectType": "KalturaOptionalAnswer"}
+        ],
+        "question": "Question 3 at 693s",
+        "questionType": 1,
+        "excludeFromScore": false,
+        "id": "q_693_third",
+        "intId": 1000003,
+        "cuePointType": "quiz.QUIZ_QUESTION",
+        "status": 1,
+        "entryId": "test_entry",
+        "partnerId": 5174,
+        "createdAt": 1663342166,
+        "updatedAt": 1663342166,
+        "startTime": 693000,
+        "userId": "test@test.com",
+        "isMomentary": true,
+        "objectType": "KalturaQuestionCuePoint"
+      }
+    ],
+    "totalCount": 3,
+    "objectType": "KalturaCuePointListResponse"
+  }
+]
