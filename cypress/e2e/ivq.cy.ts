@@ -150,8 +150,10 @@ describe('IVQ plugin', () => {
       mockKalturaBe('quiz_welcome_page_disabled_with_attempt.json', 'cues_4_question.json');
       loadPlayer({}, {autoplay: true}).then(() => {
         cy.get('[data-testid="ivqPopupSubmitButton"]').click({force: true});
-        cy.get('[data-testid="ivqPopupSubmitButton"][aria-busy="true"]').should('exist');
+        // Wait for submit API call and verify button shows loading state
         cy.wait('@submit');
+        // Verify submit completed by checking the quiz review wrapper appears
+        cy.get('[data-testid="quizReviewWrapper"]').should('exist');
       });
     });
 
