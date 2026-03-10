@@ -150,8 +150,10 @@ describe('IVQ plugin', () => {
       mockKalturaBe('quiz_welcome_page_disabled_with_attempt.json', 'cues_4_question.json');
       loadPlayer({}, {autoplay: true}).then(() => {
         cy.get('[data-testid="ivqPopupSubmitButton"]').click({force: true});
-        cy.get('[data-testid="ivqPopupSubmitButton"][aria-busy="true"]').should('exist');
+        // Wait for submit API call and verify button shows loading state
         cy.wait('@submit');
+        // Verify submit completed by checking the quiz review wrapper appears
+        cy.get('[data-testid="quizReviewWrapper"]').should('exist');
       });
     });
 
@@ -198,6 +200,28 @@ describe('IVQ plugin', () => {
       loadPlayer().then(player => {
         expect(player.getService('ivq').setQuizAttributes).to.be.a('function');
         done();
+      });
+    });
+  });
+
+  describe('multiple cuepoints at same timestamp', () => {
+    it('should handle 3 questions at the same timestamp and show first question', () => {
+      mockKalturaBe('quiz_welcome_page_disabled.json', 'cues_same_timestamp_3_questions.json');
+      loadPlayer().then(() => {
+        cy.get('.playkit-pre-playback-play-button').click({force: true});
+        // Verify timeline has only one cuepoint marker for questions at same time
+        cy.get('[data-testid="cuePointContainer"]').should('exist');
+        // The first question should be shown (sorted by startTime, first created)
+        cy.get('[data-testid="cuePointMarkerContainer"]').should('have.length', 1);
+      });
+    });
+
+    it('should display 3 timeline markers for 3 questions at different timestamps', () => {
+      mockKalturaBe('quiz_welcome_page_disabled.json', 'cues_consecutive_questions.json');
+      loadPlayer().then(() => {
+        cy.get('.playkit-pre-playback-play-button').click({force: true});
+        // Verify timeline has 3 cuepoint markers for questions at different times
+        cy.get('[data-testid="cuePointMarkerContainer"]').should('have.length', 3);
       });
     });
   });

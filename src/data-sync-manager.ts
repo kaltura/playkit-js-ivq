@@ -361,13 +361,26 @@ export class DataSyncManager {
       return cue.endTime !== this._player.currentTime;
     });
     if (filteredQuizCues.length) {
-      this._onQuestionBecomeActive(filteredQuizCues[0]);
+      // Sort by startTime to ensure we activate the earliest cuepoint first
+      // when multiple cuepoints fire at once (e.g., questions at 691s, 692s, 693s)
+      filteredQuizCues.sort((a, b) => a.startTime - b.startTime);
+      // Find the first unanswered question to avoid showing already answered questions.
+      // This helps prevent duplicate question displays when cuepoints fire multiple times.
+      // The 'a' property on quizQuestion contains the user's answer (KalturaQuizAnswer) if answered.
+      const unansweredCue = filteredQuizCues.find(cue => {
+        const quizQuestion = this.quizQuestionsMap.get(cue.id);
+        return !quizQuestion?.a;
+      });
+      // If all questions in this batch are answered, show the first one (for review scenarios)
+      // Otherwise show the first unanswered question
+      this._onQuestionBecomeActive(unansweredCue || filteredQuizCues[0]);
     }
   };
   private _onTimedMetadataAdded = ({payload}: TimedMetadataEvent) => {
     const quizCues = this._getQuizQuePoints(payload.cues);
     if (quizCues.length) {
-      this._quizCuePoints = quizCues;
+      // Sort cuepoints by startTime to ensure correct question order
+      this._quizCuePoints = quizCues.sort((a, b) => a.startTime - b.startTime);
       this.prepareQuizData();
       this._onQuestionsLoad(this.quizQuestionsMap);
     }
