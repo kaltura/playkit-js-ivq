@@ -364,14 +364,13 @@ export class DataSyncManager {
       // Sort by startTime to ensure we activate the earliest cuepoint first
       // when multiple cuepoints fire at once (e.g., questions at 691s, 692s, 693s)
       filteredQuizCues.sort((a, b) => a.startTime - b.startTime);
-      
-      // Find the first unanswered question to avoid showing already answered questions
-      // This helps prevent duplicate question displays when cuepoints fire multiple times
+      // Find the first unanswered question to avoid showing already answered questions.
+      // This helps prevent duplicate question displays when cuepoints fire multiple times.
+      // The 'a' property on quizQuestion contains the user's answer (KalturaQuizAnswer) if answered.
       const unansweredCue = filteredQuizCues.find(cue => {
         const quizQuestion = this.quizQuestionsMap.get(cue.id);
-        return !quizQuestion?.a; // Return cue if question is unanswered
+        return !quizQuestion?.a;
       });
-      
       // If all questions in this batch are answered, show the first one (for review scenarios)
       // Otherwise show the first unanswered question
       this._onQuestionBecomeActive(unansweredCue || filteredQuizCues[0]);
