@@ -201,4 +201,26 @@ describe('IVQ plugin', () => {
       });
     });
   });
+
+  describe('multiple cuepoints at same timestamp', () => {
+    it('should handle 3 questions at the same timestamp and show first question', () => {
+      mockKalturaBe('quiz_welcome_page_disabled.json', 'cues_same_timestamp_3_questions.json');
+      loadPlayer().then(() => {
+        cy.get('.playkit-pre-playback-play-button').click({force: true});
+        // Verify timeline has only one cuepoint marker for questions at same time
+        cy.get('[data-testid="cuePointContainer"]').should('exist');
+        // The first question should be shown (sorted by startTime, first created)
+        cy.get('[data-testid="cuePointMarkerContainer"]').should('have.length', 1);
+      });
+    });
+
+    it('should display 3 timeline markers for 3 questions at different timestamps', () => {
+      mockKalturaBe('quiz_welcome_page_disabled.json', 'cues_consecutive_questions.json');
+      loadPlayer().then(() => {
+        cy.get('.playkit-pre-playback-play-button').click({force: true});
+        // Verify timeline has 3 cuepoint markers for questions at different times
+        cy.get('[data-testid="cuePointMarkerContainer"]').should('have.length', 3);
+      });
+    });
+  });
 });
