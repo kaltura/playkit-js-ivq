@@ -20,6 +20,7 @@ export class DataSyncManager {
   public quizQuestionsMap: QuizQuestionMap = new Map();
   private _quizCuePoints: Array<any> = [];
   private _quizAnswers: Array<KalturaQuizAnswer> = [];
+  private _lastQuizCuePointStartTime: number | null = null;
 
   constructor(
     private _onQuestionsLoad: (qqm: QuizQuestionMap) => void,
@@ -361,7 +362,15 @@ export class DataSyncManager {
       return cue.endTime !== this._player.currentTime;
     });
     if (filteredQuizCues.length) {
+      //questions already showed
+      if (this._lastQuizCuePointStartTime == filteredQuizCues[0].startTime) {
+        return;
+      }
       this._onQuestionBecomeActive(filteredQuizCues[0]);
+      this._lastQuizCuePointStartTime = filteredQuizCues[0].startTime;
+    }
+    else {
+      this._lastQuizCuePointStartTime = null;
     }
   };
   private _onTimedMetadataAdded = ({payload}: TimedMetadataEvent) => {
