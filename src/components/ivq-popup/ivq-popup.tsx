@@ -181,7 +181,7 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
             />
           </div>
         </A11yWrapper>
-        <div className={styles.title} data-testid="ivqPopupTitle">
+        <div className={styles.title} data-testid="ivqPopupTitle" role="heading" aria-level="2">
           {otherProps.title}
         </div>
         <div className={styles.description} data-testid="ivqPopupDescription">
