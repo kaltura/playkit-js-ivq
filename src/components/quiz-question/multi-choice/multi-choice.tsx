@@ -76,11 +76,25 @@ export const MultiChoice = withText(translates)(
     };
 
     const handleUpKeyPressed = (currentIndex: number) => {
-      getAnswerOptionRef(currentIndex - 1)?.focus();
+      const prevIndex = currentIndex - 1;
+      if (prevIndex >= 0) {
+        getAnswerOptionRef(prevIndex)?.focus();
+        // For single-choice (radio buttons), arrow keys should select the focused option
+        if (!multiAnswer) {
+          onSelect && onSelect(optionalAnswers[prevIndex].key, true);
+        }
+      }
     };
 
     const handleDownKeyPressed = (currentIndex: number) => {
-      getAnswerOptionRef(currentIndex + 1)?.focus();
+      const nextIndex = currentIndex + 1;
+      if (nextIndex < optionalAnswers.length) {
+        getAnswerOptionRef(nextIndex)?.focus();
+        // For single-choice (radio buttons), arrow keys should select the focused option
+        if (!multiAnswer) {
+          onSelect && onSelect(optionalAnswers[nextIndex].key, true);
+        }
+      }
     };
 
     return (
@@ -91,7 +105,7 @@ export const MultiChoice = withText(translates)(
         </legend>
         {hint && <QuestionAddons hint={hint} />}
         <div className={styles.optionalAnswersWrapper} data-testid="multipleChoiceAnswersWrapper">
-          <div className={styles.optionalAnswersContainer} role="radiogroup" aria-labelledby="multiChoiceQuestion" data-testid="multipleChoiceAnswersContainer">
+          <div className={styles.optionalAnswersContainer} role={multiAnswer ? 'group' : 'radiogroup'} aria-labelledby="multiChoiceQuestion" data-testid="multipleChoiceAnswersContainer">
             {optionalAnswers.map(({key, text}, index) => {
               const isActive = selectedArray.includes(key);
               return (
@@ -99,7 +113,7 @@ export const MultiChoice = withText(translates)(
                   onClick={handleSelect(key, isActive)}
                   onUpKeyPressed={() => handleUpKeyPressed(index)}
                   onDownKeyPressed={() => handleDownKeyPressed(index)}
-                  role="radio">
+                  role={multiAnswer ? 'checkbox' : 'radio'}>
                   <div
                     ref={node => {
                       setAnswerOptionRef(index, node);
