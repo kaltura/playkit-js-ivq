@@ -36,6 +36,9 @@
       line-height: 18px;
       outline-offset: -1px;
       @include ivq-scrollbar;
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.70);
+      }
     }
     .charCounter {
       @include ivq-text;
