@@ -26,7 +26,7 @@ export const OpenQuestion = withText(translates)(
 
     const [liveMessage, setLiveMessage] = useState<preact.ComponentChild>(null);
     const lastAnnouncedCountRef = useRef<number>(-1);
-    const charCountAnnouncerRef = useRef<any>(null);
+    const debouncedAnnounceCharCount = useRef<any>(null);
 
     const handleChange = useCallback(
       (e: any) => {
@@ -34,8 +34,8 @@ export const OpenQuestion = withText(translates)(
       },
       [onSelect]
     );
-    if (!charCountAnnouncerRef.current) {
-      charCountAnnouncerRef.current = debounce((characterCount: number) => {
+    if (!debouncedAnnounceCharCount.current) {
+      debouncedAnnounceCharCount.current = debounce((characterCount: number) => {
         if (characterCount !== lastAnnouncedCountRef.current) {
           // Announce max limit reached when hitting the character limit
           if (characterCount === MAX_LENGTH) {
@@ -65,15 +65,15 @@ export const OpenQuestion = withText(translates)(
     }, [question]);
     // Trigger debounced announcement when the answer text changes
     useEffect(() => {
-      if (charCountAnnouncerRef.current) {
-        charCountAnnouncerRef.current(selected.length);
+      if (debouncedAnnounceCharCount.current) {
+        debouncedAnnounceCharCount.current(selected.length);
       }
     }, [selected]);
     // Cancel pending announcement on unmount
     useEffect(() => {
       return () => {
-        if (charCountAnnouncerRef.current && charCountAnnouncerRef.current.cancel) {
-          charCountAnnouncerRef.current.cancel();
+        if (debouncedAnnounceCharCount.current && debouncedAnnounceCharCount.current.cancel) {
+          debouncedAnnounceCharCount.current.cancel();
         }
       };
     }, []);
