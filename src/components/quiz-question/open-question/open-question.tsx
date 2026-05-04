@@ -14,7 +14,8 @@ const translates = (): QuizTranslates => {
   return {
     openQuestionPlaceHolder: <Text id="ivq.open_question_placeholder">Type your answer here...</Text>,
     questionLabel: <Text id="ivq.question">Question</Text>,
-    textAriaLabel: <Text id="ivq.textarea_aria_label">Open-ended quiz answer, maximum 250 characters.</Text>
+    textAriaLabel: <Text id="ivq.textarea_aria_label">Open-ended quiz answer, maximum 250 characters.</Text>,
+    maxLimitReached: <Text id="ivq.open_question_max_limit_reached">You’ve reached the 250-character limit.</Text>
   };
 };
 
@@ -25,7 +26,7 @@ export const OpenQuestion = withText(translates)(
 
     const [liveMessage, setLiveMessage] = useState<preact.ComponentChild>(null);
     const lastAnnouncedCountRef = useRef<number>(-1);
-    const charCountAnnouncerRef = useRef<any>(null);
+    const debouncedAnnounceCharCount = useRef<any>(null);
 
     const handleChange = useCallback(
       (e: any) => {
@@ -33,20 +34,25 @@ export const OpenQuestion = withText(translates)(
       },
       [onSelect]
     );
-    if (!charCountAnnouncerRef.current) {
-      charCountAnnouncerRef.current = debounce((characterCount: number) => {
+    if (!debouncedAnnounceCharCount.current) {
+      debouncedAnnounceCharCount.current = debounce((characterCount: number) => {
         if (characterCount !== lastAnnouncedCountRef.current) {
-          setLiveMessage(
-            <Text
-              id="ivq.open_question_char_count"
-              fields={{
-                count: characterCount,
-                max: MAX_LENGTH,
-              }}
-            >
-              {`${characterCount} of ${MAX_LENGTH} characters used`}
-            </Text>
-          );
+          // Announce max limit reached when hitting the character limit
+          if (characterCount === MAX_LENGTH) {
+            setLiveMessage(otherProps.maxLimitReached);
+          } else {
+            setLiveMessage(
+              <Text
+                id="ivq.open_question_char_count"
+                fields={{
+                  count: characterCount,
+                  max: MAX_LENGTH,
+                }}
+              >
+                {`${characterCount} of ${MAX_LENGTH} characters used`}
+              </Text>
+            );
+          }
           lastAnnouncedCountRef.current = characterCount;
         }
       }, 1500);
@@ -59,12 +65,16 @@ export const OpenQuestion = withText(translates)(
     }, [question]);
     // Trigger debounced announcement when the answer text changes
     useEffect(() => {
-      charCountAnnouncerRef.current?.(selected.length);
+      if (debouncedAnnounceCharCount.current) {
+        debouncedAnnounceCharCount.current(selected.length);
+      }
     }, [selected]);
     // Cancel pending announcement on unmount
     useEffect(() => {
       return () => {
-        charCountAnnouncerRef.current?.cancel?.();
+        if (debouncedAnnounceCharCount.current && debouncedAnnounceCharCount.current.cancel) {
+          debouncedAnnounceCharCount.current.cancel();
+        }
       };
     }, []);
 

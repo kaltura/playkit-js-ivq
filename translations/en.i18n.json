@@ -11,6 +11,7 @@
       "open_question_placeholder": "Type your answer here...",
       "textarea_aria_label": "Open-ended quiz answer, maximum 250 characters.",
       "open_question_char_count": "{{count}} of {{max}} characters used",
+      "open_question_max_limit_reached": "You’ve reached the 250-character limit.",
       "question": "Question",
       "reflection_point": "Reflection Point",
       "welcome_title": "Start your video quiz!",
