@@ -41,9 +41,7 @@ export const MultiChoice = withText(translates)(
     const isLargePlayer = playerSize !== undefined ? playerSize >= PLAYER_BREAK_POINTS.LARGE : false;
 
     useEffect(() => {
-      if (!disabled) {
-        answersOptionsRefMap.get(0)?.focus();
-      }
+      answersOptionsRefMap.get(0)?.focus();
     }, [question]);
 
     useEffect(() => {
