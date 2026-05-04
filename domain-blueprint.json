@@ -1,0 +1,172 @@
+{
+  "repositoryName": "playkit-js-ivq",
+  "version": "1.0.0",
+  "lastUpdated": "2025-05-04",
+  "coreResponsibility": {
+    "summary": "Interactive Video Quiz (IVQ) plugin for the Kaltura PlayKit JS Player that enables in-video quiz functionality with question overlays, scoring, submissions, and review capabilities.",
+    "type": "plugin",
+    "category": "player-plugin"
+  },
+  "domainAndLogicOwnership": {
+    "featureOwnership": [
+      "In-video quiz question rendering and management",
+      "Quiz question types: Multiple Choice, True/False, Multi-Answer, Open Question, Reflection Point",
+      "Quiz welcome screen and introduction flow",
+      "Quiz submission and scoring workflow",
+      "Quiz review screen with answer feedback",
+      "Quiz retake functionality with attempt tracking",
+      "Seek prevention during quiz playback",
+      "Timeline markers for quiz questions",
+      "Quiz cue point integration and synchronization",
+      "Quiz answer submission to Kaltura backend",
+      "Quiz pre-test download functionality",
+      "Quiz popup notifications and banners",
+      "Internationalization (i18n) support for quiz UI"
+    ],
+    "dataHandling": {
+      "stateManagement": [
+        "QuizData - Quiz configuration and settings (welcomeMessage, canSkip, preventSeek, allowAnswerUpdate, attemptsAllowed)",
+        "QuizQuestion - Individual question state including answers, skip/seek availability, and navigation",
+        "QuizQuestionMap - Collection of all quiz questions mapped by ID",
+        "QuizUserEntry - User's quiz attempt tracking with score, version, and submission status",
+        "KalturaQuizAnswer - User's submitted answers with correctness indicators"
+      ],
+      "dataObjects": [
+        "KalturaQuizQuestion - Question content, type, optional answers, hints, explanations",
+        "KalturaQuizOptionalAnswer - Answer options with correctness and weight",
+        "QuizQuestionUI - UI-specific question state for rendering",
+        "SubmissionDetails - Quiz submission status and review callbacks"
+      ]
+    }
+  },
+  "integrationPoints": {
+    "upstream": {
+      "repositories": [
+        {
+          "name": "playkit-js-kaltura-cuepoints",
+          "purpose": "Provides quiz cue point data and timed metadata events for question timing"
+        },
+        {
+          "name": "playkit-js-timeline",
+          "purpose": "Provides timeline service for adding quiz question markers on the player seekbar"
+        },
+        {
+          "name": "kaltura-player-js",
+          "purpose": "Core player framework, provides BasePlugin, UI components, event system, and provider for API calls"
+        },
+        {
+          "name": "playkit-js-ui-managers",
+          "purpose": "Provides FloatingManager for popups and ToastManager for notifications"
+        }
+      ],
+      "services": [
+        "Kaltura Backend API - quiz_quiz service for quiz data",
+        "Kaltura Backend API - userEntry service for user quiz attempts",
+        "Kaltura Backend API - cuepoint_cuepoint service for quiz answers"
+      ]
+    },
+    "downstream": {
+      "consumers": [
+        "Kaltura Player applications embedding IVQ functionality",
+        "LMS integrations using Kaltura video quizzes",
+        "Video-based learning platforms"
+      ]
+    },
+    "externalApis": [
+      {
+        "name": "Kaltura quiz_quiz API",
+        "operations": ["get - Retrieve quiz configuration"]
+      },
+      {
+        "name": "Kaltura userEntry API",
+        "operations": ["list - Get user quiz entries", "add - Create new quiz attempt"]
+      },
+      {
+        "name": "Kaltura cuepoint_cuepoint API",
+        "operations": ["list - Get quiz answers", "add - Submit answer", "update - Update answer"]
+      },
+      {
+        "name": "Kaltura quiz_quiz API",
+        "operations": ["getUrl - Download pre-test PDF"]
+      }
+    ]
+  },
+  "technicalStack": {
+    "primaryLanguages": ["TypeScript", "TSX/JSX"],
+    "frameworks": ["Preact", "Kaltura PlayKit JS"],
+    "buildTools": ["Webpack", "TypeScript Compiler"],
+    "testingTools": ["Cypress"],
+    "styling": ["SCSS"],
+    "entryPoints": {
+      "main": "src/index.ts",
+      "pluginClass": "src/ivq.tsx",
+      "dataManager": "src/data-sync-manager.ts",
+      "visualManager": "src/questions-visual-manager.tsx",
+      "middleware": "src/quiz-middleware.ts"
+    },
+    "keyDirectories": {
+      "components": "src/components/ - UI components (quiz-question, quiz-review, quiz-submit, welcome-screen, ivq-popup)",
+      "providers": "src/providers/ - Kaltura API loaders (quiz-loader, quiz-answers-loader, quiz-submit-loader)",
+      "types": "src/types/ - TypeScript interfaces and enums",
+      "translations": "translations/ - i18n JSON files for 15 languages"
+    }
+  },
+  "triageKeywords": [
+    "ivq",
+    "quiz",
+    "quiz question",
+    "quiz answer",
+    "quiz submit",
+    "quiz review",
+    "quiz retake",
+    "quiz score",
+    "welcome screen",
+    "reflection point",
+    "multiple choice",
+    "true false question",
+    "open question",
+    "quiz cuepoint",
+    "preventSeek",
+    "skip question",
+    "quiz marker",
+    "quiz popup",
+    "quiz attempt",
+    "KalturaQuiz"
+  ],
+  "errorPatterns": [
+    "quiz data absent",
+    "quizUserEntryId absent",
+    "submit quiz failed",
+    "submit answer failed",
+    "kalturaCuepoints service is not registered",
+    "No timeline service available",
+    "QuizRetake: quizNewUserEntry absent",
+    "can't process quiz data",
+    "QUIZ_QUESTION cuePointType",
+    "quiz.QUIZ_ANSWER",
+    "quiz.QUIZ_QUESTION"
+  ],
+  "eventTypes": [
+    "QuizStarted",
+    "QuizSkipped",
+    "QuizSeek",
+    "QuestionAnswered",
+    "QuizSubmitted",
+    "QuizRetake",
+    "QuizQuestionChanged"
+  ],
+  "configurationKeys": [
+    "welcomeMessage",
+    "noSeekAlertText",
+    "inVideoTip",
+    "showWelcomePage",
+    "canSkip",
+    "banSeek/preventSeek",
+    "allowAnswerUpdate",
+    "showCorrectAfterSubmission",
+    "showGradeAfterSubmission",
+    "allowDownload",
+    "attemptsAllowed",
+    "scoreType"
+  ]
+}
