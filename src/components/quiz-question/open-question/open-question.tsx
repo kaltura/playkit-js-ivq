@@ -59,9 +59,7 @@ export const OpenQuestion = withText(translates)(
     }
 
     useEffect(() => {
-      if (!disabled) {
-        textareaRef.current?.focus();
-      }
+      textareaRef.current?.focus();
     }, [question]);
     // Trigger debounced announcement when the answer text changes
     useEffect(() => {

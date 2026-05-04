@@ -25,9 +25,7 @@ export const TrueFalse = withText(translates)(
       [onSelect]
     );
     useEffect(() => {
-      if (!disabled) {
-        answersOptionsRefMap.get(0)?.focus();
-      }
+      answersOptionsRefMap.get(0)?.focus();
     }, [question]);
 
     let answersOptionsRefMap: Map<number, HTMLElement | null> = new Map();
