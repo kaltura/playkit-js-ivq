@@ -75,7 +75,7 @@
     "externalApis": [
       {
         "name": "Kaltura quiz_quiz API",
-        "operations": ["get - Retrieve quiz configuration"]
+        "operations": ["get - Retrieve quiz configuration", "getUrl - Download pre-test PDF"]
       },
       {
         "name": "Kaltura userEntry API",
@@ -84,10 +84,6 @@
       {
         "name": "Kaltura cuepoint_cuepoint API",
         "operations": ["list - Get quiz answers", "add - Submit answer", "update - Update answer"]
-      },
-      {
-        "name": "Kaltura quiz_quiz API",
-        "operations": ["getUrl - Download pre-test PDF"]
       }
     ]
   },
