@@ -1,7 +1,57 @@
 {
-    "nl": {
-        "ivq": {
-            "quiz_popup_shortcut": "Druk op Shift + Alt + Q of Shift + Optie + Q om de dialoog rechtstreeks te openen"
-        }
+  "nl": {
+    "ivq": {
+      "continue_button": "Doorgaan",
+      "continue_button_area_label": "Doorgaan met de quiz met het geselecteerde antwoord",
+      "skip_button": "Overslaan",
+      "skip_button_area_label": "Nu overslaan",
+      "question_counter": "Vraag {{current}} van {{total}}",
+      "next_question_area_label": "Volgende vraag",
+      "prev_question_area_label": "Vorige vraag",
+      "open_question_placeholder": "Typ je antwoord hier…",
+      "question": "Vraag",
+      "reflection_point": "Reflectiepunt",
+      "welcome_title": "Begin uw videoquiz!",
+      "welcome_download": "Pre-test downloaden",
+      "start_quiz": "Quiz starten",
+      "submit_button": "Indienen",
+      "submit_button_area_label": "Klik om de quiz in te dienen",
+      "review_button": "Controleren",
+      "review_button_area_label": "Klik om de quiz te controleren",
+      "review_title": "U bent bijna klaar",
+      "review_description": "Het lijkt erop dat sommige vragen onbeantwoord bleven, u moet alle vragen beantwoorden voordat u kunt indienen",
+      "submit_title": "Quiz voltooid",
+      "submit_description": "Neem even de tijd om uw antwoorden te controleren, of ga door en dien ze in.",
+      "quiz_score": "Uw score is {{quizScore}}",
+      "retake_button": "Opnieuw maken",
+      "retake_button_area_label": "Klik om de quiz opnieuw te maken",
+      "close_button": "Afsluiten",
+      "close_button_aria_label": "Klik om de controle af te sluiten",
+      "quiz_completed": "U hebt de quiz voltooid",
+      "back_button": "Terug",
+      "correct_answer_is": "Het juiste antwoord is",
+      "your_answer": "Uw antwoord",
+      "correct_answer": "Juiste antwoord",
+      "incorrect_answer": "Onjuiste antwoord",
+      "wrong_answer": "Fout antwoord",
+      "show_hint": "Hint tonen",
+      "hide_hint": "Hint verbergen",
+      "show_why": "Reden verbergen",
+      "hide_why": "Reden waarom",
+      "show_feedback": "Feedback tonen",
+      "hide_feedback": "Feedback verbergen",
+      "marker_area_label": "Naar vraag springen {{questionIndex}}",
+      "answer_number": "Antwoord vraag",
+      "review_question": "Klik om de vraag te controleren",
+      "tip": "Alle vragen moeten worden beantwoord. De quiz wordt verzonden als deze is afgerond.",
+      "available_attempts_message": "Totaal aantal pogingen beschikbaar voor deze quiz: {{availableAttempts}}",
+      "quiz_almost_done_title": "U bent bijna klaar",
+      "quiz_almost_done_description": "Het lijkt erop dat sommige vragen onbeantwoord bleven, u moet alle vragen beantwoorden voordat u kunt indienen",
+      "quiz_submit_description": "Neem even de tijd om uw antwoorden te controleren, of ga door en dien ze in.",
+      "quiz_completed_description": "Bekijk de video helemaal om in te dienen.",
+      "quiz_submitted_title": "Quiz ingediend",
+      "seeking_is_disable_popup_title": "Zoeken is in deze video uitgeschakeld",
+      "quiz_popup_shortcut": "Druk op Shift + Alt + Q of Shift + Optie + Q om rechtstreeks naar de dialoog te gaan"
     }
+  }
 }
