@@ -43,8 +43,8 @@ export const TrueFalse = withText(translates)(
       return answersOptionsRefMap.get(index);
     };
 
-    const navigateAndSelect = (currentIndex: number, direction: 'prev' | 'next') => {
-      const newIndex = direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
+    const navigateAndSelect = (currentIndex: number, step: -1 | 1) => {
+      const newIndex = currentIndex + step;
       if (newIndex >= 0 && newIndex < optionalAnswers.length) {
         getAnswerOptionRef(newIndex)?.focus();
         // For radiogroups, arrow keys should select the focused option
@@ -52,10 +52,10 @@ export const TrueFalse = withText(translates)(
       }
     };
 
-    const handleLeftKeyPressed = (currentIndex: number) => navigateAndSelect(currentIndex, 'prev');
-    const handleRightKeyPressed = (currentIndex: number) => navigateAndSelect(currentIndex, 'next');
-    const handleUpKeyPressed = (currentIndex: number) => navigateAndSelect(currentIndex, 'prev');
-    const handleDownKeyPressed = (currentIndex: number) => navigateAndSelect(currentIndex, 'next');
+    const handleLeftKeyPressed = (currentIndex: number) => navigateAndSelect(currentIndex, -1);
+    const handleRightKeyPressed = (currentIndex: number) => navigateAndSelect(currentIndex, 1);
+    const handleUpKeyPressed = (currentIndex: number) => navigateAndSelect(currentIndex, -1);
+    const handleDownKeyPressed = (currentIndex: number) => navigateAndSelect(currentIndex, 1);
 
     return (
       <div className={styles.trueFalseWrapper} data-testid="trueFalseContainer">
