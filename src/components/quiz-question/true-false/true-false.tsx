@@ -43,13 +43,19 @@ export const TrueFalse = withText(translates)(
       return answersOptionsRefMap.get(index);
     };
 
-    const handleLeftKeyPressed = (currentIndex: number) => {
-      getAnswerOptionRef(currentIndex - 1)?.focus();
+    const navigateAndSelect = (currentIndex: number, step: -1 | 1) => {
+      const newIndex = currentIndex + step;
+      if (newIndex >= 0 && newIndex < optionalAnswers.length) {
+        getAnswerOptionRef(newIndex)?.focus();
+        // For radiogroups, arrow keys should select the focused option
+        onSelect && onSelect(optionalAnswers[newIndex].key, true);
+      }
     };
 
-    const handleRightKeyPressed = (currentIndex: number) => {
-      getAnswerOptionRef(currentIndex + 1)?.focus();
-    };
+    const handleLeftKeyPressed = (currentIndex: number) => navigateAndSelect(currentIndex, -1);
+    const handleRightKeyPressed = (currentIndex: number) => navigateAndSelect(currentIndex, 1);
+    const handleUpKeyPressed = (currentIndex: number) => navigateAndSelect(currentIndex, -1);
+    const handleDownKeyPressed = (currentIndex: number) => navigateAndSelect(currentIndex, 1);
 
     return (
       <div className={styles.trueFalseWrapper} data-testid="trueFalseContainer">
@@ -65,8 +71,8 @@ export const TrueFalse = withText(translates)(
             return (
               <A11yWrapper
                 onClick={handleSelect(key)}
-                onUpKeyPressed={() => {}}
-                onDownKeyPressed={() => {}}
+                onUpKeyPressed={() => handleUpKeyPressed(index)}
+                onDownKeyPressed={() => handleDownKeyPressed(index)}
                 onLeftKeyPressed={() => handleLeftKeyPressed(index)}
                 onRightKeyPressed={() => handleRightKeyPressed(index)}
                 role="radio">
