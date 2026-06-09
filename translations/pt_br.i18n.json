@@ -1,8 +1,7 @@
 {
     "pt_br": {
         "ivq": {
-            "quiz_popup_shortcut": "Pressione Shift + Alt + Q ou Shift + Option + Q para acessar a caixa de diálogo diretamente",
-            "open_question_max_limit_reached": "Você atingiu o limite de 250 caracteres."
+            "quiz_popup_shortcut": "Pressione Shift + Alt + Q ou Shift + Option + Q para acessar a caixa de diálogo diretamente"
         }
     }
 }

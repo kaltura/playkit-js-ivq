@@ -1,8 +1,7 @@
 {
     "fi": {
         "ivq": {
-            "quiz_popup_shortcut": "Pääset suoraan valintaikkunaan painamalla Shift + Alt + Q tai Shift + Option + Q",
-            "open_question_max_limit_reached": "Olet saavuttanut 250 merkin rajan."
+            "quiz_popup_shortcut": "Pääset suoraan valintaikkunaan painamalla Shift + Alt + Q tai Shift + Option + Q"
         }
     }
 }

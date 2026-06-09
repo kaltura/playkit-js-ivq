@@ -1,8 +1,7 @@
 {
     "fr": {
         "ivq": {
-            "quiz_popup_shortcut": "Appuyez sur Maj + Alt + Q ou Maj + Option + Q pour accéder directement à la boîte de dialogue",
-            "open_question_max_limit_reached": "Vous avez atteint la limite de 250 caractères."
+            "quiz_popup_shortcut": "Appuyez sur Maj + Alt + Q ou Maj + Option + Q pour accéder directement à la boîte de dialogue"
         }
     }
 }

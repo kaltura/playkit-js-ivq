@@ -1,8 +1,7 @@
 {
     "zh_cn": {
         "ivq": {
-            "quiz_popup_shortcut": "按 Shift + Alt + Q 或 Shift + Option + Q 直接打开对话框",
-            "open_question_max_limit_reached": "已达到 250 个字符的限制。"
+            "quiz_popup_shortcut": "按 Shift + Alt + Q 或 Shift + Option + Q 直接打开对话框"
         }
     }
 }
