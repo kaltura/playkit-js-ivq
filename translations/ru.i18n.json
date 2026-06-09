@@ -1,7 +1,8 @@
 {
     "ru": {
         "ivq": {
-            "quiz_popup_shortcut": "Нажмите Shift + Alt + Q или Shift + Option + Q, чтобы открыть диалог напрямую"
+            "quiz_popup_shortcut": "Нажмите Shift + Alt + Q или Shift + Option + Q, чтобы открыть диалог напрямую",
+            "open_question_max_limit_reached": "Вы достигли лимита в 250 символов."
         }
     }
 }

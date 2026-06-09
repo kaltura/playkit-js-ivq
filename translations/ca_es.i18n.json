@@ -1,7 +1,8 @@
 {
     "ca_es": {
         "ivq": {
-            "quiz_popup_shortcut": "Premeu Shift + Alt + Q o Shift + Option + Q per accedir al diàleg directament"
+            "quiz_popup_shortcut": "Premeu Shift + Alt + Q o Shift + Option + Q per accedir al diàleg directament",
+            "open_question_max_limit_reached": "Heu arribat al límit de 250 caràcters."
         }
     }
 }
