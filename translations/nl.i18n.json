@@ -51,7 +51,8 @@
       "quiz_completed_description": "Bekijk de video helemaal om in te dienen.",
       "quiz_submitted_title": "Quiz ingediend",
       "seeking_is_disable_popup_title": "Zoeken is in deze video uitgeschakeld",
-      "quiz_popup_shortcut": "Druk op Shift + Alt + Q of Shift + Optie + Q om rechtstreeks naar de dialoog te gaan"
+      "quiz_popup_shortcut": "Druk op Shift + Alt + Q of Shift + Optie + Q om rechtstreeks naar de dialoog te gaan",
+      "open_question_max_limit_reached": "U hebt de limiet van 250 tekens bereikt."
     }
   }
 }
