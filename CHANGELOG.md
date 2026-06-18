@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.7.26 (2026-06-18)
+
+
+### Bug Fixes
+
+* **FEC-14921:** Translations ([#207](https://github.com/kaltura/playkit-js-ivq/issues/207)) ([58cc4a2](https://github.com/kaltura/playkit-js-ivq/commit/58cc4a2))
+
+
+
 ### 3.7.25 (2026-06-04)
 
 
