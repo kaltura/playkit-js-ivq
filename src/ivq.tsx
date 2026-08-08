@@ -162,6 +162,7 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   };
 
   private _restoreSeekBar = () => {
+    this._updatePlayerHover();
     const seekBarParentNode = this._getBottomBarNode();
     if (seekBarParentNode && !seekBarParentNode?.querySelector(KalturaPlayerSeekBarSelector)) {
       const seekBarNode = this._getSeekBarNode();
