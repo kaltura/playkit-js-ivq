@@ -158,20 +158,26 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
     return this._player.getView().parentNode?.parentNode?.querySelector(KalturaPlayerSeekBarSelector) || null;
   };
 
+  private _getSeekBarContainerNode = () => {
+    return this._player.getView().parentNode?.parentNode?.querySelector(KalturaPlayerSeekBarContainerSelector) || null;
+  };
+
   private _updatePlayerHover = () => {
     this._player.dispatchEvent(new FakeEvent(PLAYER_HOVERED));
   };
 
   private _restoreSeekBar = () => {
-    const seekBarContainerNode = this._player.getView().parentNode?.parentNode?.querySelector(KalturaPlayerSeekBarContainerSelector);
-    if (seekBarContainerNode && !seekBarContainerNode?.querySelector(KalturaPlayerSeekBarSelector)) {
-      const seekBarNode = this._getSeekBarNode();
-      if (seekBarNode) {
-        // move player seek bar from IvqBottomBar to Kaltura player bottom bar seekbar container
-        seekBarContainerNode.append(seekBarNode);
-        seekBarNode.setAttribute('role', 'slider');
-      }
-    }
+    const targetNode = this._getSeekBarContainerNode() || this._getBottomBarNode();
+    if (!targetNode) return;
+    
+    if (targetNode.querySelector(KalturaPlayerSeekBarSelector)) return;
+
+    const seekBarNode = this._getSeekBarNode();
+    if (!seekBarNode) return;
+
+    // move player seek bar from IvqBottomBar to Kaltura player seekbar container
+    targetNode.append(seekBarNode);
+    seekBarNode.setAttribute('role', 'slider');
   };
 
   private _handlePlaylistConfiguration() {
