@@ -10,6 +10,7 @@ import {
   IvqConfig,
   IvqEventTypes,
   KalturaPlayerBottomBarSelector,
+  KalturaPlayerSeekBarContainerSelector,
   KalturaPlayerSeekBarSelector,
   KalturaQuizQuestion,
   PresetAreas,
@@ -162,12 +163,12 @@ export class Ivq extends KalturaPlayer.core.BasePlugin {
   };
 
   private _restoreSeekBar = () => {
-    const seekBarParentNode = this._getBottomBarNode();
-    if (seekBarParentNode && !seekBarParentNode?.querySelector(KalturaPlayerSeekBarSelector)) {
+    const seekBarContainerNode = this._player.getView().parentNode?.parentNode?.querySelector(KalturaPlayerSeekBarContainerSelector);
+    if (seekBarContainerNode && !seekBarContainerNode?.querySelector(KalturaPlayerSeekBarSelector)) {
       const seekBarNode = this._getSeekBarNode();
       if (seekBarNode) {
-        // move player seek bar from IvqBottomBar to Kaltura player bottom bar
-        seekBarParentNode.append(seekBarNode);
+        // move player seek bar from IvqBottomBar to Kaltura player bottom bar seekbar container
+        seekBarContainerNode.append(seekBarNode);
         seekBarNode.setAttribute('role', 'slider');
       }
     }
