@@ -100,6 +100,65 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 This project is licensed under the AGPL-3.0 License - see the [LICENSE.md](LICENSE.md) file for details
 
+## Theming
+
+The plugin root element carries the stable class `playkit-ivq`. Default values
+are declared on that class; override any property at the player-container level.
+
+**Question text**
+
+| Property | Default | Description |
+|---|---|---|
+| `--ivq-question-font-size` | `18px` | Question text font size |
+| `--ivq-question-line-height` | `normal` | Question text line height |
+| `--ivq-question-max-width` | `100%` | Max width of question text block |
+
+**Answer options**
+
+| Property | Default | Description |
+|---|---|---|
+| `--ivq-answer-font-size` | `16px` | Answer choice font size |
+| `--ivq-answer-line-height` | `normal` | Answer choice line height |
+| `--ivq-answer-border-radius` | `4px` | Answer choice corner radius |
+
+**Open question textarea**
+
+| Property | Default | Description |
+|---|---|---|
+| `--ivq-textarea-font-size` | `14px` | Textarea font size |
+| `--ivq-textarea-min-height` | `80px` | Textarea minimum height |
+| `--ivq-textarea-max-height` | `120px` | Textarea maximum height |
+
+**Buttons**
+
+| Property | Default | Description |
+|---|---|---|
+| `--ivq-button-font-size` | `14px` | Button label font size |
+| `--ivq-button-padding` | `4px 8px` | Button inner padding |
+| `--ivq-button-border-radius` | `4px` | Button corner radius |
+
+**Welcome and submit screens**
+
+| Property | Default | Description |
+|---|---|---|
+| `--ivq-title-font-size` | `32px` | Title font size |
+| `--ivq-description-font-size` | `14px` | Description font size |
+
+**Popup**
+
+| Property | Default | Description |
+|---|---|---|
+| `--ivq-popup-background` | `rgba(0, 0, 0, 0.7)` | Popup background color |
+| `--ivq-popup-blur` | `8px` | Popup backdrop blur radius |
+
+**Example** — override from the player container:
+```css
+.playkit-ivq {
+  --ivq-button-font-size: 16px;
+  --ivq-panel-max-width: 800px;
+}
+```
+
 <a name="dependencies"></a>
 ## Dependencies
 

@@ -1,5 +1,24 @@
 @import '~@playkit-js/playkit-js-ui';
 
+:global(.playkit-ivq) {
+  --ivq-question-font-size: 18px;
+  --ivq-question-line-height: normal;
+  --ivq-question-max-width: 100%;
+  --ivq-answer-font-size: 16px;
+  --ivq-answer-line-height: normal;
+  --ivq-answer-border-radius: 4px;
+  --ivq-textarea-font-size: 14px;
+  --ivq-textarea-min-height: 80px;
+  --ivq-textarea-max-height: 120px;
+  --ivq-button-font-size: 14px;
+  --ivq-button-padding: 4px 8px;
+  --ivq-button-border-radius: 4px;
+  --ivq-title-font-size: 32px;
+  --ivq-description-font-size: 14px;
+  --ivq-popup-background: rgba(0, 0, 0, 0.7);
+  --ivq-popup-blur: 8px;
+}
+
 $roundness-1: 4px;
 
 $button-background: rgba(255, 255, 255, 0.12);
@@ -8,8 +27,6 @@ $selection-border-width: 2px;
 
 @mixin ivq-text {
   font-style: normal;
-  line-height: normal;
-  font-size: 18px;
   color: #ffffff;
   overflow: auto;
 }
@@ -17,8 +34,10 @@ $selection-border-width: 2px;
 @mixin ivq-question-content {
   flex-shrink: 0;
   font-weight: bold;
-  line-height: normal;
+  font-size: var(--ivq-question-font-size);
+  line-height: var(--ivq-question-line-height);
   overflow-wrap: break-word;
+  max-width: var(--ivq-question-max-width);
   &:focus {
     outline: none !important; // overwride player styles
   }
@@ -28,14 +47,14 @@ $selection-border-width: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 4px 8px;
+  padding: var(--ivq-button-padding);
   height: 32px;
-  border-radius: $roundness-1;
+  border-radius: var(--ivq-button-border-radius);
   border-width: 1px;
   border-color: transparent;
   font-style: normal;
   font-weight: bold;
-  font-size: 14px;
+  font-size: var(--ivq-button-font-size);
   line-height: 17px;
   text-align: left;
   color: #ffffff;
@@ -90,10 +109,10 @@ $selection-border-width: 2px;
   background: $button-background;
   border-style: solid;
   border-width: $selection-border-width;
-  border-radius: $roundness-1;
+  border-radius: var(--ivq-answer-border-radius);
   border-color: transparent;
-  font-size: 16px;
-  line-height: normal;
+  font-size: var(--ivq-answer-font-size);
+  line-height: var(--ivq-answer-line-height);
   color: #ffffff;
   cursor: pointer;
   box-sizing: border-box;
