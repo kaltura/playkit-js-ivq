@@ -155,7 +155,7 @@ are declared on that class; override any property at the player-container level.
 ```css
 .playkit-ivq {
   --ivq-button-font-size: 16px;
-  --ivq-panel-max-width: 800px;
+  --ivq-quesion-max-width: 800px;
 }
 ```
 
