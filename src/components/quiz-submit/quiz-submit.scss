@@ -15,13 +15,13 @@
   }
   .title {
     flex-shrink: 0;
-    font-size: var(--ivq-title-font-size);
+    font-size: var(--ivq-title-font-size, 32px);
     line-height: normal;
     font-weight: 700;
   }
   .description {
     margin-top: 16px;
-    font-size: var(--ivq-description-font-size);
+    font-size: var(--ivq-description-font-size, 14px);
     max-width: 600px;
   }
   .buttonWrapper {

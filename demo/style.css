@@ -2,6 +2,25 @@ body {
   background-color: #212121;
 }
 
+.playkit-ivq {
+  --ivq-question-font-size: 18px;
+  --ivq-question-line-height: normal;
+  --ivq-question-max-width: 100%;
+  --ivq-answer-font-size: 16px;
+  --ivq-answer-line-height: normal;
+  --ivq-answer-border-radius: 4px;
+  --ivq-textarea-font-size: 14px;
+  --ivq-textarea-min-height: 80px;
+  --ivq-textarea-max-height: 120px;
+  --ivq-button-font-size: 14px;
+  --ivq-button-padding: 4px 8px;
+  --ivq-button-border-radius: 4px;
+  --ivq-title-font-size: 32px;
+  --ivq-description-font-size: 14px;
+  --ivq-popup-background: rgba(0, 0, 0, 0.7);
+  --ivq-popup-blur: 8px;
+}
+
 #player-placeholder {
   margin: 100px auto;
   width: 768px;

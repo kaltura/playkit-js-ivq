@@ -30,9 +30,9 @@
       background: rgba(0, 0, 0, 0.3);
       color: $tone-1-color;
       font-family: inherit;
-      min-height: var(--ivq-textarea-min-height);
-      max-height: var(--ivq-textarea-max-height);
-      font-size: var(--ivq-textarea-font-size);
+      min-height: var(--ivq-textarea-min-height, 80px);
+      max-height: var(--ivq-textarea-max-height, 120px);
+      font-size: var(--ivq-textarea-font-size, 14px);
       line-height: 18px;
       outline-offset: -1px;
       @include ivq-scrollbar;
