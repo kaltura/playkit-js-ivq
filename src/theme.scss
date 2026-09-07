@@ -8,8 +8,6 @@ $selection-border-width: 2px;
 
 @mixin ivq-text {
   font-style: normal;
-  line-height: normal;
-  font-size: 18px;
   color: #ffffff;
   overflow: auto;
 }
@@ -17,8 +15,10 @@ $selection-border-width: 2px;
 @mixin ivq-question-content {
   flex-shrink: 0;
   font-weight: bold;
-  line-height: normal;
+  font-size: var(--ivq-question-font-size, 18px);
+  line-height: var(--ivq-question-line-height, normal);
   overflow-wrap: break-word;
+  max-width: var(--ivq-question-max-width, 100%);
   &:focus {
     outline: none !important; // overwride player styles
   }
@@ -28,14 +28,14 @@ $selection-border-width: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 4px 8px;
+  padding: var(--ivq-button-padding, 4px 8px);
   height: 32px;
-  border-radius: $roundness-1;
+  border-radius: var(--ivq-button-border-radius, 4px);
   border-width: 1px;
   border-color: transparent;
   font-style: normal;
   font-weight: bold;
-  font-size: 14px;
+  font-size: var(--ivq-button-font-size, 14px);
   line-height: 17px;
   text-align: left;
   color: #ffffff;
@@ -90,10 +90,10 @@ $selection-border-width: 2px;
   background: $button-background;
   border-style: solid;
   border-width: $selection-border-width;
-  border-radius: $roundness-1;
+  border-radius: var(--ivq-answer-border-radius, 4px);
   border-color: transparent;
-  font-size: 16px;
-  line-height: normal;
+  font-size: var(--ivq-answer-font-size, 16px);
+  line-height: var(--ivq-answer-line-height, normal);
   color: #ffffff;
   cursor: pointer;
   box-sizing: border-box;

@@ -36,11 +36,11 @@
 
     .title {
       font-weight: 700;
-      font-size: 32px;
+      font-size: var(--ivq-title-font-size, 32px);
     }
     .desc {
       font-weight: 400;
-      font-size: 14px;
+      font-size: var(--ivq-description-font-size, 14px);
       padding-top: 16px;
     }
     .tip, .attempts{
