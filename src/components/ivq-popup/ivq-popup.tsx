@@ -135,7 +135,7 @@ export const IvqPopup = withText(translates)(({type, onClose, onSubmit, onReview
     }
   }, []);
 
-  const popupClasses = [styles.popupRoot];
+  const popupClasses = [styles.popupRoot, 'playkit-ivq'];
   if (type === IvqPopupTypes.submit) {
     popupClasses.push(styles.submit);
   } else if (type === IvqPopupTypes.almostDone) {

@@ -13,7 +13,7 @@ export const IvqOverlay = ({children}: IvqOverlayProps) => {
   return (
     <OverlayPortal>
       <FocusTrap active>
-        <div className={styles.ivqOverlay} aria-live="polite">
+        <div className={`${styles.ivqOverlay} playkit-ivq`} aria-live="polite">
           <Overlay open permanent>
             {children}
           </Overlay>

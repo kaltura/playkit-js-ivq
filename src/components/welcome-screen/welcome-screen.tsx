@@ -50,7 +50,7 @@ export const WelcomeScreen = withText(translates)(
       () => (
         <div
           data-testid="welcomeScreenRoot"
-          className={['ivq', styles.welcomeScreenWrapper, poster ? styles.withPoster : ''].join(' ')}
+          className={['ivq', 'playkit-ivq', styles.welcomeScreenWrapper, poster ? styles.withPoster : ''].join(' ')}
           style={{backgroundImage: poster ? `url(${poster})` : 'none'}}>
           <div className={styles.background} />
           <div className={styles.content} data-testid="welcomeScreenContent">

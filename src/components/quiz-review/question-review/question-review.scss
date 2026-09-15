@@ -43,6 +43,8 @@
 
     .questionText {
       @include ivq-text;
+      font-size: var(--ivq-question-font-size, 18px);
+      line-height: var(--ivq-question-line-height, normal);
       flex-shrink: 0;
       overflow-wrap: break-word;
       font-weight: bold;

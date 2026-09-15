@@ -32,6 +32,9 @@
       @include outline-fix;
       .reviewAnswer {
         @include optional-answer;
+        font-size: 16px;
+        line-height: normal;
+        border-radius: $roundness-1;
         min-height: 32px;
         margin: 4px 0;
         padding: 0;
