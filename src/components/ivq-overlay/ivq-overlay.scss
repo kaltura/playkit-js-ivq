@@ -16,6 +16,9 @@
     flex-direction: column;
     padding: 0 !important; // overwrite responsive overlay styles
     overflow: hidden;
+    > div {
+      height: 100%;
+    }
   }
   :focus {
     outline: 2px solid var(--playkit-tab-focus-color) !important;
